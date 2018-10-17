@@ -1,23 +1,23 @@
-* Cover Page
-    * A cover page containing your group member names, project title, course number, and semester
-    * Github URL
-    * Project Demo Presentation as Google Slide URL
-Example:
-# Project Title
-## CS 110 Final Project
-### Semester, Year
 
-[https://github.com/<repo>](#)
+# Game Name: Nonsense: The Game
+## CS 110 Final Project
+### Fall 2018
+
+[https://github.com/binghamtonuniversity-cs110/final-project-fall18-the](#)
 
 [link to demo presentation slides](#)
 
 ### Team:
-#### Team Names
+    * Michael Spano
+    * Kevin
+    * Brain DeVries
+#### Team Name
+    * THE
 
 ***
 
 ## Project Description
-Give an overview of your project
+
 
 ***    
 
