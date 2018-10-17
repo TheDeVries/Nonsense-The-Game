@@ -8,11 +8,10 @@
 [link to demo presentation slides](#)
 
 ### Team:
-    * Michael Spano
-    * Kevin
-    * Brain DeVries
-#### Team Name
-    * THE
+* Michael Spano
+* Kevin
+* Brain DeVries
+#### Team Name: __THE__
 
 ***
 
