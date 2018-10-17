@@ -1,5 +1,26 @@
-#import your controller
+import pygame
+from menu import *
+from maze_level import *
+pygame.init()
+def callMenu():
+    menu = Menu()
+    menu.randomize()
 
 def main():
-    #Create an instance on your controller object
+    callMenu()
+    running = True
+    # Main Game Loop
+    while running:
+        for event in pygame.event.get():
+            # Quit button
+            if event.type == pygame.QUIT:
+                running = False
+
+            # Keybinds
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_ESCAPE:
+                    running = False
+        # Updates Display Constantly
+        pygame.display.flip()
+
 main()
