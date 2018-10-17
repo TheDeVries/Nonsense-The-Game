@@ -2,6 +2,7 @@ import pygame
 from menu import *
 from maze_level import *
 pygame.init()
+
 def callMenu():
     menu = Menu()
     menu.randomize()
