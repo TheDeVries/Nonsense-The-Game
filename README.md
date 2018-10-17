@@ -16,7 +16,7 @@
 ***
 
 ## Project Description
-* THE is an adventure through many different types of games and puzzles. The more you make mistakes the lower your sanity meter goes. When your sanity reaches 0, its game over you loose! The more levels you pass the higher your score gets.
+* __Nonsense: The Game__ is an adventure through many different types of games and puzzles. The more you make mistakes the lower your sanity meter goes. When your sanity reaches 0, its game over you loose! The more levels you pass the higher your score gets.
 
 
 ***    
