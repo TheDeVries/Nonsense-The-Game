@@ -13,6 +13,8 @@ class Menu:
         self.start_button_pressed = pygame.image.load("Sprites//start2.png").convert()
         self.instruct_button_unpressed = pygame.image.load("Sprites//instruct1.png").convert()
         self.instruct_button_pressed = pygame.image.load("Sprites//instruct2.png").convert()
+        self.quit_button_unpressed = pygame.image.load("Sprites//quit1.png").convert()
+        self.quit_button_pressed = pygame.image.load("Sprites//quit2.png").convert()
         # Method Calls
         self.background()
         self.title_pic()
@@ -76,6 +78,14 @@ class Menu:
         if x[0] == 1 and y == True:
             instruct = Instructions()
             self.running = False
+        # Quit button
+        y = self.button_method(500,400,626,500,400,460, self.quit_button_unpressed, self.quit_button_pressed)
+        x = pygame.mouse.get_pressed()
+        self.text(525,410,60,"Quit")
+        if x[0] == 1 and y == True:
+            self.running = False
+
+        #Settings button
 
 
 
