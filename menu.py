@@ -40,10 +40,6 @@ class Menu:
         mouse_posy = pygame.mouse.get_pos()[1]
         if mouse_posx < 226 and mouse_posx > 100 and mouse_posy > 400 and mouse_posy < 460:
             self.window.blit(self.start_button_pressed, (100,400))
-
-
-
-
     def instructions(self):
         pass
     def quit(self):
