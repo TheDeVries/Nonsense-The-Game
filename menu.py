@@ -11,9 +11,12 @@ class Menu:
         self.title = pygame.image.load("Sprites//titlecard.png").convert()
         self.start_button_unpressed = pygame.image.load("Sprites//start1.png").convert()
         self.start_button_pressed = pygame.image.load("Sprites//start2.png").convert()
+        self.instruct_button_unpressed = pygame.image.load("Sprites//instruct1.png").convert()
+        self.instruct_button_pressed = pygame.image.load("Sprites//instruct2.png").convert()
         # Method Calls
         self.randomize()
-        self.start_button()
+        self.start()
+        self.instructions()
         self.title_pic()
 
     def randomize(self):
@@ -29,19 +32,29 @@ class Menu:
            blits title image onto surface
         '''
         self.window.blit(self.title, (200,100))
-    def start_button(self):
+    def button(self, blit1, blit2, x1, x2, y1, y2, unpressed, pressed):
         """
-           method for start start_button
+           method for creating buttons
         """
-        self.start_button_unpressed = pygame.transform.scale(self.start_button_unpressed, (126, 60))
-        self.start_button_pressed = pygame.transform.scale(self.start_button_pressed, (126, 60))
-        self.window.blit(self.start_button_unpressed, (100,400))
+        unpressed = pygame.transform.scale(unpressed, (126, 60))
+        pressed = pygame.transform.scale(pressed, (126, 60))
+        self.window.blit(unpressed, (blit1, blit2))
         mouse_posx = pygame.mouse.get_pos()[0]
         mouse_posy = pygame.mouse.get_pos()[1]
-        if mouse_posx < 226 and mouse_posx > 100 and mouse_posy > 400 and mouse_posy < 460:
-            self.window.blit(self.start_button_pressed, (100,400))
+        if mouse_posx < x1 and mouse_posx > x2 and mouse_posy > y1 and mouse_posy < y2:
+            self.window.blit(pressed, (blit1,blit2))
+            return True
+    def start(self):
+        """
+           create and control start button
+        """
+        self.button(100,400,226,100,400,460, self.start_button_unpressed, self.start_button_pressed)
     def instructions(self):
-        pass
+        """
+           create and control instructions button and page
+        """
+        self.button(300,400,426,300,400,460, self.instruct_button_unpressed, self.instruct_button_pressed)
+
     def quit(self):
         pass
     def setting(self):
