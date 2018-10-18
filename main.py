@@ -5,10 +5,8 @@ pygame.init()
 
 def callMenu():
     menu = Menu()
-    menu.randomize()
 
 def main():
-    callMenu()
     running = True
     # Main Game Loop
     while running:
@@ -21,6 +19,7 @@ def main():
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
                     running = False
+        callMenu()
         # Updates Display Constantly
         pygame.display.flip()
 
