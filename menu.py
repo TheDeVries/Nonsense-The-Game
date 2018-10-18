@@ -1,6 +1,7 @@
 import pygame
 import time
 import random
+from instructions import *
 class Menu:
     def __init__(self):
         '''
@@ -29,6 +30,8 @@ class Menu:
                     if event.key == pygame.K_ESCAPE:
                         self.running = False
                 self.buttons()
+
+
                 pygame.display.flip()
 
     def background(self):
@@ -66,10 +69,9 @@ class Menu:
         y = self.button_method(300,400,426,300,400,460, self.instruct_button_unpressed, self.instruct_button_pressed)
         x = pygame.mouse.get_pressed()
         if x[0] == 1 and y == True:
-            print("test complete")
-            myfont = pygame.font.SysFont('Comic Sans MS', 30)
-            textsurface = myfont.render('Some Text', False, (0, 0, 0))
-            self.window.blit(textsurface,(0,0))
+            instruct = Instructions()
+            self.running = False
+
 
 
     def quit(self):
