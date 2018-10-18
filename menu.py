@@ -48,12 +48,19 @@ class Menu:
         """
            create and control start button
         """
-        self.button(100,400,226,100,400,460, self.start_button_unpressed, self.start_button_pressed)
+        y = self.button(100,400,226,100,400,460, self.start_button_unpressed, self.start_button_pressed)
+        x = pygame.mouse.get_pressed()
+        if x[0] == 1 and y == True:
+            print("test complete")
     def instructions(self):
         """
            create and control instructions button and page
         """
-        self.button(300,400,426,300,400,460, self.instruct_button_unpressed, self.instruct_button_pressed)
+        y = self.button(300,400,426,300,400,460, self.instruct_button_unpressed, self.instruct_button_pressed)
+        x = pygame.mouse.get_pressed()
+        if x[0] == 1 and y == True:
+            print("test complete")
+
 
     def quit(self):
         pass
