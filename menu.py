@@ -30,12 +30,15 @@ class Menu:
         '''
         self.window.blit(self.title, (200,100))
     def start_button(self):
+        """
+           method for start start_button
+        """
         self.start_button_unpressed = pygame.transform.scale(self.start_button_unpressed, (126, 60))
+        self.start_button_pressed = pygame.transform.scale(self.start_button_pressed, (126, 60))
         self.window.blit(self.start_button_unpressed, (100,400))
         mouse_posx = pygame.mouse.get_pos()[0]
         mouse_posy = pygame.mouse.get_pos()[1]
         if mouse_posx < 226 and mouse_posx > 100 and mouse_posy > 400 and mouse_posy < 460:
-            self.start_button_pressed = pygame.transform.scale(self.start_button_pressed, (126, 60))
             self.window.blit(self.start_button_pressed, (100,400))
 
 
