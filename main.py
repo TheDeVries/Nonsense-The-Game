@@ -3,8 +3,6 @@ from menu import *
 from maze_level import *
 pygame.init()
 
-def callMenu():
-    menu = Menu()
 def main():
     running = True
     # Main Game Loop
@@ -18,8 +16,9 @@ def main():
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
                     running = False
-        callMenu()
-        # Updates Display Constantly
-        pygame.display.flip()
+            menu = Menu()
+
+            # Updates Display Constantly
+            pygame.display.flip()
 
 main()

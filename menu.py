@@ -14,19 +14,16 @@ class Menu:
         self.instruct_button_unpressed = pygame.image.load("Sprites//instruct1.png").convert()
         self.instruct_button_pressed = pygame.image.load("Sprites//instruct2.png").convert()
         # Method Calls
-        self.randomize()
+        self.background()
         self.start()
         self.instructions()
         self.title_pic()
 
-    def randomize(self):
+    def background(self):
         '''
            creates random colors in background
         '''
-        x = random.randint(0, 255)
-        x1 = random.randint(0, 255)
-        x2 = random.randint(0, 255)
-        self.window.fill((x,x1,x2))
+        self.window.fill((50,220,100))
     def title_pic(self):
         '''
            blits title image onto surface
