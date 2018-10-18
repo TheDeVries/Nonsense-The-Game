@@ -15,21 +15,36 @@ class Menu:
         self.instruct_button_pressed = pygame.image.load("Sprites//instruct2.png").convert()
         # Method Calls
         self.background()
-        self.start()
-        self.instructions()
         self.title_pic()
+        self.running = True
+        # Main Menu Loop
+        while self.running:
+            for event in pygame.event.get():
+                # Quit button
+                if event.type == pygame.QUIT:
+                    self.running = False
+
+                # Keybinds
+                if event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_ESCAPE:
+                        self.running = False
+                self.buttons()
+                pygame.display.flip()
 
     def background(self):
         '''
-           creates random colors in background
+           creates background
         '''
-        self.window.fill((50,220,100))
+        x1 = random.randint(0, 255)
+        x2 = random.randint(0, 255)
+        x3 = random.randint(0, 255)
+        self.window.fill((x1,x2,x3))
     def title_pic(self):
         '''
            blits title image onto surface
         '''
         self.window.blit(self.title, (200,100))
-    def button(self, blit1, blit2, x1, x2, y1, y2, unpressed, pressed):
+    def button_method(self, blit1, blit2, x1, x2, y1, y2, unpressed, pressed):
         """
            method for creating buttons
         """
@@ -41,22 +56,18 @@ class Menu:
         if mouse_posx < x1 and mouse_posx > x2 and mouse_posy > y1 and mouse_posy < y2:
             self.window.blit(pressed, (blit1,blit2))
             return True
-    def start(self):
-        """
-           create and control start button
-        """
-        y = self.button(100,400,226,100,400,460, self.start_button_unpressed, self.start_button_pressed)
+    def buttons(self):
+        y = self.button_method(100,400,226,100,400,460, self.start_button_unpressed, self.start_button_pressed)
         x = pygame.mouse.get_pressed()
         if x[0] == 1 and y == True:
             print("test complete")
-    def instructions(self):
-        """
-           create and control instructions button and page
-        """
-        y = self.button(300,400,426,300,400,460, self.instruct_button_unpressed, self.instruct_button_pressed)
+        y = self.button_method(300,400,426,300,400,460, self.instruct_button_unpressed, self.instruct_button_pressed)
         x = pygame.mouse.get_pressed()
         if x[0] == 1 and y == True:
             print("test complete")
+            myfont = pygame.font.SysFont('Comic Sans MS', 30)
+            textsurface = myfont.render('Some Text', False, (0, 0, 0))
+            self.window.blit(textsurface,(0,0))
 
 
     def quit(self):
