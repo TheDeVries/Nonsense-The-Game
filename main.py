@@ -5,7 +5,6 @@ pygame.init()
 
 def callMenu():
     menu = Menu()
-
 def main():
     running = True
     # Main Game Loop
