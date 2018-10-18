@@ -1,5 +1,4 @@
-
-# Game Name: Nonsense: The Game
+# Nonsense: The Game
 ## CS 110 Final Project
 ### Fall 2018
 
@@ -7,16 +6,16 @@
 
 [link to demo presentation slides](#)
 
-### Team:
+### Team: __THE__
 * Michael Spano
-* Kevin
+* Kevin Apyapong
 * Brain DeVries
 #### Team Name: __THE__
 
 ***
 
 ## Project Description
-* __Nonsense: The Game__ is an adventure through many different types of games and puzzles. The more you make mistakes the lower your sanity meter goes. When your sanity reaches 0, its game over you loose! The more levels you pass the higher your score gets.
+* __Nonsense: The Game__ is a pixelated horror game under a facade of simplicity. Gameplay goes a little bit like this: The player is led through an assortment of games and scenarios that are rotated according to a randomized timer. Success in each scene will raise the player’s score. Failure will decrease the sanity meter, resulting in a series of undesirable graphical, audio, and logical distortions. It’s game over once the sanity meter reaches zero.
 
 
 ***    
@@ -44,7 +43,7 @@
 ### Software Lead - Brain DeVries
 TBT
 
-### Front End Specialist - Kevin
+### Front End Specialist - Kevin Apyapong
 TBT
 
 ### Back End Specialist - Michael Spano
@@ -55,7 +54,7 @@ TBT
 
 ### Menu Testing
 
-Destription
+Description
 
 
 ### Game Testing
