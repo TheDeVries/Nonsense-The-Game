@@ -10,12 +10,11 @@
 * Michael Spano
 * Kevin Apyapong
 * Brain DeVries
-#### Team Name: __THE__
 
 ***
 
 ## Project Description
-* __Nonsense: The Game__ is a pixelated horror game under a facade of simplicity. Gameplay goes a little bit like this: The player is led through an assortment of games and scenarios that are rotated according to a randomized timer. Success in each scene will raise the player’s score. Failure will decrease the sanity meter, resulting in a series of undesirable graphical, audio, and logical distortions. It’s game over once the sanity meter reaches zero.
+ __Nonsense: The Game__ is a pixelated horror game under a facade of simplicity. Gameplay goes a little bit like this: The player is led through an assortment of games and scenarios that are rotated according to a randomized timer. Success in each scene will raise the player’s score. Failure will decrease the sanity meter, resulting in a series of undesirable graphical, audio, and logical distortions. It’s game over once the sanity meter reaches zero.
 
 
 ***    
