@@ -46,6 +46,10 @@ class Menu:
            blits title image onto surface
         '''
         self.window.blit(self.title, (200,100))
+    def text(self, x, y, z, a):
+        myfont = pygame.font.SysFont('Times New Roman', z)
+        textsurface = myfont.render(a, True, (0, 0, 0))
+        self.window.blit(textsurface,(x,y))
     def button_method(self, blit1, blit2, x1, x2, y1, y2, unpressed, pressed):
         """
            method for creating buttons
@@ -62,11 +66,13 @@ class Menu:
         # Start button
         y = self.button_method(100,400,226,100,400,460, self.start_button_unpressed, self.start_button_pressed)
         x = pygame.mouse.get_pressed()
+        self.text(110,410,60,"Start")
         if x[0] == 1 and y == True:
             print("test complete")
         # Instruction button
         y = self.button_method(300,400,426,300,400,460, self.instruct_button_unpressed, self.instruct_button_pressed)
         x = pygame.mouse.get_pressed()
+        self.text(325,410,60,"Info")
         if x[0] == 1 and y == True:
             instruct = Instructions()
             self.running = False
