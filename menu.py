@@ -9,8 +9,8 @@ class Menu:
         init = pygame.init()
         self.window = pygame.display.set_mode((800,600))
         self.title = pygame.image.load("Sprites//titlecard.png").convert()
-        self.start_button_unpressed = pygame.image.load("Pictures//start1.png").convert()
-        self.start_button_pressed = pygame.image.load("Pictures//start2.png").convert()
+        self.start_button_unpressed = pygame.image.load("Sprites//start1.png").convert()
+        self.start_button_pressed = pygame.image.load("Sprites//start2.png").convert()
         # Method Calls
         self.randomize()
         self.start_button()
