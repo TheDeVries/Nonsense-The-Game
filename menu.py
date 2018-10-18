@@ -57,10 +57,12 @@ class Menu:
             self.window.blit(pressed, (blit1,blit2))
             return True
     def buttons(self):
+        # Start button
         y = self.button_method(100,400,226,100,400,460, self.start_button_unpressed, self.start_button_pressed)
         x = pygame.mouse.get_pressed()
         if x[0] == 1 and y == True:
             print("test complete")
+        # Instruction button
         y = self.button_method(300,400,426,300,400,460, self.instruct_button_unpressed, self.instruct_button_pressed)
         x = pygame.mouse.get_pressed()
         if x[0] == 1 and y == True:
