@@ -1,5 +1,5 @@
 import pygame
-from menu import *
+from main_menu import *
 from maze_level import *
 from instructions import *
 pygame.init()
