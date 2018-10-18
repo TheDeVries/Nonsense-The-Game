@@ -15,6 +15,8 @@ class Menu:
         self.instruct_button_pressed = pygame.image.load("Sprites//instruct2.png").convert()
         self.quit_button_unpressed = pygame.image.load("Sprites//quit1.png").convert()
         self.quit_button_pressed = pygame.image.load("Sprites//quit2.png").convert()
+        self.setting_button_unpressed = pygame.image.load("Sprites//settings1.png").convert()
+        self.setting_button_pressed = pygame.image.load("Sprites//settings2.png").convert()
         # Method Calls
         self.background()
         self.title_pic()
@@ -66,27 +68,31 @@ class Menu:
             return True
     def buttons(self):
         # Start button
-        y = self.button_method(100,400,226,100,400,460, self.start_button_unpressed, self.start_button_pressed)
+        y = self.button_method(37,400,163,37,400,460, self.start_button_unpressed, self.start_button_pressed)
         x = pygame.mouse.get_pressed()
-        self.text(110,410,60,"Start")
+        self.text(47,410,60,"Start")
         if x[0] == 1 and y == True:
             print("test complete")
         # Instruction button
-        y = self.button_method(300,400,426,300,400,460, self.instruct_button_unpressed, self.instruct_button_pressed)
+        y = self.button_method(237,400,363,237,400,460, self.instruct_button_unpressed, self.instruct_button_pressed)
         x = pygame.mouse.get_pressed()
-        self.text(325,410,60,"Info")
+        self.text(262,410,60,"Info")
         if x[0] == 1 and y == True:
             instruct = Instructions()
             self.running = False
         # Quit button
-        y = self.button_method(500,400,626,500,400,460, self.quit_button_unpressed, self.quit_button_pressed)
+        y = self.button_method(437,400,563,437,400,460, self.quit_button_unpressed, self.quit_button_pressed)
         x = pygame.mouse.get_pressed()
-        self.text(525,410,60,"Quit")
+        self.text(462,410,60,"Quit")
         if x[0] == 1 and y == True:
             self.running = False
 
         #Settings button
-
+        y = self.button_method(637,400,763,637,400,460, self.setting_button_unpressed, self.setting_button_pressed)
+        x = pygame.mouse.get_pressed()
+        self.text(652,420,30,"Settings")
+        if x[0] == 1 and y == True:
+            print("test")
 
 
     def quit(self):
