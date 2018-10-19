@@ -49,6 +49,7 @@ class Menu:
         '''
            blits title image onto surface
         '''
+        self.title.set_colorkey((255,255,255))
         self.window.blit(self.title, (200,100))
     def text(self, x, y, z, a):
         myfont = pygame.font.SysFont('Times New Roman', z)
