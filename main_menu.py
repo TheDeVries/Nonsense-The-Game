@@ -61,6 +61,7 @@ class Menu:
         '''
            blits title image onto surface
         '''
+        pygame.draw.ellipse(self.window, (255,255,255), (150, 50, 500, 250))
         self.title.set_colorkey((255,255,255))
         self.window.blit(self.title, (200,100))
     def text(self, x, y, z, a):
