@@ -92,7 +92,8 @@ class Menu:
         x = pygame.mouse.get_pressed()
         self.text(652,420,30,"Settings")
         if x[0] == 1 and y == True:
-            print("test")
+            set = Settings()
+            self.running = False
 
 
     def quit(self):
@@ -126,3 +127,24 @@ class Instructions:
         myfont = pygame.font.SysFont('Times New Roman', 30)
         textsurface = myfont.render('Instructions: Example instructions...', True, (0, 0, 0))
         self.window.blit(textsurface,(0,0))
+class Settings:
+    def __init__(self):
+        self.window = pygame.display.set_mode((800,600))
+        self.running = True
+
+        # Main Menu Loop
+        while self.running:
+            for event in pygame.event.get():
+                # Quit button
+                if event.type == pygame.QUIT:
+                    foo = Menu()
+                    self.running = False
+
+                # Keybinds
+                if event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_ESCAPE:
+                        bar = Menu()
+                        self.running = False
+
+
+                pygame.display.flip()
