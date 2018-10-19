@@ -104,6 +104,7 @@ class Instructions:
     def __init__(self):
         self.window = pygame.display.set_mode(Settings.res)
         self.running = True
+        Menu.background(self)
 
         # Main Menu Loop
         while self.running:
@@ -123,7 +124,6 @@ class Instructions:
 
                 pygame.display.flip()
     def instruct(self):
-        self.window.fill((255,255,255))
         myfont = pygame.font.SysFont('Times New Roman', 30)
         textsurface = myfont.render('Instructions: Example instructions...', True, (0, 0, 0))
         self.window.blit(textsurface,(0,0))
@@ -132,6 +132,7 @@ class Settings:
     def __init__(self):
         self.window = pygame.display.set_mode(Settings.res)
         self.running = True
+        Menu.background(self)
 
         # Main Menu Loop
         while self.running:
@@ -149,3 +150,5 @@ class Settings:
 
 
                 pygame.display.flip()
+    def res_buttuns(self):
+        pass
