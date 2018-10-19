@@ -7,7 +7,7 @@ class Menu:
            inits the menu
         '''
         init = pygame.init()
-        self.window = pygame.display.set_mode((800,600))
+        self.window = pygame.display.set_mode(Settings.res)
         self.title = pygame.image.load("Sprites//titlecard.png").convert()
         self.start_button_unpressed = pygame.image.load("Sprites//start1.png").convert()
         self.start_button_pressed = pygame.image.load("Sprites//start2.png").convert()
@@ -102,7 +102,7 @@ class Menu:
         pass
 class Instructions:
     def __init__(self):
-        self.window = pygame.display.set_mode((800,600))
+        self.window = pygame.display.set_mode(Settings.res)
         self.running = True
 
         # Main Menu Loop
@@ -128,8 +128,9 @@ class Instructions:
         textsurface = myfont.render('Instructions: Example instructions...', True, (0, 0, 0))
         self.window.blit(textsurface,(0,0))
 class Settings:
+    res = (800, 600)
     def __init__(self):
-        self.window = pygame.display.set_mode((800,600))
+        self.window = pygame.display.set_mode(Settings.res)
         self.running = True
 
         # Main Menu Loop
