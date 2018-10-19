@@ -45,6 +45,10 @@ class Menu:
         x2 = random.randint(0, 255)
         x3 = random.randint(0, 255)
         self.window.fill((x1,x2,x3))
+        self.menu_background = pygame.image.load("Sprites//movingbackground.png").convert()
+        self.menu_background.set_colorkey((255,255,255))
+        self.window.blit(self.menu_background, (0,0))
+
     def title_pic(self):
         '''
            blits title image onto surface
