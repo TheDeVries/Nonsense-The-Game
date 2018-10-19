@@ -7,7 +7,7 @@ class Menu:
            inits the menu
         '''
         init = pygame.init()
-        self.window = pygame.display.set_mode(Settings.res)
+        self.window = pygame.display.set_mode((800,600))
         self.title = pygame.image.load("Sprites//titlecard.png").convert()
         self.start_button_unpressed = pygame.image.load("Sprites//start1.png").convert()
         self.start_button_pressed = pygame.image.load("Sprites//start2.png").convert()
@@ -81,18 +81,18 @@ class Menu:
             instruct = Instructions()
             self.running = False
         # Quit button
-        y = self.button_method(437,400,563,437,400,460, self.quit_button_unpressed, self.quit_button_pressed)
+        y = self.button_method(437,400,563,437,400,460, self.setting_button_unpressed, self.setting_button_pressed)
         x = pygame.mouse.get_pressed()
-        self.text(462,410,60,"Quit")
+        self.text(462,420,30,"Settings")
         if x[0] == 1 and y == True:
+            set = Settings()
             self.running = False
 
         #Settings button
-        y = self.button_method(637,400,763,637,400,460, self.setting_button_unpressed, self.setting_button_pressed)
+        y = self.button_method(637,400,763,637,400,460, self.quit_button_unpressed, self.quit_button_pressed)
         x = pygame.mouse.get_pressed()
-        self.text(652,420,30,"Settings")
+        self.text(652,410,60,"Quit")
         if x[0] == 1 and y == True:
-            set = Settings()
             self.running = False
 
 
@@ -102,7 +102,7 @@ class Menu:
         pass
 class Instructions:
     def __init__(self):
-        self.window = pygame.display.set_mode(Settings.res)
+        self.window = pygame.display.set_mode((800,600))
         self.running = True
         Menu.background(self)
 
@@ -133,6 +133,8 @@ class Settings:
         self.window = pygame.display.set_mode(Settings.res)
         self.running = True
         Menu.background(self)
+        self.res_button_unpressed = pygame.image.load("Sprites//res1.png").convert()
+        self.res_button_pressed = pygame.image.load("Sprites//res2.png").convert()
 
         # Main Menu Loop
         while self.running:
@@ -147,8 +149,13 @@ class Settings:
                     if event.key == pygame.K_ESCAPE:
                         bar = Menu()
                         self.running = False
+                self.res_buttons()
 
 
                 pygame.display.flip()
-    def res_buttuns(self):
-        pass
+    def res_buttons(self):
+        y = Menu.button_method(self, 37,400,163,37,400,460, self.res_button_unpressed, self.res_button_pressed)
+        x = pygame.mouse.get_pressed()
+        Menu.text(self, 47,410,60,"1000 by 750")
+        if x[0] == 1 and y == True:
+            Settings.res = (1000, 750)
