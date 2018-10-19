@@ -18,8 +18,8 @@ class Menu:
         self.setting_button_unpressed = pygame.image.load("Sprites//settings1.png").convert()
         self.setting_button_pressed = pygame.image.load("Sprites//settings2.png").convert()
         # Method Calls
-        self.background()
-        self.title_pic()
+        our_color = self.background()
+        x = 0
         self.running = True
         # Main Menu Loop
         while self.running:
@@ -32,10 +32,16 @@ class Menu:
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_ESCAPE:
                         self.running = False
-                self.buttons()
 
-
-                pygame.display.flip()
+            x -= 1
+            rel_x = x % 800
+            self.window.fill(our_color)
+            self.window.blit(self.menu_background, (rel_x - 800, 0))
+            if rel_x < 800:
+                self.window.blit(self.menu_background, (rel_x, 0))
+            self.title_pic()
+            self.buttons()
+            pygame.display.flip()
 
     def background(self):
         '''
@@ -44,10 +50,12 @@ class Menu:
         x1 = random.randint(0, 255)
         x2 = random.randint(0, 255)
         x3 = random.randint(0, 255)
+        rand_color = (x1,x2,x3)
         self.window.fill((x1,x2,x3))
         self.menu_background = pygame.image.load("Sprites//movingbackground.png").convert()
         self.menu_background.set_colorkey((255,255,255))
-        self.window.blit(self.menu_background, (0,0))
+        self.window.blit(self.menu_background, (0, 0))
+        return rand_color
 
     def title_pic(self):
         '''
