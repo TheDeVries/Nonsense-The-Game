@@ -21,7 +21,7 @@ class Menu:
         self.setting_button_pressed = pygame.image.load("Sprites//settings2.png").convert()
         self.res_button_unpressed = pygame.image.load("Sprites//res1.png").convert()
         self.res_button_pressed = pygame.image.load("Sprites//res2.png").convert()
-        self.song = pygame.mixer.music.load("Sounds//Tchaikovsky - Valse Sentimentale.wav")
+        self.song = pygame.mixer.music.load("Sounds//Party Hard OST - Main Theme 2 (Felipe Adorno Vassao).wav")
         # Method Calls
         our_color = self.background()
         pygame.mixer.music.play(loops=-1, start=0.0)
