@@ -37,6 +37,7 @@ class Menu:
                 if event.type == pygame.QUIT:
                     if self.menu_act == 0:
                         self.running = False
+                        self.music = False
                     elif self.menu_act == 1:
                         self.menu_act = 0
                     elif self.menu_act == 2:
@@ -47,6 +48,7 @@ class Menu:
                     if event.key == pygame.K_ESCAPE:
                         if self.menu_act == 0:
                             self.running = False
+                            self.music = False
                         elif self.menu_act == 1:
                             self.menu_act = 0
                         elif self.menu_act == 2:
@@ -67,7 +69,7 @@ class Menu:
                 self.instruct()
             elif self.menu_act == 2:
                 self.music_buttons()
-            elif self.music == False:
+            if self.music == False:
                 pygame.mixer.music.stop()
 
 
