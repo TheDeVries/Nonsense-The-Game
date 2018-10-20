@@ -22,7 +22,7 @@ class Menu:
         self.res_button_pressed = pygame.image.load("Sprites//res2.png").convert()
         # Method Calls
         our_color = self.background()
-        x = 0
+        i = 0
         self.running = True
         self.menu_act = 0
         # Main Menu Loop
@@ -48,8 +48,8 @@ class Menu:
                             self.menu_act = 0
 
             #Scrolling Background Image
-            x -= 1
-            rel_x = x % 800
+            i -= 1
+            rel_x = i % 800
             self.window.fill(our_color)
             self.window.blit(self.menu_background, (rel_x - 800, 0))
             if rel_x < 800:
