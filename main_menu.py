@@ -20,13 +20,15 @@ class Menu:
         self.setting_button_pressed = pygame.image.load("Sprites//settings2.png").convert()
         self.res_button_unpressed = pygame.image.load("Sprites//res1.png").convert()
         self.res_button_pressed = pygame.image.load("Sprites//res2.png").convert()
-        self.song = pygame.mixer.music.load("Sounds//Tchaikovsky - Valse Sentimentale.mp3")
+        self.song = pygame.mixer.music.load("Sounds//MenuMusic.mp3")
         # Method Calls
         our_color = self.background()
+        pygame.mixer.music.play()
         i = 0
         self.running = True
         self.music = True
         self.menu_act = 0
+
         # Main Menu Loop
         while self.running:
             for event in pygame.event.get():
@@ -64,8 +66,6 @@ class Menu:
                 self.instruct()
             elif self.menu_act == 2:
                 self.music_buttons()
-            if self.music == True:
-                pygame.mixer.music.play()
             elif self.music == False:
                 pygame.mixer.music.stop()
 
