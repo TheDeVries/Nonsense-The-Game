@@ -13,7 +13,7 @@ def main():
     while running:
         window = pygame.display.set_mode((800, 600))
         club_background = pygame.image.load("Sprites//club.png").convert()
-        bar2 = pygame.image.load("Sprites//empty_bar2.png").convert()
+        bar2 = pygame.image.load("Sprites//empty_bar.png").convert()
         bar_man = pygame.image.load("Sprites//bar_man.png").convert()
         window.blit(club_background, (0,0))
         bar_man.set_colorkey((255,255,255))
