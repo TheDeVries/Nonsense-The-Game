@@ -37,7 +37,6 @@ class Menu:
                 if event.type == pygame.QUIT:
                     if self.menu_act == 0:
                         self.running = False
-                        self.music = False
                     elif self.menu_act == 1:
                         self.menu_act = 0
                     elif self.menu_act == 2:
@@ -48,7 +47,6 @@ class Menu:
                     if event.key == pygame.K_ESCAPE:
                         if self.menu_act == 0:
                             self.running = False
-                            self.music = False
                         elif self.menu_act == 1:
                             self.menu_act = 0
                         elif self.menu_act == 2:
@@ -62,6 +60,8 @@ class Menu:
             if rel_x < 800:
                 self.window.blit(self.menu_background, (rel_x, 0))
             #Title and Buttons
+            if self.music == False:
+                pygame.mixer.music.stop()
             if self.menu_act == 0:
                 self.title_pic()
                 self.buttons()
@@ -69,8 +69,8 @@ class Menu:
                 self.instruct()
             elif self.menu_act == 2:
                 self.music_buttons()
-            if self.music == False:
-                pygame.mixer.music.stop()
+
+
 
 
 
@@ -126,13 +126,13 @@ class Menu:
         self.text(262,410,60,"Info")
         if x[0] == 1 and y == True:
             self.menu_act = 1
-        # Quit button
+        # Settings button
         y = self.button_method(437,400,563,437,400,460, self.setting_button_unpressed, self.setting_button_pressed)
         x = pygame.mouse.get_pressed()
         self.text(462,420,30,"Settings")
         if x[0] == 1 and y == True:
             self.menu_act = 2
-        #Settings button
+        #Quit button
         y = self.button_method(637,400,763,637,400,460, self.quit_button_unpressed, self.quit_button_pressed)
         x = pygame.mouse.get_pressed()
         self.text(652,410,60,"Quit")
@@ -147,15 +147,18 @@ class Menu:
         textsurface = myfont.render('Instructions: Example instructions...', True, (0, 0, 0))
         self.window.blit(textsurface,(0,0))
     def music_buttons(self):
+        pygame.draw.rect(self.window, (255,255,255), (150, 50, 500, 250))
         # Music on button
-        y = self.button_method(237,400,363,237,400,460, self.res_button_unpressed, self.res_button_pressed)
+        y = self.button_method(237,200,363,237,200,260, self.res_button_unpressed, self.res_button_pressed)
         x = pygame.mouse.get_pressed()
-        self.text(255,420,30,"Music On")
+        self.text(255,220,30,"Music On")
         if x[0] == 1 and y == True:
             self.music = True
+            pygame.mixer.music.play(loops=-1, start=0.0)
         # Music off
-        y = self.button_method(437,400,563,437,400,460, self.res_button_unpressed, self.res_button_pressed)
+        y = self.button_method(437,200,563,437,200,260, self.res_button_unpressed, self.res_button_pressed)
         x = pygame.mouse.get_pressed()
-        self.text(455,420,30,"Music Off")
+        self.text(455,220,30,"Music Off")
         if x[0] == 1 and y == True:
             self.music = False
+        self.text(335, 120, 30, "Sound Settings")
