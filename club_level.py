@@ -8,6 +8,7 @@ class Club:
         self.club_background = pygame.image.load("Sprites//club.png").convert()
         self.bar2 = pygame.image.load("Sprites//empty_bar.png").convert()
         self.bar_woman = pygame.image.load("Sprites//bar_woman.png").convert()
+        self.bar_woman2 = pygame.image.load("Sprites//bar_woman2.png").convert()
         self.bar_man = pygame.image.load("Sprites//bar_man.png").convert()
         self.bar_man2 = pygame.image.load("Sprites//bar_man2.png").convert()
         while self.running == True:
@@ -22,17 +23,21 @@ class Club:
                         self.running = False
             self.window.blit(self.club_background, (0,0))
 
+            self.bar_woman2.set_colorkey((255,255,255))
+            self.bar_woman2 = pygame.transform.scale(self.bar_woman2, (250, 500))
+            self.window.blit(self.bar_woman2, (575, 30))
+
             self.bar_man2.set_colorkey((255,255,255))
             self.bar_man2 = pygame.transform.scale(self.bar_man2, (250, 500))
-            self.window.blit(self.bar_man2, (500, 30))
+            self.window.blit(self.bar_man2, (450, 90))
 
             self.bar_woman.set_colorkey((255,255,255))
             self.bar_woman = pygame.transform.scale(self.bar_woman, (250,500))
-            self.window.blit(self.bar_woman, (375, 90))
+            self.window.blit(self.bar_woman, (325, 150))
 
             self.bar_man.set_colorkey((255,255,255))
             self.bar_man = pygame.transform.scale(self.bar_man, (250, 500))
-            self.window.blit(self.bar_man, (250, 150))
+            self.window.blit(self.bar_man, (200, 210))
 
             self.bar2.set_colorkey((0,0,64))
             self.window.blit(self.bar2, (200, 300))
