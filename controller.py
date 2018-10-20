@@ -1,10 +1,11 @@
 import pygame
-from main_menu import *
 from club_level import *
 from typing_level import *
+from main_menu import *
 
 class Controller:
     sanity = 1
+    scence = 0
     sanity1 = pygame.image.load("Sprites//sanity1.png")
     sanity2 = pygame.image.load("Sprites//sanity2.png")
     sanity3 = pygame.image.load("Sprites//sanity3.png")
@@ -12,9 +13,14 @@ class Controller:
     sanity5 = pygame.image.load("Sprites//sanity5.png")
     def __init__(self):
         pygame.init()
-        self.rand = random.randint(0,0)
-        if self.rand == 0:
-            club = Club()
+        self.window = pygame.display.set_mode((800,600))
+        self.running = True
+        while self.running:
+
+            if Controller.scence == 0:
+                men = Menu()
+            elif Controller.scence == 1:
+                club = Club()
 
     def sanity_meter(self, window):
         if Controller.sanity == 1:

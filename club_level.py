@@ -2,7 +2,6 @@ import pygame
 pygame.init()
 
 #Must still make into a class, in the meantime it functions on its own.
-
 class Club:
     def __init__(self):
         self.running = True
