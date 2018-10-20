@@ -8,6 +8,7 @@ class Menu:
            inits the menu
         '''
         init = pygame.init()
+        init2 = pygame.mixer.init()
         self.window = pygame.display.set_mode((800,600))
         self.title = pygame.image.load("Sprites//titlecard.png").convert()
         self.start_button_unpressed = pygame.image.load("Sprites//start1.png").convert()
@@ -20,10 +21,10 @@ class Menu:
         self.setting_button_pressed = pygame.image.load("Sprites//settings2.png").convert()
         self.res_button_unpressed = pygame.image.load("Sprites//res1.png").convert()
         self.res_button_pressed = pygame.image.load("Sprites//res2.png").convert()
-        self.song = pygame.mixer.music.load("Sounds//MenuMusic.mp3")
+        self.song = pygame.mixer.music.load("Sounds//Tchaikovsky - Valse Sentimentale.wav")
         # Method Calls
         our_color = self.background()
-        pygame.mixer.music.play()
+        pygame.mixer.music.play(loops=-1, start=0.0)
         i = 0
         self.running = True
         self.music = True
