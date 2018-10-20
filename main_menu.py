@@ -1,6 +1,7 @@
 import pygame
 import time
 import random
+
 class Menu:
     res = (800,600)
     def __init__(self):
@@ -36,7 +37,8 @@ class Menu:
                 # Quit button
                 if event.type == pygame.QUIT:
                     if self.menu_act == 0:
-                        self.running = False
+                        pygame.quit()
+                        exit()
                     elif self.menu_act == 1:
                         self.menu_act = 0
                     elif self.menu_act == 2:
@@ -46,7 +48,8 @@ class Menu:
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_ESCAPE:
                         if self.menu_act == 0:
-                            self.running = False
+                            pygame.quit()
+                            exit()
                         elif self.menu_act == 1:
                             self.menu_act = 0
                         elif self.menu_act == 2:
@@ -144,7 +147,8 @@ class Menu:
         x = pygame.mouse.get_pressed()
         self.text(652,410,60,"Quit")
         if x[0] == 1 and y == True:
-            self.running = False
+            pygame.quit()
+            exit()
         #Credits button
         #I want to make it so that when the title card is clicked (or the oval behind it),
         #it 'flips over' and on the back it says our names and can be clicked to flip back again.
@@ -160,8 +164,9 @@ class Menu:
         x = pygame.mouse.get_pressed()
         self.text(255,220,30,"Music On")
         if x[0] == 1 and y == True:
-            self.music = True
-            pygame.mixer.music.play(loops=-1, start=0.0)
+            if self.music != True:
+                self.music = True
+                pygame.mixer.music.play(loops=-1, start=0.0)
         # Music off
         y = self.button_method(437,200,563,437,200,260, self.res_button_unpressed, self.res_button_pressed)
         x = pygame.mouse.get_pressed()
