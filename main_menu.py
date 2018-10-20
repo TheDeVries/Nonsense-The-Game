@@ -2,6 +2,7 @@ import pygame
 import time
 import random
 class Menu:
+    res = (800,600)
     def __init__(self):
         '''
            inits the menu
@@ -17,21 +18,34 @@ class Menu:
         self.quit_button_pressed = pygame.image.load("Sprites//quit2.png").convert()
         self.setting_button_unpressed = pygame.image.load("Sprites//settings1.png").convert()
         self.setting_button_pressed = pygame.image.load("Sprites//settings2.png").convert()
+        self.res_button_unpressed = pygame.image.load("Sprites//res1.png").convert()
+        self.res_button_pressed = pygame.image.load("Sprites//res2.png").convert()
         # Method Calls
         our_color = self.background()
         x = 0
         self.running = True
+        self.menu_act = 0
         # Main Menu Loop
         while self.running:
             for event in pygame.event.get():
                 # Quit button
                 if event.type == pygame.QUIT:
-                    self.running = False
+                    if self.menu_act == 0:
+                        self.running = False
+                    elif self.menu_act == 1:
+                        self.menu_act = 0
+                    elif self.menu_act == 2:
+                        self.menu_act = 0
 
                 # Keybinds
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_ESCAPE:
-                        self.running = False
+                        if self.menu_act == 0:
+                            self.running = False
+                        elif self.menu_act == 1:
+                            self.menu_act = 0
+                        elif self.menu_act == 2:
+                            self.menu_act = 0
 
             #Scrolling Background Image
             x -= 1
@@ -41,8 +55,15 @@ class Menu:
             if rel_x < 800:
                 self.window.blit(self.menu_background, (rel_x, 0))
             #Title and Buttons
-            self.title_pic()
-            self.buttons()
+            if self.menu_act == 0:
+                self.title_pic()
+                self.buttons()
+            elif self.menu_act == 1:
+                self.instruct()
+            elif self.menu_act == 2:
+                self.res_buttons()
+
+
             pygame.display.flip()
 
     def background(self):
@@ -94,15 +115,13 @@ class Menu:
         x = pygame.mouse.get_pressed()
         self.text(262,410,60,"Info")
         if x[0] == 1 and y == True:
-            instruct = Instructions()
-            self.running = False
+            self.menu_act = 1
         # Quit button
         y = self.button_method(437,400,563,437,400,460, self.setting_button_unpressed, self.setting_button_pressed)
         x = pygame.mouse.get_pressed()
         self.text(462,420,30,"Settings")
         if x[0] == 1 and y == True:
-            set = Settings()
-            self.running = False
+            self.menu_act = 2
         #Settings button
         y = self.button_method(637,400,763,637,400,460, self.quit_button_unpressed, self.quit_button_pressed)
         x = pygame.mouse.get_pressed()
@@ -117,62 +136,13 @@ class Menu:
         pass
     def setting(self):
         pass
-class Instructions:
-    def __init__(self):
-        self.window = pygame.display.set_mode((800,600))
-        self.running = True
-        Menu.background(self)
-
-        # Main Menu Loop
-        while self.running:
-            for event in pygame.event.get():
-                # Quit button
-                if event.type == pygame.QUIT:
-                    foo = Menu()
-                    self.running = False
-
-                # Keybinds
-                if event.type == pygame.KEYDOWN:
-                    if event.key == pygame.K_ESCAPE:
-                        bar = Menu()
-                        self.running = False
-
-                self.instruct()
-
-                pygame.display.flip()
     def instruct(self):
         myfont = pygame.font.SysFont('Times New Roman', 30)
         textsurface = myfont.render('Instructions: Example instructions...', True, (0, 0, 0))
         self.window.blit(textsurface,(0,0))
-class Settings:
-    res = (800, 600)
-    def __init__(self):
-        self.window = pygame.display.set_mode(Settings.res)
-        self.running = True
-        Menu.background(self)
-        self.res_button_unpressed = pygame.image.load("Sprites//res1.png").convert()
-        self.res_button_pressed = pygame.image.load("Sprites//res2.png").convert()
-
-        # Main Menu Loop
-        while self.running:
-            for event in pygame.event.get():
-                # Quit button
-                if event.type == pygame.QUIT:
-                    foo = Menu()
-                    self.running = False
-
-                # Keybinds
-                if event.type == pygame.KEYDOWN:
-                    if event.key == pygame.K_ESCAPE:
-                        bar = Menu()
-                        self.running = False
-                self.res_buttons()
-
-
-                pygame.display.flip()
     def res_buttons(self):
-        y = Menu.button_method(self, 37,400,163,37,400,460, self.res_button_unpressed, self.res_button_pressed)
+        y = self.button_method(37,400,163,37,400,460, self.res_button_unpressed, self.res_button_pressed)
         x = pygame.mouse.get_pressed()
-        Menu.text(self, 47,410,60,"1000 by 750")
+        self.text(47,410,60,"1000 by 750")
         if x[0] == 1 and y == True:
-            Settings.res = (1000, 750)
+            Menu.res = (1000, 750)
