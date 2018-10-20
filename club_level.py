@@ -9,6 +9,7 @@ class Club:
         self.bar2 = pygame.image.load("Sprites//empty_bar.png").convert()
         self.bar_woman = pygame.image.load("Sprites//bar_woman.png").convert()
         self.bar_man = pygame.image.load("Sprites//bar_man.png").convert()
+        self.bar_man2 = pygame.image.load("Sprites//bar_man2.png").convert()
         while self.running == True:
             for event in pygame.event.get():
                 # Quit button
@@ -20,6 +21,10 @@ class Club:
                     if event.key == pygame.K_ESCAPE:
                         self.running = False
             self.window.blit(self.club_background, (0,0))
+
+            self.bar_man2.set_colorkey((255,255,255))
+            self.bar_man2 = pygame.transform.scale(self.bar_man2, (250, 500))
+            self.window.blit(self.bar_man2, (500, 30))
 
             self.bar_woman.set_colorkey((255,255,255))
             self.bar_woman = pygame.transform.scale(self.bar_woman, (250,500))
