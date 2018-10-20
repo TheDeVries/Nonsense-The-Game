@@ -20,10 +20,12 @@ class Menu:
         self.setting_button_pressed = pygame.image.load("Sprites//settings2.png").convert()
         self.res_button_unpressed = pygame.image.load("Sprites//res1.png").convert()
         self.res_button_pressed = pygame.image.load("Sprites//res2.png").convert()
+        self.song = pygame.mixer.music.load("Sounds//Tchaikovsky - Valse Sentimentale.mp3")
         # Method Calls
         our_color = self.background()
         i = 0
         self.running = True
+        self.music = True
         self.menu_act = 0
         # Main Menu Loop
         while self.running:
@@ -61,7 +63,12 @@ class Menu:
             elif self.menu_act == 1:
                 self.instruct()
             elif self.menu_act == 2:
-                self.res_buttons()
+                self.music_buttons()
+            if self.music == True:
+                pygame.mixer.music.play()
+            elif self.music == False:
+                pygame.mixer.music.stop()
+
 
 
             pygame.display.flip()
@@ -136,9 +143,16 @@ class Menu:
         myfont = pygame.font.SysFont('Times New Roman', 30)
         textsurface = myfont.render('Instructions: Example instructions...', True, (0, 0, 0))
         self.window.blit(textsurface,(0,0))
-    def res_buttons(self):
-        y = self.button_method(37,400,163,37,400,460, self.res_button_unpressed, self.res_button_pressed)
+    def music_buttons(self):
+        # Music on button
+        y = self.button_method(237,400,363,237,400,460, self.res_button_unpressed, self.res_button_pressed)
         x = pygame.mouse.get_pressed()
-        self.text(47,410,60,"1000 by 750")
+        self.text(255,420,30,"Music On")
         if x[0] == 1 and y == True:
-            Menu.res = (1000, 750)
+            self.music = True
+        # Music off
+        y = self.button_method(437,400,563,437,400,460, self.res_button_unpressed, self.res_button_pressed)
+        x = pygame.mouse.get_pressed()
+        self.text(455,420,30,"Music Off")
+        if x[0] == 1 and y == True:
+            self.music = False
