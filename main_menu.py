@@ -33,12 +33,14 @@ class Menu:
                     if event.key == pygame.K_ESCAPE:
                         self.running = False
 
+            #Scrolling Background Image
             x -= 1
             rel_x = x % 800
             self.window.fill(our_color)
             self.window.blit(self.menu_background, (rel_x - 800, 0))
             if rel_x < 800:
                 self.window.blit(self.menu_background, (rel_x, 0))
+            #Title and Buttons
             self.title_pic()
             self.buttons()
             pygame.display.flip()
@@ -101,15 +103,16 @@ class Menu:
         if x[0] == 1 and y == True:
             set = Settings()
             self.running = False
-
         #Settings button
         y = self.button_method(637,400,763,637,400,460, self.quit_button_unpressed, self.quit_button_pressed)
         x = pygame.mouse.get_pressed()
         self.text(652,410,60,"Quit")
         if x[0] == 1 and y == True:
             self.running = False
-
-
+        #Credits button
+        #I want to make it so that when the title card is clicked (or the oval behind it),
+        #it 'flips over' and on the back it says our names and can be clicked to flip back again.
+        #y = self.button_method(150, 50, 150, 50, )
     def quit(self):
         pass
     def setting(self):

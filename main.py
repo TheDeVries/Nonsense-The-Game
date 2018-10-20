@@ -6,6 +6,4 @@ pygame.init()
 def main():
     menu = Menu()
 
-            # Updates Display Constan
-
 main()
