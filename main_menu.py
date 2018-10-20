@@ -1,6 +1,7 @@
 import pygame
 import time
 import random
+from controller import *
 class Menu:
     res = (800,600)
     def __init__(self):
@@ -119,7 +120,8 @@ class Menu:
         x = pygame.mouse.get_pressed()
         self.text(47,410,60,"Start")
         if x[0] == 1 and y == True:
-            print("test complete")
+            self.running = False
+            controll = Controller()
         # Instruction button
         y = self.button_method(237,400,363,237,400,460, self.instruct_button_unpressed, self.instruct_button_pressed)
         x = pygame.mouse.get_pressed()

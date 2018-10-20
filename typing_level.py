@@ -2,7 +2,7 @@ import pygame
 import random
 pygame.font.init()
 
-Class Typing:
+class Typing:
     def __init__(self, sanity, timer):
         #S refers to Sanity and L to level of difficulty
         sanity = self.sanity
@@ -34,5 +34,5 @@ Class Typing:
 
             self.window = pygame.display.set_mode((800,600))
 
-        if sanity = 1:
+        if sanity == 1:
             words.append(S1_L1)

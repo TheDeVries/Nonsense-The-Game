@@ -1,5 +1,7 @@
 import pygame
 from main_menu import *
+from club_level import *
+from typing_level import *
 
 class Controller:
     sanity = 1
@@ -8,8 +10,12 @@ class Controller:
     sanity3 = pygame.image.load("Sprites//sanity3.png")
     sanity4 = pygame.image.load("Sprites//sanity4.png")
     sanity5 = pygame.image.load("Sprites//sanity5.png")
-    def __init__(self, instance):
+    def __init__(self):
         pygame.init()
+        self.rand = random.randint(0,0)
+        if self.rand == 0:
+            club = Club()
+
     def sanity_meter(self, window):
         if Controller.sanity == 1:
             window.blit(Controller.sanity1, (0,0))
