@@ -132,10 +132,6 @@ class Menu:
         #I want to make it so that when the title card is clicked (or the oval behind it),
         #it 'flips over' and on the back it says our names and can be clicked to flip back again.
         #y = self.button_method(150, 50, 150, 50, )
-    def quit(self):
-        pass
-    def setting(self):
-        pass
     def instruct(self):
         myfont = pygame.font.SysFont('Times New Roman', 30)
         textsurface = myfont.render('Instructions: Example instructions...', True, (0, 0, 0))
