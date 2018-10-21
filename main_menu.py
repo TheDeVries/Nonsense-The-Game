@@ -1,7 +1,6 @@
 import pygame
 import time
 import random
-
 class Menu:
     res = (800,600)
     def __init__(self):

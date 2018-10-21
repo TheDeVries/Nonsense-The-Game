@@ -13,15 +13,17 @@ class Controller:
     sanity5 = pygame.image.load("Sprites//sanity5.png")
     def __init__(self):
         pygame.init()
-        self.window = pygame.display.set_mode((800,600))
         self.running = True
+        self.window = pygame.display.set_mode((800,600))
         while self.running:
-
             if Controller.scence == 0:
                 men = Menu()
             elif Controller.scence == 1:
                 club = Club()
+            elif Controller.scence == 2:
+                type = Typing()
 
+            pygame.display.flip()
     def sanity_meter(self, window):
         if Controller.sanity == 1:
             window.blit(Controller.sanity1, (0,0))

@@ -42,5 +42,4 @@ class Club:
 
             self.bar.set_colorkey((0,0,64))
             self.window.blit(self.bar, (200, 300))
-
             pygame.display.flip()
