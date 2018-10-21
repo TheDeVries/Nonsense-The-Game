@@ -20,7 +20,8 @@ class Club:
                 # Keybinds
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_ESCAPE:
-                        self.running = False
+                        pygame.quit()
+                        exit()
             self.window.blit(self.club_background, (0,0))
 
             self.bar_woman2.set_colorkey((255,255,255))
