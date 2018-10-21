@@ -16,7 +16,6 @@ class Club:
         self.window.blit(self.club_background, (0,0))
 
         self.chosens = self.Randomize()
-        print(self.chosens)
 
         while self.running == True:
             for event in pygame.event.get():
@@ -30,21 +29,30 @@ class Club:
                         pygame.quit()
                         exit()
 
-                '''
-                for i in range(3):
-                    if self.chosens[i + 3] != self.bar_server:
-                        self.chosens[i + 3].set_colorkey((255,255,255))
-                        self.chosens[i + 3] = pygame.transform.scale(self.chosens[i + 3], (250, 500))
-                        self.window.blit(self.chosens[i + 3], self.chosens[i])
-                    self.bar.set_colorkey((0,0,64))
-                    self.window.blit(self.bar, (200, 300))
-                    if self.chosens[i + 3] == self.bar_server:
-                        self.bar_server.set_colorkey((255,255,255))
-                        self.bar_server = pygame.transform.scale(self.bar_server, (250, 500))
-                        self.window.blit(self.bar_server, (550, 200))
-                    pygame.display.update()
+            if self.chosens[5] == self.bar_server:
+                pass
+            else:
+                self.chosens[5].set_colorkey((255,255,255))
+                self.chosens[5] = pygame.transform.scale(self.chosens[5], (250, 500))
+                self.window.blit(self.chosens[5], self.chosens[2])
 
-                '''
+            self.chosens[4].set_colorkey((255,255,255))
+            self.chosens[4] = pygame.transform.scale(self.chosens[4], (250, 500))
+            self.window.blit(self.chosens[4], self.chosens[1])
+
+            self.chosens[3].set_colorkey((255,255,255))
+            self.chosens[3] = pygame.transform.scale(self.chosens[3], (250, 500))
+            self.window.blit(self.chosens[3], self.chosens[0])
+
+            self.bar.set_colorkey((0,0,64))
+            self.window.blit(self.bar, (200, 300))
+
+            if self.chosens[5] == self.bar_server:
+                self.chosens[5].set_colorkey((255,255,255))
+                self.bar_server2 = pygame.transform.scale(self.chosens[5], (250, 500))
+                self.window.blit(self.bar_server2, (550, 200))
+
+            '''
             self.bar_woman2.set_colorkey((255,255,255))
             self.bar_woman2 = pygame.transform.scale(self.bar_woman2, (250, 500))
             self.window.blit(self.bar_woman2, (575, 30))
@@ -67,7 +75,7 @@ class Club:
             self.bar_server.set_colorkey((255,255,255))
             self.bar_server = pygame.transform.scale(self.bar_server, (250, 500))
             self.window.blit(self.bar_server, (550, 200))
-
+            '''
             pygame.display.flip()
 
     def Randomize(self):
@@ -78,7 +86,7 @@ class Club:
         return self.chosens
 
     def rand_positions(self):
-        self.positions = [(200, 210), (325, 150), (450, 90), (575, 30), "(550, 200)"]
+        self.positions = [(200, 210), (325, 150), (450, 90), (575, 30), (550, 200)]
         for i in range(2):
             self.choice = random.choice(self.positions)
             self.positions.remove(self.choice)
@@ -88,7 +96,7 @@ class Club:
         self.characters = [self.bar_man, self.bar_man2, self.bar_woman, self.bar_woman2]
         self.chosen_characters = []
         for i in range(len(self.positions)):
-            if self.positions[i] == str((550,200)):
+            if self.positions[i] == (550,200):
                 self.chosen_characters.append(self.bar_server)
             else:
                 self.choice = random.choice(self.characters)
