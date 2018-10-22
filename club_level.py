@@ -1,4 +1,5 @@
 import pygame
+import random
 pygame.init()
 
 class Club:
@@ -11,6 +12,12 @@ class Club:
         self.bar_woman2 = pygame.image.load("Sprites//bar_woman2.png").convert()
         self.bar_man = pygame.image.load("Sprites//bar_man.png").convert()
         self.bar_man2 = pygame.image.load("Sprites//bar_man2.png").convert()
+        self.bar_server = pygame.image.load("Sprites//bar_server.png").convert()
+        self.window.blit(self.club_background, (0,0))
+
+        self.chosens = self.Randomize()
+        print(self.chosens)
+
         while self.running == True:
             for event in pygame.event.get():
                 # Quit button
@@ -22,8 +29,22 @@ class Club:
                     if event.key == pygame.K_ESCAPE:
                         pygame.quit()
                         exit()
-            self.window.blit(self.club_background, (0,0))
 
+                '''
+                for i in range(3):
+                    if self.chosens[i + 3] != self.bar_server:
+                        self.chosens[i + 3].set_colorkey((255,255,255))
+                        self.chosens[i + 3] = pygame.transform.scale(self.chosens[i + 3], (250, 500))
+                        self.window.blit(self.chosens[i + 3], self.chosens[i])
+                    self.bar.set_colorkey((0,0,64))
+                    self.window.blit(self.bar, (200, 300))
+                    if self.chosens[i + 3] == self.bar_server:
+                        self.bar_server.set_colorkey((255,255,255))
+                        self.bar_server = pygame.transform.scale(self.bar_server, (250, 500))
+                        self.window.blit(self.bar_server, (550, 200))
+                    pygame.display.update()
+
+                '''
             self.bar_woman2.set_colorkey((255,255,255))
             self.bar_woman2 = pygame.transform.scale(self.bar_woman2, (250, 500))
             self.window.blit(self.bar_woman2, (575, 30))
@@ -43,3 +64,30 @@ class Club:
             self.bar.set_colorkey((0,0,64))
             self.window.blit(self.bar, (200, 300))
             pygame.display.flip()
+
+    def Randomize(self):
+        self.chosens = []
+        self.positions = self.rand_positions()
+        self.characters = self.rand_characters(self.positions)
+        self.chosens = self.positions + self.characters
+        return self.chosens
+
+    def rand_positions(self):
+        self.positions = [(200, 210), (325, 150), (450, 90), (575, 30), "(550, 200)"]
+        for i in range(2):
+            self.choice = random.choice(self.positions)
+            self.positions.remove(self.choice)
+        return self.positions
+
+    def rand_characters(self, positions):
+        self.characters = [self.bar_man, self.bar_man2, self.bar_woman, self.bar_woman2]
+        self.chosen_characters = []
+        for i in range(len(self.positions)):
+            if self.positions[i] == str((550,200)):
+                self.chosen_characters.append(self.bar_server)
+            else:
+                self.choice = random.choice(self.characters)
+                self.chosen_characters.append(self.choice)
+                self.characters.remove(self.choice)
+
+        return self.chosen_characters
