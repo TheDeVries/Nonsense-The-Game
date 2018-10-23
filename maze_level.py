@@ -1,4 +1,8 @@
-import pygame 
+import pygame
 
 class Maze:
-    pass
+    def __inti__(self):
+        self.running = True
+        self.wn = pygame.display.set_mode((800,600))
+        while self.running:
+            pass
