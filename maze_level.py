@@ -4,6 +4,10 @@ class Maze:
     tile_size = 96
     map_height = 25
     map_width = 25
+    x_camera = 0
+    y_camera = 0
+    move_camera = 0
+    eno = 5
     def __init__(self):
         self.running = True
         self.wn = pygame.display.set_mode((800,600))
@@ -21,6 +25,26 @@ class Maze:
                     if event.key == pygame.K_ESCAPE:
                         pygame.quit()
                         exit()
+                if event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_w:
+                        Maze.move_camera = 1
+                    elif event.key == pygame.K_a:
+                        Maze.move_camera = 2
+                    elif event.key == pygame.K_s:
+                        Maze.move_camera = 3
+                    elif event.key == pygame.K_d:
+                        Maze.move_camera = 4
+                elif event.type == pygame.KEYUP:
+                    Maze.move_camera = 0
+            if Maze.move_camera == 1:
+                Maze.y_camera -= Maze.eno
+            elif Maze.move_camera == 2:
+                Maze.x_camera -= Maze.eno
+            elif Maze.move_camera == 3:
+                Maze.y_camera += Maze.eno
+            elif Maze.move_camera == 4:
+                Maze.x_camera += Maze.eno
+            self.wn.fill((0,0,0))
             self.map_build()
             pygame.display.flip()
     def map_build(self):
@@ -53,4 +77,6 @@ class Maze:
 
         for rows in range(Maze.map_height):
             for colums in range(Maze.map_width):
-                self.wn.blit(textures[map_list[rows][colums]], (colums*Maze.tile_size, rows*Maze.tile_size))
+                self.wn.blit(textures[map_list[rows][colums]], (colums*Maze.tile_size - Maze.x_camera, rows*Maze.tile_size - Maze.y_camera))
+        def player(self):
+            pass
