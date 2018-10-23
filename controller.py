@@ -2,6 +2,7 @@ import pygame
 from club_level import *
 from typing_level import *
 from main_menu import *
+from maze_level import *
 
 class Controller:
     sanity = 1
@@ -21,9 +22,8 @@ class Controller:
             elif Controller.scence == 1:
                 club = Club()
             elif Controller.scence == 2:
-                type = Typing()
+                mazey = Maze()
 
-            pygame.display.flip()
     def sanity_meter(self, window):
         if Controller.sanity == 1:
             window.blit(Controller.sanity1, (0,0))
