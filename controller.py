@@ -22,10 +22,13 @@ class Controller:
                 if Menu.start == True:
                     x = random.randint(1,2)
                     Controller.scence += x
-            elif Controller.scence == 1:
+            if Controller.scence == 1:
                 club = Club()
-            elif Controller.scence == 2:
+            if Controller.scence == 2:
                 mazey = Maze()
+                if Maze.toggle != 0:
+                    x = random.randint(1,1)
+                    Controller.scence -= x
 
 
     def sanity_meter(self, window):

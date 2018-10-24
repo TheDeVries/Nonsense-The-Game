@@ -8,17 +8,22 @@ class Maze:
     y_camera = 0
     move_camera = 0
     eno = 10
+    toggle = 0
     def __init__(self):
         self.running = True
         self.wn = pygame.display.set_mode((800,600))
         self.mountain = pygame.image.load("Sprites//grass_mount1.png")
         self.grass = pygame.image.load("Sprites//grass.png")
+        self.finish = pygame.image.load("Sprites//finish.png")
+        self.song = pygame.mixer.music.load("Sounds//Tchaikovsky - Valse Sentimentale.wav")
         player = Player()
         active_sprite_list = pygame.sprite.Group()
         active_sprite_list.add(player)
         self.blacklist = []
+        self.finish_list = []
         self.posy = 300
         self.posx = 400
+        pygame.mixer.music.play(loops=-1, start=0.0)
         #self.player_rec.move_ip(400,300)
         while self.running:
             for event in pygame.event.get():
@@ -69,8 +74,12 @@ class Maze:
             for x in self.blacklist:
                 if x.colliderect(self.player_rec):
                     Maze.move_camera = 0
+            for y in self.finish_list:
+                if y.colliderect(self.player_rec):
+                    Maze.toggle +=1
+                    print(Maze.toggle)
     def map_build(self):
-        textures = {"1":self.mountain, "2":self.grass}
+        textures = {"1":self.mountain, "2":self.grass, "3":self.finish}
         map_list = [["1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1"],
                     ["1","2","2","2","2","1","1","1","1","1","1","1","1","1","1","1","1","1","2","2","2","1","2","1","1"],
                     ["1","2","2","2","2","1","1","1","2","2","2","2","2","2","2","2","2","1","2","1","2","1","2","1","1"],
@@ -93,7 +102,7 @@ class Maze:
                     ["1","1","2","1","1","1","1","1","2","1","2","1","2","1","1","1","2","2","2","1","2","1","2","1","1"],
                     ["1","1","2","2","2","1","2","1","2","2","2","1","2","2","2","1","1","1","1","1","2","1","1","1","1"],
                     ["1","1","2","1","2","1","2","1","1","1","1","1","2","1","2","2","2","2","2","2","2","1","2","2","1"],
-                    ["1","1","2","1","2","1","2","1","2","2","2","2","2","1","1","1","1","1","1","1","1","1","2","2","2"],
+                    ["1","1","2","1","2","1","2","1","2","2","2","2","2","1","1","1","1","1","1","1","1","1","2","2","3"],
                     ["1","1","1","1","2","2","2","2","2","1","1","1","2","2","2","2","2","2","2","2","2","2","2","2","1"],
                     ["1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1"]]
 
@@ -102,6 +111,9 @@ class Maze:
                 if textures[map_list[rows][colums]] == self.mountain:
                     self.rec = textures[map_list[rows][colums]].get_rect()
                     self.blacklist += [self.rec.move(colums*Maze.tile_size, rows*Maze.tile_size)]
+                if textures[map_list[rows][colums]] == self.finish:
+                    self.rec1 = textures[map_list[rows][colums]].get_rect()
+                    self.finish_list += [self.rec1.move(colums*Maze.tile_size, rows*Maze.tile_size)]
                 self.wn.blit(textures[map_list[rows][colums]], (colums*Maze.tile_size - Maze.x_camera, rows*Maze.tile_size - Maze.y_camera))
 
 
