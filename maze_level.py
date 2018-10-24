@@ -16,6 +16,10 @@ class Maze:
         player = Player()
         active_sprite_list = pygame.sprite.Group()
         active_sprite_list.add(player)
+        self.blacklist = []
+        self.posy = 300
+        self.posx = 400
+        #self.player_rec.move_ip(400,300)
         while self.running:
             for event in pygame.event.get():
                 # Quit button
@@ -44,18 +48,28 @@ class Maze:
                     Maze.move_camera = 0
                     player.stop()
             if Maze.move_camera == 1:
+                self.posy -= Maze.eno
                 Maze.y_camera -= Maze.eno
             elif Maze.move_camera == 2:
+                self.posx -= Maze.eno
                 Maze.x_camera -= Maze.eno
             elif Maze.move_camera == 3:
+                self.posy += Maze.eno
                 Maze.y_camera += Maze.eno
             elif Maze.move_camera == 4:
+                self.posx += Maze.eno
                 Maze.x_camera += Maze.eno
+            self.player_rec = pygame.Rect(self.posx,self.posy,48,48)
+            #self.player_rec = self.player_rec.move(self.posx, self.posy)
             self.wn.fill((0,0,0))
             self.map_build()
             active_sprite_list.draw(self.wn)
             active_sprite_list.update()
             pygame.display.flip()
+            for x in self.blacklist:
+
+                if x.colliderect(self.player_rec):
+                    Maze.move_camera = 0
     def map_build(self):
         textures = {"1":self.mountain, "2":self.grass}
         map_list = [["1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1"],
@@ -86,7 +100,16 @@ class Maze:
 
         for rows in range(Maze.map_height):
             for colums in range(Maze.map_width):
+                if textures[map_list[rows][colums]] == self.mountain:
+                    self.rec = textures[map_list[rows][colums]].get_rect()
+                    self.blacklist += [self.rec.move(colums*Maze.tile_size, rows*Maze.tile_size)]
                 self.wn.blit(textures[map_list[rows][colums]], (colums*Maze.tile_size - Maze.x_camera, rows*Maze.tile_size - Maze.y_camera))
+
+
+
+
+
+
 class SpriteSheet(object):
 
     def __init__(self, file_name):
