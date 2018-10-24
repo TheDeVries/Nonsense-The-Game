@@ -19,10 +19,14 @@ class Controller:
         while self.running:
             if Controller.scence == 0:
                 men = Menu()
+                if Menu.start == True:
+                    x = random.randint(1,2)
+                    Controller.scence += x
             elif Controller.scence == 1:
                 club = Club()
             elif Controller.scence == 2:
                 mazey = Maze()
+
 
     def sanity_meter(self, window):
         if Controller.sanity == 1:
