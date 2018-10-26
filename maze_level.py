@@ -146,6 +146,7 @@ class Maze:
             for y in self.finish_list:
                 if y.colliderect(self.player_rec):
                     Controller.scene -= 1
+                    pygame.mixer.music.stop()
                     c1 = Controller()
 
     def map_build(self, map_list):
