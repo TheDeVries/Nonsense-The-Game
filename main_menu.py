@@ -1,6 +1,7 @@
 import pygame
 import time
 import random
+from controller import *
 class Menu:
     start = False
     res = (800,600)
@@ -128,7 +129,9 @@ class Menu:
         self.text(47,410,60,"Start")
         if x[0] == 1 and y == True:
             pygame.mixer.music.stop()
-            Menu.start = True
+            x = random.randint(1,2)
+            c = Controller()
+            c.scene += x
         # Instruction button
         y = self.button_method(237,400,363,237,400,460, self.instruct_button_unpressed, self.instruct_button_pressed)
         x = pygame.mouse.get_pressed()

@@ -1,14 +1,7 @@
 import pygame
+from controller import *
 pygame.init()
 class Maze:
-    tile_size = 96
-    map_height = 25
-    map_width = 25
-    x_camera = 0
-    y_camera = 0
-    move_camera = 0
-    eno = 10
-    toggle = 0
     def __init__(self):
         self.running = True
         self.wn = pygame.display.set_mode((800,600))
@@ -23,6 +16,14 @@ class Maze:
         self.finish_list = []
         self.posy = 300
         self.posx = 400
+        self.tile_size = 96
+        self.map_height = 25
+        self.map_width = 25
+        self.x_camera = 0
+        self.y_camera = 0
+        self.move_camera = 0
+        self.eno = 10
+        self.toggle = True
         pygame.mixer.music.play(loops=-1, start=0.0)
         #self.player_rec.move_ip(400,300)
         while self.running:
@@ -39,31 +40,31 @@ class Maze:
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_w:
                         player.go_up()
-                        Maze.move_camera = 1
+                        self.move_camera = 1
                     elif event.key == pygame.K_a:
                         player.go_left()
-                        Maze.move_camera = 2
+                        self.move_camera = 2
                     elif event.key == pygame.K_s:
                         player.go_down()
-                        Maze.move_camera = 3
+                        self.move_camera = 3
                     elif event.key == pygame.K_d:
                         player.go_right()
-                        Maze.move_camera = 4
+                        self.move_camera = 4
                 elif event.type == pygame.KEYUP:
-                    Maze.move_camera = 0
+                    self.move_camera = 0
                     player.stop()
-            if Maze.move_camera == 1:
-                self.posy -= Maze.eno
-                Maze.y_camera -= Maze.eno
-            elif Maze.move_camera == 2:
-                self.posx -= Maze.eno
-                Maze.x_camera -= Maze.eno
-            elif Maze.move_camera == 3:
-                self.posy += Maze.eno
-                Maze.y_camera += Maze.eno
-            elif Maze.move_camera == 4:
-                self.posx += Maze.eno
-                Maze.x_camera += Maze.eno
+            if self.move_camera == 1:
+                self.posy -= self.eno
+                self.y_camera -= self.eno
+            elif self.move_camera == 2:
+                self.posx -= self.eno
+                self.x_camera -= self.eno
+            elif self.move_camera == 3:
+                self.posy += self.eno
+                self.y_camera += self.eno
+            elif self.move_camera == 4:
+                self.posx += self.eno
+                self.x_camera += self.eno
             self.player_rec = pygame.Rect(self.posx,self.posy,48,48)
             #self.player_rec = self.player_rec.move(self.posx, self.posy)
             self.wn.fill((0,0,0))
@@ -73,14 +74,14 @@ class Maze:
             pygame.display.flip()
             for x in self.blacklist:
                 if x.colliderect(self.player_rec):
-                    Maze.move_camera = 0
+                    self.move_camera = 0
             for y in self.finish_list:
                 if y.colliderect(self.player_rec):
-                    Maze.toggle +=1
-                    print(Maze.toggle)
+                    self.toggle = False
+
     def map_build(self):
         textures = {"1":self.mountain, "2":self.grass, "3":self.finish}
-        map_list = [["1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1"],
+        map_list = [["1","3","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1"],
                     ["1","2","2","2","2","1","1","1","1","1","1","1","1","1","1","1","1","1","2","2","2","1","2","1","1"],
                     ["1","2","2","2","2","1","1","1","2","2","2","2","2","2","2","2","2","1","2","1","2","1","2","1","1"],
                     ["1","2","2","2","2","2","2","1","2","1","1","1","1","1","2","1","2","1","2","1","2","1","2","1","1"],
@@ -106,15 +107,15 @@ class Maze:
                     ["1","1","1","1","2","2","2","2","2","1","1","1","2","2","2","2","2","2","2","2","2","2","2","2","1"],
                     ["1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1"]]
 
-        for rows in range(Maze.map_height):
-            for colums in range(Maze.map_width):
+        for rows in range(self.map_height):
+            for colums in range(self.map_width):
                 if textures[map_list[rows][colums]] == self.mountain:
                     self.rec = textures[map_list[rows][colums]].get_rect()
-                    self.blacklist += [self.rec.move(colums*Maze.tile_size, rows*Maze.tile_size)]
+                    self.blacklist += [self.rec.move(colums*self.tile_size, rows*self.tile_size)]
                 if textures[map_list[rows][colums]] == self.finish:
                     self.rec1 = textures[map_list[rows][colums]].get_rect()
-                    self.finish_list += [self.rec1.move(colums*Maze.tile_size, rows*Maze.tile_size)]
-                self.wn.blit(textures[map_list[rows][colums]], (colums*Maze.tile_size - Maze.x_camera, rows*Maze.tile_size - Maze.y_camera))
+                    self.finish_list += [self.rec1.move(colums*self.tile_size, rows*self.tile_size)]
+                self.wn.blit(textures[map_list[rows][colums]], (colums*self.tile_size - self.x_camera, rows*self.tile_size - self.y_camera))
 
 
 
