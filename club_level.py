@@ -1,5 +1,6 @@
 import pygame
 import random
+from controller import *
 pygame.init()
 
 class Club:
@@ -51,7 +52,7 @@ class Club:
                 self.chosens[5].set_colorkey((255,255,255))
                 self.bar_server2 = pygame.transform.scale(self.chosens[5], (250, 500))
                 self.window.blit(self.bar_server2, (550, 200))
-
+            Controller.sanity_meter(self, self.window)
             pygame.display.flip()
 
     def Randomize(self):

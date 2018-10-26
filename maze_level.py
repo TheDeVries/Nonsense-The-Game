@@ -79,7 +79,6 @@ class Maze:
                          ["1","1","2","1","2","1","2","1","2","2","2","2","2","1","1","1","1","1","1","1","1","1","2","2","3"],
                          ["1","1","1","1","2","2","2","2","2","1","1","1","2","2","2","2","2","2","2","2","2","2","2","2","1"],
                          ["1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1"]]
-        #self.player_rec.move_ip(400,300)
         while self.running:
             for event in pygame.event.get():
                 # Quit button
@@ -132,7 +131,6 @@ class Maze:
                 self.posx += self.eno
                 Maze.x_camera += self.eno
             self.player_rec = pygame.Rect(self.posx,self.posy,48,48)
-            #self.player_rec = self.player_rec.move(self.posx, self.posy)
             self.wn.fill((0,0,0))
             if self.maze_map == 1:
                 self.map_build(self.map_list)
