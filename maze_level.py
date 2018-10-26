@@ -50,6 +50,18 @@ class Maze:
                     elif event.key == pygame.K_d:
                         player.go_right()
                         self.move_camera = 4
+                    elif event.key == pygame.K_UP:
+                        player.go_up()
+                        self.move_camera = 1
+                    elif event.key == pygame.K_LEFT:
+                        player.go_left()
+                        self.move_camera = 2
+                    elif event.key == pygame.K_DOWN:
+                        player.go_down()
+                        self.move_camera = 3
+                    elif event.key == pygame.K_RIGHT:
+                        player.go_right()
+                        self.move_camera = 4
                 elif event.type == pygame.KEYUP:
                     self.move_camera = 0
                     player.stop()
