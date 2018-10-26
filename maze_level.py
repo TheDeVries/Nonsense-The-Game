@@ -140,6 +140,7 @@ class Maze:
                 self.map_build(self.map_list2)
             active_sprite_list.draw(self.wn)
             active_sprite_list.update()
+            Controller.sanity_meter(self, self.wn)
             pygame.display.flip()
             for x in self.blacklist:
                 if x.colliderect(self.player_rec):
