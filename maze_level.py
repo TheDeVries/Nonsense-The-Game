@@ -8,7 +8,7 @@ class Maze:
     def __init__(self):
         self.running = True
         self.wn = pygame.display.set_mode((800,600))
-        self.mountain = pygame.image.load("Sprites//grass_mount1.png")
+        self.hedge = pygame.image.load("Sprites//hedge.png")
         self.grass = pygame.image.load("Sprites//grass.png")
         self.finish = pygame.image.load("Sprites//finish.png")
         self.song = pygame.mixer.music.load("Sounds//Tchaikovsky - Valse Sentimentale.wav")
@@ -150,11 +150,11 @@ class Maze:
                     c1 = Controller()
 
     def map_build(self, map_list):
-        textures = {"1":self.mountain, "2":self.grass, "3":self.finish}
+        textures = {"1":self.hedge, "2":self.grass, "3":self.finish}
 
         for rows in range(self.map_height):
             for colums in range(self.map_width):
-                if textures[map_list[rows][colums]] == self.mountain:
+                if textures[map_list[rows][colums]] == self.hedge:
                     self.rec = textures[map_list[rows][colums]].get_rect()
                     self.blacklist += [self.rec.move(colums*self.tile_size, rows*self.tile_size)]
                 if textures[map_list[rows][colums]] == self.finish:
