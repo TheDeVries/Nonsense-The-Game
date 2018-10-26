@@ -2,6 +2,8 @@ import pygame
 from controller import *
 pygame.init()
 class Maze:
+    x_camera = 0
+    y_camera = 0
     def __init__(self):
         self.running = True
         self.wn = pygame.display.set_mode((800,600))
@@ -19,8 +21,6 @@ class Maze:
         self.tile_size = 96
         self.map_height = 25
         self.map_width = 25
-        self.x_camera = 0
-        self.y_camera = 0
         self.move_camera = 0
         self.eno = 10
         self.toggle = True
@@ -55,16 +55,16 @@ class Maze:
                     player.stop()
             if self.move_camera == 1:
                 self.posy -= self.eno
-                self.y_camera -= self.eno
+                Maze.y_camera -= self.eno
             elif self.move_camera == 2:
                 self.posx -= self.eno
-                self.x_camera -= self.eno
+                Maze.x_camera -= self.eno
             elif self.move_camera == 3:
                 self.posy += self.eno
-                self.y_camera += self.eno
+                Maze.y_camera += self.eno
             elif self.move_camera == 4:
                 self.posx += self.eno
-                self.x_camera += self.eno
+                Maze.x_camera += self.eno
             self.player_rec = pygame.Rect(self.posx,self.posy,48,48)
             #self.player_rec = self.player_rec.move(self.posx, self.posy)
             self.wn.fill((0,0,0))
@@ -77,7 +77,8 @@ class Maze:
                     self.move_camera = 0
             for y in self.finish_list:
                 if y.colliderect(self.player_rec):
-                    self.toggle = False
+                    Controller.scene -= 1
+                    c1 = Controller()
 
     def map_build(self):
         textures = {"1":self.mountain, "2":self.grass, "3":self.finish}
@@ -115,7 +116,7 @@ class Maze:
                 if textures[map_list[rows][colums]] == self.finish:
                     self.rec1 = textures[map_list[rows][colums]].get_rect()
                     self.finish_list += [self.rec1.move(colums*self.tile_size, rows*self.tile_size)]
-                self.wn.blit(textures[map_list[rows][colums]], (colums*self.tile_size - self.x_camera, rows*self.tile_size - self.y_camera))
+                self.wn.blit(textures[map_list[rows][colums]], (colums*self.tile_size - Maze.x_camera, rows*self.tile_size - Maze.y_camera))
 
 
 
