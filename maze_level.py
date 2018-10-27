@@ -10,9 +10,11 @@ class Maze:
         self.wn = pygame.display.set_mode((800,600))
         self.hedge = pygame.image.load("Sprites//hedge.png")
         self.grass = pygame.image.load("Sprites//grass.png")
+        self.hedge_sanity4 = pygame.image.load("Sprites//hedge_sanity4.png")
+
         self.finish = pygame.image.load("Sprites//finish.png")
         self.song = pygame.mixer.music.load("Sounds//Tchaikovsky - Valse Sentimentale.wav")
-        self.boo = pygame.mixer.Sound("Sounds//Crowd Boo 6-SoundBible.com-928081827.wav")
+        self.boo = pygame.mixer.Sound("Sounds//Demon_Your_Soul_is_mine-BlueMann-1903732045.wav")
         self.sanity2_graphics = pygame.image.load("Sprites//Sanity2_maze.png").convert()
         player = Player()
         active_sprite_list = pygame.sprite.Group()
@@ -95,34 +97,64 @@ class Maze:
                     if event.key == pygame.K_ESCAPE:
                         pygame.quit()
                         exit()
-                if event.type == pygame.KEYDOWN:
-                    if event.key == pygame.K_w and self.move_camera != 5:
-                        player.go_up()
-                        self.move_camera = 1
-                    if event.key == pygame.K_a:
-                        player.go_left()
-                        self.move_camera = 2
-                    if event.key == pygame.K_s:
-                        player.go_down()
-                        self.move_camera = 3
-                    if event.key == pygame.K_d:
-                        player.go_right()
-                        self.move_camera = 4
-                    if event.key == pygame.K_UP:
-                        player.go_up()
-                        self.move_camera = 1
-                    if event.key == pygame.K_LEFT:
-                        player.go_left()
-                        self.move_camera = 2
-                    if event.key == pygame.K_DOWN:
-                        player.go_down()
-                        self.move_camera = 3
-                    if event.key == pygame.K_RIGHT:
-                        player.go_right()
-                        self.move_camera = 4
-                elif event.type == pygame.KEYUP:
-                    self.move_camera = 0
-                    player.stop()
+                if Controller.sanity <= 2:
+                    if event.type == pygame.KEYDOWN:
+                        if event.key == pygame.K_w:
+                            player.go_up()
+                            self.move_camera = 1
+                        if event.key == pygame.K_a:
+                            player.go_left()
+                            self.move_camera = 2
+                        if event.key == pygame.K_s:
+                            player.go_down()
+                            self.move_camera = 3
+                        if event.key == pygame.K_d:
+                            player.go_right()
+                            self.move_camera = 4
+                        if event.key == pygame.K_UP:
+                            player.go_up()
+                            self.move_camera = 1
+                        if event.key == pygame.K_LEFT:
+                            player.go_left()
+                            self.move_camera = 2
+                        if event.key == pygame.K_DOWN:
+                            player.go_down()
+                            self.move_camera = 3
+                        if event.key == pygame.K_RIGHT:
+                            player.go_right()
+                            self.move_camera = 4
+                    elif event.type == pygame.KEYUP:
+                        self.move_camera = 0
+                        player.stop()
+                if Controller.sanity > 2:
+                    if event.type == pygame.KEYDOWN:
+                        if event.key == pygame.K_s:
+                            player.go_up()
+                            self.move_camera = 1
+                        if event.key == pygame.K_d:
+                            player.go_left()
+                            self.move_camera = 2
+                        if event.key == pygame.K_w:
+                            player.go_down()
+                            self.move_camera = 3
+                        if event.key == pygame.K_a:
+                            player.go_right()
+                            self.move_camera = 4
+                        if event.key == pygame.K_DOWN:
+                            player.go_up()
+                            self.move_camera = 1
+                        if event.key == pygame.K_RIGHT:
+                            player.go_left()
+                            self.move_camera = 2
+                        if event.key == pygame.K_UP:
+                            player.go_down()
+                            self.move_camera = 3
+                        if event.key == pygame.K_LEFT:
+                            player.go_right()
+                            self.move_camera = 4
+                    elif event.type == pygame.KEYUP:
+                        self.move_camera = 0
+                        player.stop()
             if self.move_camera == 1:
                 self.posy -= self.eno
                 Maze.y_camera -= self.eno
@@ -154,12 +186,14 @@ class Maze:
                     print("Boo! Sanity level 5, score reduction!")
                     Controller.score_current -= 1
                     self.boo.play(loops=1)
-                    Controller.sanity += 5
+                    Controller.sanity += 1
                     if Controller.sanity > 5:
                         Controller.sanity = 5
             for y in self.finish_list:
                 if y.colliderect(self.player_rec):
                     Controller.scene -= 1
+                    Controller.score_current += 1000
+                    Controller.sanity -= 1
                     pygame.mixer.music.stop()
                     self.toggle = False
                     c1 = Controller()
@@ -168,7 +202,11 @@ class Maze:
             pygame.display.flip()
 
     def map_build(self, map_list):
-        textures = {"1":self.hedge, "2":self.grass, "3":self.finish}
+        if Controller.sanity < 4:
+            textures = {"1":self.hedge, "2":self.grass, "3":self.finish}
+        elif Controller.sanity >= 4:
+            textures = {"1":self.hedge_sanity4, "2":self.grass, "3":self.finish}
+
 
         for rows in range(self.map_height):
             for columns in range(self.map_width):
@@ -226,7 +264,6 @@ class Player(pygame.sprite.Sprite):
     def __init__(self):
 
         super().__init__()
-
         self.change_x = 0
         self.change_y = 0
         self.x_val = 0
@@ -239,8 +276,8 @@ class Player(pygame.sprite.Sprite):
 
         self.direction = "D"
 
-
         sprite_sheet = SpriteSheet("Sprites//character_walk.png")
+
         color_key_player = (255,100,178,200)
         image = sprite_sheet.get_image(0, 48, 48, 48, (255,100,178,200))
         self.walking_frames_l.append(image)
