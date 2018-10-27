@@ -12,7 +12,7 @@ class Maze:
         self.grass = pygame.image.load("Sprites//grass.png")
         self.finish = pygame.image.load("Sprites//finish.png")
         self.song = pygame.mixer.music.load("Sounds//Tchaikovsky - Valse Sentimentale.wav")
-        self.boo = pygame.mixer.Sound("Sounds//Crowd Boo 6-SoundBible.com-928081827.wav")
+        self.boo = pygame.mixer.Sound("Sounds//Demon_Your_Soul_is_mine-BlueMann-1903732045.wav")
         self.sanity2_graphics = pygame.image.load("Sprites//Sanity2_maze.png").convert()
         player = Player()
         active_sprite_list = pygame.sprite.Group()
