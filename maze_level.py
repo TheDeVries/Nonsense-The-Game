@@ -171,14 +171,14 @@ class Maze:
         textures = {"1":self.hedge, "2":self.grass, "3":self.finish}
 
         for rows in range(self.map_height):
-            for colums in range(self.map_width):
-                if textures[map_list[rows][colums]] == self.hedge:
-                    self.rec = textures[map_list[rows][colums]].get_rect()
-                    self.blacklist += [self.rec.move(colums*self.tile_size, rows*self.tile_size)]
-                if textures[map_list[rows][colums]] == self.finish:
-                    self.rec1 = textures[map_list[rows][colums]].get_rect()
-                    self.finish_list += [self.rec1.move(colums*self.tile_size, rows*self.tile_size)]
-                self.wn.blit(textures[map_list[rows][colums]], (colums*self.tile_size - Maze.x_camera, rows*self.tile_size - Maze.y_camera))
+            for columns in range(self.map_width):
+                if textures[map_list[rows][columns]] == self.hedge:
+                    self.rec = textures[map_list[rows][columns]].get_rect()
+                    self.blacklist += [self.rec.move(columns*self.tile_size, rows*self.tile_size)]
+                if textures[map_list[rows][columns]] == self.finish:
+                    self.rec1 = textures[map_list[rows][columns]].get_rect()
+                    self.finish_list += [self.rec1.move(columns*self.tile_size, rows*self.tile_size)]
+                self.wn.blit(textures[map_list[rows][columns]], (columns*self.tile_size - Maze.x_camera, rows*self.tile_size - Maze.y_camera))
     def sanity_results(self, sanity):
         sanity_graphics = []
         self.sanity2_graphics.set_colorkey((0,0,0,0))
