@@ -13,6 +13,7 @@ class Maze:
         self.finish = pygame.image.load("Sprites//finish.png")
         self.song = pygame.mixer.music.load("Sounds//Tchaikovsky - Valse Sentimentale.wav")
         self.boo = pygame.mixer.Sound("Sounds//Crowd Boo 6-SoundBible.com-928081827.wav")
+        self.sanity2_graphics = pygame.image.load("Sprites//Sanity2_maze.png").convert()
         player = Player()
         active_sprite_list = pygame.sprite.Group()
         active_sprite_list.add(player)
@@ -29,6 +30,7 @@ class Maze:
         self.eno = 10
         self.toggle = True
         self.test = True
+        self.sanity2_pos = -800
         if Controller.sanity == 1:
             pygame.mixer.music.play(loops=-1, start=0.0)
         self.map_list = [["1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1"],
@@ -127,12 +129,14 @@ class Maze:
             elif self.move_camera == 2:
                 self.posx -= self.eno
                 Maze.x_camera -= self.eno
+                self.sanity2_pos -= self.eno
             elif self.move_camera == 3:
                 self.posy += self.eno
                 Maze.y_camera += self.eno
             elif self.move_camera == 4:
                 self.posx += self.eno
                 Maze.x_camera += self.eno
+                self.sanity2_pos += self.eno
             self.player_rec = pygame.Rect(self.posx,self.posy,48,48)
             self.wn.fill((0,0,0))
             if self.maze_map == 1:
@@ -159,6 +163,8 @@ class Maze:
                     pygame.mixer.music.stop()
                     self.toggle = False
                     c1 = Controller()
+            if Controller.sanity >= 2:
+                self.sanity_results(Controller.sanity)
             pygame.display.flip()
 
     def map_build(self, map_list):
@@ -173,6 +179,21 @@ class Maze:
                     self.rec1 = textures[map_list[rows][colums]].get_rect()
                     self.finish_list += [self.rec1.move(colums*self.tile_size, rows*self.tile_size)]
                 self.wn.blit(textures[map_list[rows][colums]], (colums*self.tile_size - Maze.x_camera, rows*self.tile_size - Maze.y_camera))
+    def sanity_results(self, sanity):
+        sanity_graphics = []
+        self.sanity2_graphics.set_colorkey((0,0,0,0))
+        if self.sanity2_pos <= -2400:
+            self.sanity2_pos = 0
+        elif self.sanity2_pos >= 0:
+            self.sanity2_pos = -2400
+        self.wn.blit(self.sanity2_graphics, (self.sanity2_pos,0))
+
+
+
+
+
+
+
 
 
 
@@ -187,7 +208,7 @@ class SpriteSheet(object):
         self.sprite_sheet = pygame.image.load(file_name).convert()
 
 
-    def get_image(self, x, y, width, height):
+    def get_image(self, x, y, width, height, color_key):
 
         # Create a new blank image
         image = pygame.Surface([width, height]).convert()
@@ -196,7 +217,7 @@ class SpriteSheet(object):
         image.blit(self.sprite_sheet, (0, 0), (x, y, width, height))
 
         # Assuming pink works as the transparent color
-        image.set_colorkey((255,100,178,200))
+        image.set_colorkey((color_key))
 
         # Return the image
         return image
@@ -220,33 +241,33 @@ class Player(pygame.sprite.Sprite):
 
 
         sprite_sheet = SpriteSheet("Sprites//character_walk.png")
-
-        image = sprite_sheet.get_image(0, 48, 48, 48)
+        color_key_player = (255,100,178,200)
+        image = sprite_sheet.get_image(0, 48, 48, 48, (255,100,178,200))
         self.walking_frames_l.append(image)
-        image = sprite_sheet.get_image(48, 48, 48, 48)
+        image = sprite_sheet.get_image(48, 48, 48, 48, (255,100,178,200))
         self.walking_frames_l.append(image)
-        image = sprite_sheet.get_image(96, 48, 48, 48)
+        image = sprite_sheet.get_image(96, 48, 48, 48, (255,100,178,200))
         self.walking_frames_l.append(image)
 
-        image = sprite_sheet.get_image(0, 96, 48, 48)
+        image = sprite_sheet.get_image(0, 96, 48, 48, (255,100,178,200))
         self.walking_frames_r.append(image)
-        image = sprite_sheet.get_image(48, 96, 48, 48)
+        image = sprite_sheet.get_image(48, 96, 48, 48, (255,100,178,200))
         self.walking_frames_r.append(image)
-        image = sprite_sheet.get_image(96, 96, 48, 48)
+        image = sprite_sheet.get_image(96, 96, 48, 48, (255,100,178,200))
         self.walking_frames_r.append(image)
 
-        image = sprite_sheet.get_image(0, 0, 48, 48)
+        image = sprite_sheet.get_image(0, 0, 48, 48, (255,100,178,200))
         self.walking_frames_d.append(image)
-        image = sprite_sheet.get_image(48, 0, 48, 48)
+        image = sprite_sheet.get_image(48, 0, 48, 48, (255,100,178,200))
         self.walking_frames_d.append(image)
-        image = sprite_sheet.get_image(96, 0, 48, 48)
+        image = sprite_sheet.get_image(96, 0, 48, 48, (255,100,178,200))
         self.walking_frames_d.append(image)
 
-        image = sprite_sheet.get_image(0, 144, 48, 48)
+        image = sprite_sheet.get_image(0, 144, 48, 48, (255,100,178,200))
         self.walking_frames_u.append(image)
-        image = sprite_sheet.get_image(48, 144, 48, 48)
+        image = sprite_sheet.get_image(48, 144, 48, 48, (255,100,178,200))
         self.walking_frames_u.append(image)
-        image = sprite_sheet.get_image(96, 144, 48, 48)
+        image = sprite_sheet.get_image(96, 144, 48, 48, (255,100,178,200))
         self.walking_frames_u.append(image)
 
         # Set the image the player starts with
