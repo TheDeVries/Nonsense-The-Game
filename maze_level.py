@@ -12,6 +12,7 @@ class Maze:
         self.grass = pygame.image.load("Sprites//grass.png")
         self.finish = pygame.image.load("Sprites//finish.png")
         self.song = pygame.mixer.music.load("Sounds//Tchaikovsky - Valse Sentimentale.wav")
+        self.boo = pygame.mixer.Sound("Sounds//Crowd Boo 6-SoundBible.com-928081827.wav")
         player = Player()
         active_sprite_list = pygame.sprite.Group()
         active_sprite_list.add(player)
@@ -27,7 +28,9 @@ class Maze:
         self.maze_map = self.random_map
         self.eno = 10
         self.toggle = True
-        pygame.mixer.music.play(loops=-1, start=0.0)
+        self.test = True
+        if Controller.sanity == 1:
+            pygame.mixer.music.play(loops=-1, start=0.0)
         self.map_list = [["1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1"],
                     ["1","2","2","2","2","1","1","1","1","1","1","1","1","1","1","1","1","1","2","2","2","1","2","1","1"],
                     ["1","2","2","2","2","1","1","1","2","2","2","2","2","2","2","2","2","1","2","1","2","1","2","1","1"],
@@ -91,28 +94,28 @@ class Maze:
                         pygame.quit()
                         exit()
                 if event.type == pygame.KEYDOWN:
-                    if event.key == pygame.K_w:
+                    if event.key == pygame.K_w and self.move_camera != 5:
                         player.go_up()
                         self.move_camera = 1
-                    elif event.key == pygame.K_a:
+                    if event.key == pygame.K_a:
                         player.go_left()
                         self.move_camera = 2
-                    elif event.key == pygame.K_s:
+                    if event.key == pygame.K_s:
                         player.go_down()
                         self.move_camera = 3
-                    elif event.key == pygame.K_d:
+                    if event.key == pygame.K_d:
                         player.go_right()
                         self.move_camera = 4
-                    elif event.key == pygame.K_UP:
+                    if event.key == pygame.K_UP:
                         player.go_up()
                         self.move_camera = 1
-                    elif event.key == pygame.K_LEFT:
+                    if event.key == pygame.K_LEFT:
                         player.go_left()
                         self.move_camera = 2
-                    elif event.key == pygame.K_DOWN:
+                    if event.key == pygame.K_DOWN:
                         player.go_down()
                         self.move_camera = 3
-                    elif event.key == pygame.K_RIGHT:
+                    if event.key == pygame.K_RIGHT:
                         player.go_right()
                         self.move_camera = 4
                 elif event.type == pygame.KEYUP:
@@ -139,15 +142,24 @@ class Maze:
             active_sprite_list.draw(self.wn)
             active_sprite_list.update()
             Controller.sanity_meter(self, self.wn)
-            pygame.display.flip()
+            Controller.score(self, self.wn)
             for x in self.blacklist:
                 if x.colliderect(self.player_rec):
                     self.move_camera = 0
+                if x.contains(self.player_rec):
+                    print("fehohfeoiqwhfoihqfiohoihfqoiwhfoiqwhfiowqhfijwfoinqwinfinfqiqwnfiqnwefiqwnfiqwnefoqiwnfqoiwefniqowenfqiwnfqiwofnqowifqwiofnqofiqwoefnqweofwefoiqnwefoqiwnfoiq")
+                    Controller.score_current -= 1
+                    self.boo.play(loops=1)
+                    Controller.sanity += 5
+                    if Controller.sanity > 5:
+                        Controller.sanity = 5
             for y in self.finish_list:
                 if y.colliderect(self.player_rec):
                     Controller.scene -= 1
                     pygame.mixer.music.stop()
+                    self.toggle = False
                     c1 = Controller()
+            pygame.display.flip()
 
     def map_build(self, map_list):
         textures = {"1":self.hedge, "2":self.grass, "3":self.finish}
@@ -183,7 +195,7 @@ class SpriteSheet(object):
         # Copy the sprite from the large sheet onto the smaller image
         image.blit(self.sprite_sheet, (0, 0), (x, y, width, height))
 
-        # Assuming black works as the transparent color
+        # Assuming pink works as the transparent color
         image.set_colorkey((255,100,178,200))
 
         # Return the image

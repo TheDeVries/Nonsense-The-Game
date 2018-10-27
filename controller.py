@@ -8,6 +8,7 @@ class Controller:
     sanity3 = pygame.image.load("Sprites//sanity3.png")
     sanity4 = pygame.image.load("Sprites//sanity4.png")
     sanity5 = pygame.image.load("Sprites//sanity5.png")
+    score_current = 0
     def __init__(self):
         pygame.init()
         self.running_menu = True
@@ -38,6 +39,15 @@ class Controller:
             window.blit(Controller.sanity4, (0,0))
         elif Controller.sanity == 5:
             window.blit(Controller.sanity5, (0,0))
+    def score(self, window):
+        myfont = pygame.font.SysFont('Times New Roman', 45)
+        textsurface = myfont.render("Score:", True, (0, 0, 0))
+        scores = str(Controller.score_current)
+        score_surface = myfont.render(scores, True, (0, 0, 0))
+        window.blit(textsurface,(500,0))
+        window.blit(score_surface,(600,0))
+
+
 from club_level import *
 from typing_level import *
 from main_menu import *
