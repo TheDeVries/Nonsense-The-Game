@@ -55,3 +55,4 @@ from club_level import *
 from typing_level import *
 from main_menu import *
 from maze_level import *
+from platform_level import *
