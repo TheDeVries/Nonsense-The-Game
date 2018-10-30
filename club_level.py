@@ -60,25 +60,18 @@ class Club:
                 self.chosens[5].set_colorkey((255,255,255))
                 self.chosens[5] = pygame.transform.scale(self.chosens[5], (250, 500))
                 self.window.blit(self.chosens[5], self.chosens[2])
-
             self.chosens[4].set_colorkey((255,255,255))
             self.chosens[4] = pygame.transform.scale(self.chosens[4], (250, 500))
             self.window.blit(self.chosens[4], self.chosens[1])
-
             self.chosens[3].set_colorkey((255,255,255))
             self.chosens[3] = pygame.transform.scale(self.chosens[3], (250, 500))
             self.window.blit(self.chosens[3], self.chosens[0])
-
             self.bar.set_colorkey((0,0,64))
             self.window.blit(self.bar, (200, 300))
-
             if self.chosens[5] == self.bar_server:
                 self.chosens[5].set_colorkey((255,255,255))
                 self.bar_server2 = pygame.transform.scale(self.chosens[5], (250, 500))
                 self.window.blit(self.bar_server2, (550, 200))
-<<<<<<< HEAD
-            Controller.sanity_meter(self, self.window, (255,255,255))
-=======
             '''
 
             self.bar_woman2_front.set_colorkey((255,255,255))
@@ -91,7 +84,6 @@ class Club:
             self.window.blit(la_right, (300, 43))
 
             Controller.sanity_meter(self, self.window)
->>>>>>> 54c68cc3f4dc0be821fe4dc19e89d93cc6146e7e
             pygame.display.flip()
 
     def Randomize(self):
