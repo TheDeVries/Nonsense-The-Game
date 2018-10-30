@@ -3,9 +3,9 @@ import random
 pygame.font.init()
 
 class Typing:
-    def __init__(self, sanity, timer):
+    def __init__(self):
         #S refers to Sanity and L to level of difficulty
-        sanity = self.sanity
+
 
         S1_L1 = ["cat", "tractor", "monkey", "boat", "house", "man", "hat", "run",
         "elephant", "mouse", "computer", "pick", "police", "sports", "fruit",
@@ -26,13 +26,27 @@ class Typing:
         "I am absolutely stupified right now. You have no idea."]
         words = []
 
-        play(sanity)
-
-    def play(sanity):
         running = True
         while running:
 
             self.window = pygame.display.set_mode((800,600))
+            self.window.fill((255,255,255))
 
-        if sanity == 1:
-            words.append(S1_L1)
+            for event in pygame.event.get():
+                # Quit button
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+                    exit()
+                # Keybinds
+                if event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_ESCAPE:
+                        pygame.quit()
+                        exit()
+                    elif event.key == pygame.K_RETURN:
+                        print("enter")
+                    else:
+                        our_key = chr(event.key)
+                        print(our_key)
+            pygame.display.flip()
+
+#Typing()

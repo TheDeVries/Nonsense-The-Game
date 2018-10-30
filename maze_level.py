@@ -213,6 +213,8 @@ class Maze:
                 Controller.sanity = 2
             elif self.time == 45 and Controller.sanity < 3:
                 Controller.sanity = 3
+                pygame.mixer.music.load("Sounds//Tchaikovsky Distorted.wav")
+                pygame.mixer.music.play(loops=-1, start=0.0)
             elif self.time == 60 and Controller.sanity < 4:
                 Controller.sanity = 4
             elif self.time >= 120:
