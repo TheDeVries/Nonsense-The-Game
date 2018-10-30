@@ -49,4 +49,4 @@ class Typing:
                         print(our_key)
             pygame.display.flip()
 
-Typing()
+#Typing()
