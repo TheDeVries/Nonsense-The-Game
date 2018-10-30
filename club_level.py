@@ -83,7 +83,7 @@ class Club:
             self.window.blit(la_left, (0, 43))
             self.window.blit(la_right, (300, 43))
 
-            Controller.sanity_meter(self, self.window)
+            Controller.sanity_meter(self, self.window, (255,255,255))
             pygame.display.flip()
 
     def Randomize(self):
