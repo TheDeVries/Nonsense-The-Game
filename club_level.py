@@ -52,7 +52,7 @@ class Club:
                 self.chosens[5].set_colorkey((255,255,255))
                 self.bar_server2 = pygame.transform.scale(self.chosens[5], (250, 500))
                 self.window.blit(self.bar_server2, (550, 200))
-            Controller.sanity_meter(self, self.window)
+            Controller.sanity_meter(self, self.window, (255,255,255))
             pygame.display.flip()
 
     def Randomize(self):

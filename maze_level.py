@@ -187,8 +187,8 @@ class Maze:
             active_sprite_list.update()
 
             active_sprite_list.draw(self.wn)
-            Controller.sanity_meter(self, self.wn)
-            Controller.score(self, self.wn)
+            Controller.sanity_meter(self, self.wn, (255,255,255))
+            Controller.score(self, self.wn, (255,255,255))
             for x in self.blacklist:
                 if x.colliderect(self.player_rec):
                     self.move_camera = 0
@@ -249,9 +249,9 @@ class Maze:
             pass
     def clock(self):
         myfont = pygame.font.SysFont('Times New Roman', 45)
-        timefont = myfont.render("Time:", True, (0, 0, 0))
+        timefont = myfont.render("Time:", True, (255, 255, 255))
         strtimer = str(self.time)
-        clocktimer = myfont.render(strtimer, True, (0, 0, 0))
+        clocktimer = myfont.render(strtimer, True, (255, 255, 255))
         self.wn.blit(timefont,(300,0))
         self.wn.blit(clocktimer,(400,0))
 

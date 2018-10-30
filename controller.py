@@ -28,7 +28,7 @@ class Controller:
 
 
 
-    def sanity_meter(self, window):
+    def sanity_meter(self, window, color):
         if Controller.sanity == 1:
             window.blit(Controller.sanity1, (0,0))
         elif Controller.sanity == 2:
@@ -39,11 +39,17 @@ class Controller:
             window.blit(Controller.sanity4, (0,0))
         elif Controller.sanity == 5:
             window.blit(Controller.sanity5, (0,0))
-    def score(self, window):
-        myfont = pygame.font.SysFont('Times New Roman', 45)
-        textsurface = myfont.render("Score:", True, (0, 0, 0))
+        myfont = pygame.font.SysFont('Times New Roman', 30)
+        textsurface = myfont.render("Sanity:", True, color)
         scores = str(Controller.score_current)
-        score_surface = myfont.render(scores, True, (0, 0, 0))
+        score_surface = myfont.render(str(Controller.sanity), True, color)
+        window.blit(textsurface,(130,0))
+        window.blit(score_surface,(210,0))
+    def score(self, window, color):
+        myfont = pygame.font.SysFont('Times New Roman', 45)
+        textsurface = myfont.render("Score:", True, color)
+        scores = str(Controller.score_current)
+        score_surface = myfont.render(scores, True, color)
         window.blit(textsurface,(500,0))
         window.blit(score_surface,(600,0))
 
