@@ -5,8 +5,6 @@ pygame.font.init()
 class Typing:
     def __init__(self):
         #S refers to Sanity and L to level of difficulty
-
-
         S1_L1 = ["cat", "tractor", "monkey", "boat", "house", "man", "hat", "run",
         "elephant", "mouse", "computer", "pick", "police", "sports", "fruit",
         "ocean", "money", "game", "snake", "car", "factory", "food", "family"]
@@ -26,11 +24,26 @@ class Typing:
         "I am absolutely stupified right now. You have no idea."]
         words = []
 
+        words += S1_L1
+
+        self.word = random.choice(words)
+
+        self.window = pygame.display.set_mode((800,600))
+        self.myfont = pygame.font.SysFont('Times New Roman', 40)
+        self.cur_x = 30
+        self.cur_y = 560
+
         running = True
         while running:
 
-            self.window = pygame.display.set_mode((800,600))
             self.window.fill((255,255,255))
+            display_word = self.myfont.render(self.word, True, (0, 0, 0))
+            display_line = self.myfont.render(">", True, (0,0,0))
+            display_cursor = self.myfont.render("|", True, (0,0,0))
+            self.window.blit(display_word, (0,0))
+            self.window.blit(display_line, (0, 560))
+            self.cur_pos = (self.cur_x, self.cur_y)
+            self.window.blit(display_cursor, self.cur_pos)
 
             for event in pygame.event.get():
                 # Quit button
@@ -44,9 +57,15 @@ class Typing:
                         exit()
                     elif event.key == pygame.K_RETURN:
                         print("enter")
+                    elif event.key == pygame.K_BACKSPACE:
+                        if self.cur_x != 30:
+                            self.cur_x -= 30
+                    elif event.key == pygame.K_RSHIFT or event.key == pygame.K_LSHIFT:
+                        print("shift")
                     else:
-                        our_key = chr(event.key)
-                        print(our_key)
+                        our_key = self.myfont.render(chr(event.key), True, (0,0,0))
+                        self.window.blit(our_key, self.cur_pos)
+                        self.cur_x += 30
             pygame.display.flip()
 
-#Typing()
+Typing()
