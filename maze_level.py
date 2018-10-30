@@ -201,7 +201,14 @@ class Maze:
                         Controller.sanity = 5
             for y in self.finish_list:
                 if y.colliderect(self.player_rec):
-                    Controller.scene -= 1
+                    x = random.randint(1,2)
+                    Controller.scenes_done.append(2)
+                    if x in Controller.scenes_done:
+                        print("Already done this level... Making some changes")
+                        x = 1
+                        if x in Controller.scenes_done:
+                            x = 3
+                    Controller.scene = x
                     if self.time <= 75:
                         Controller.score_current += 10000
                         print("10000 points added for completion!")

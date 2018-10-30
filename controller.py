@@ -2,6 +2,7 @@ import pygame
 
 class Controller:
     scene = 0
+    scenes_done = []
     sanity = 1
     sanity1 = pygame.image.load("Sprites//sanity1.png")
     sanity2 = pygame.image.load("Sprites//sanity2.png")
@@ -20,6 +21,8 @@ class Controller:
                 club = Club()
             elif Controller.scene == 2:
                 mazey = Maze()
+            elif Controller.scene == 3:
+                platform_level = PlatformLevel()
 
 
 
