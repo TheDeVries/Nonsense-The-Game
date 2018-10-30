@@ -202,7 +202,18 @@ class Maze:
             for y in self.finish_list:
                 if y.colliderect(self.player_rec):
                     Controller.scene -= 1
-                    Controller.score_current += 1000
+                    if self.time <= 75:
+                        Controller.score_current += 10000
+                        print("10000 points added for completion!")
+                    elif self.time <= 100:
+                        Controller.score_current += 5000
+                        print("5000 points added for completion!")
+                    elif self.time <= 120:
+                        Controller.score_current += 2500
+                        print("2500 points added for completion!")
+                    elif self.time > 120:
+                        Controller.score_current += 1000
+                        print("1000 points added for completion!")
                     Controller.sanity -= 1
                     pygame.mixer.music.stop()
                     self.toggle = False

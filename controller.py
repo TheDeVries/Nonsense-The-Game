@@ -20,9 +20,6 @@ class Controller:
                 club = Club()
             elif Controller.scene == 2:
                 mazey = Maze()
-                if mazey.toggle == False:
-                    print("hi")
-                    Controller.scene -= 1
 
 
 
