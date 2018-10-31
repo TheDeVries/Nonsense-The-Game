@@ -42,11 +42,11 @@ class Controller:
         elif Controller.sanity == 5:
             window.blit(Controller.sanity5, (0,0))
         myfont = pygame.font.SysFont('Times New Roman', 30)
-        textsurface = myfont.render("Sanity:", True, color)
+        textsurface = myfont.render("Insanity:", True, color)
         scores = str(Controller.score_current)
         score_surface = myfont.render(str(Controller.sanity), True, color)
         window.blit(textsurface,(130,0))
-        window.blit(score_surface,(210,0))
+        window.blit(score_surface,(235,0))
     def score(self, window, color):
         myfont = pygame.font.SysFont('Times New Roman', 45)
         textsurface = myfont.render("Score:", True, color)

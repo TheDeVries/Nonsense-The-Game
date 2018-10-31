@@ -198,6 +198,8 @@ class Maze:
                     self.boo.play(loops=1)
                     Controller.sanity += 1
                     if Controller.sanity > 5:
+                        pygame.mixer.music.load("Sounds//Tchaikovsky Distorted.wav")
+                        pygame.mixer.music.play(loops=-1, start=0.0)
                         Controller.sanity = 5
             for y in self.finish_list:
                 if y.colliderect(self.player_rec):

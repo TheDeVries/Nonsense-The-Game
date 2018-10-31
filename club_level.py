@@ -74,14 +74,14 @@ class Club:
                 self.window.blit(self.bar_server2, (550, 200))
             '''
 
-            self.bar_woman2_front.set_colorkey((255,255,255))
-            self.window.blit(self.bar_woman2_front, (400, 300))
+            self.bar_man2_front.set_colorkey((255,255,255))
+            self.window.blit(self.bar_man2_front, (400, 300))
             self.speech_bubble.set_colorkey((255,255,255))
-            self.window.blit(self.speech_bubble, (400, 0))
-            self.window.blit(la_up, (100, 43))
-            self.window.blit(la_down, (200, 43))
-            self.window.blit(la_left, (0, 43))
-            self.window.blit(la_right, (300, 43))
+            self.window.blit(self.speech_bubble, (400, 65))
+            self.window.blit(la_up, (105, 64))
+            self.window.blit(la_down, (205, 64))
+            self.window.blit(la_left, (5, 64))
+            self.window.blit(la_right, (305, 64))
 
             Controller.sanity_meter(self, self.window, (255,255,255))
             pygame.display.flip()
