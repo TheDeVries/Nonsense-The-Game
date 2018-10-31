@@ -23,6 +23,8 @@ class Controller:
                 mazey = Maze()
             elif Controller.scene == 3:
                 platform_level = PlatformLevel()
+            elif Controller.scene == 4:
+                typing = Typing()
 
 
 

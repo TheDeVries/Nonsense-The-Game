@@ -67,5 +67,3 @@ class Typing:
                         self.window.blit(our_key, self.cur_pos)
                         self.cur_x += 30
             pygame.display.flip()
-
-Typing()

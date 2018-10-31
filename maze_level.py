@@ -473,7 +473,6 @@ class Sanity5Face(pygame.sprite.Sprite):
         self.image = self.sanity5_frames[self.index]
         self.rect = self.image.get_rect()
         self.rect.move_ip(0,-100)
-        print(len(self.sanity5_frames))
     def update(self):
         self.index += 1
         if self.index >= len(self.sanity5_frames)-1:
