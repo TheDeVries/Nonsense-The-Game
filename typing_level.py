@@ -4,6 +4,8 @@ pygame.font.init()
 
 class Typing:
     def __init__(self):
+
+        self.ty_background = pygame.image.load("Sprites//Pro Typing.png")
         #S refers to Sanity and L to level of difficulty
         S1_L1 = ["cat", "tractor", "monkey", "boat", "house", "man", "hat", "run",
         "elephant", "mouse", "computer", "pick", "police", "sports", "fruit",
@@ -25,25 +27,23 @@ class Typing:
         words = []
 
         words += S1_L1
+        our_word = "|"
 
         self.word = random.choice(words)
 
         self.window = pygame.display.set_mode((800,600))
         self.myfont = pygame.font.SysFont('Times New Roman', 40)
-        self.cur_x = 30
-        self.cur_y = 560
 
         running = True
         while running:
 
-            self.window.fill((255,255,255))
+            self.window.blit(self.ty_background, (0,0))
             display_word = self.myfont.render(self.word, True, (0, 0, 0))
             display_line = self.myfont.render(">", True, (0,0,0))
             display_cursor = self.myfont.render("|", True, (0,0,0))
-            self.window.blit(display_word, (0,0))
-            self.window.blit(display_line, (0, 560))
-            self.cur_pos = (self.cur_x, self.cur_y)
-            self.window.blit(display_cursor, self.cur_pos)
+            self.window.blit(display_word, (270, 405))
+            self.window.blit(display_line, (10, 475))
+            l = len(our_word)
 
             for event in pygame.event.get():
                 # Quit button
@@ -58,12 +58,16 @@ class Typing:
                     elif event.key == pygame.K_RETURN:
                         print("enter")
                     elif event.key == pygame.K_BACKSPACE:
-                        if self.cur_x != 30:
-                            self.cur_x -= 30
+                        our_word = our_word[0:(l-2)]
+                        our_word += "|"
                     elif event.key == pygame.K_RSHIFT or event.key == pygame.K_LSHIFT:
                         print("shift")
                     else:
                         our_key = self.myfont.render(chr(event.key), True, (0,0,0))
-                        self.window.blit(our_key, self.cur_pos)
-                        self.cur_x += 30
+                        our_word = our_word[0:(l-1)]
+                        our_word += chr(event.key)
+                        our_word += "|"
+            display_ours = self.myfont.render(our_word, True, (0,0,0))
+            self.window.blit(display_ours, (40, 475))
+
             pygame.display.flip()
