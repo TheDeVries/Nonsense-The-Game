@@ -98,4 +98,3 @@ class Typing:
             self.window.blit(display_ours, (40, 475))
 
             pygame.display.flip()
-Typing()
