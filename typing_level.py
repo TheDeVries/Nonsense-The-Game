@@ -1,9 +1,13 @@
 import pygame
 import random
-pygame.font.init()
+pygame.init()
 
 class Typing:
     def __init__(self):
+        #Sounds
+        self.welcome_jingle = pygame.mixer.Sound("Sounds//Computer Magic.wav")
+        self.chime = pygame.mixer.Sound("Sounds//Electronic_Chime.wav")
+        self.check = pygame.mixer.Sound("Sounds//Check Mark.wav")
 
         self.ty_background = pygame.image.load("Sprites//Pro Typing.png")
         #S refers to Sanity and L to level of difficulty
@@ -28,11 +32,15 @@ class Typing:
 
         words += S1_L1
         our_word = "|"
-
         self.word = random.choice(words)
 
         self.window = pygame.display.set_mode((800,600))
+        self.welcome_jingle.play(loops=0)
         self.myfont = pygame.font.SysFont('Times New Roman', 40)
+        self.strike = pygame.image.load("Sprites//strike.png").convert()
+        self.strike = pygame.transform.scale(self.strike, (40, 40))
+        self.strike.set_colorkey((0,0,0))
+        left_count = 5
 
         running = True
         while running:
@@ -43,6 +51,9 @@ class Typing:
             display_cursor = self.myfont.render("|", True, (0,0,0))
             self.window.blit(display_word, (270, 405))
             self.window.blit(display_line, (10, 475))
+            display_count = self.myfont.render(str(left_count), True, (0,0,0))
+            self.window.blit(display_count, (574, 210))
+            self.window.blit(self.strike, (574, 335))
             l = len(our_word)
 
             for event in pygame.event.get():
@@ -56,12 +67,18 @@ class Typing:
                         pygame.quit()
                         exit()
                     elif event.key == pygame.K_RETURN:
-                        print("enter")
+                        if our_word[0:l-1] == self.word:
+                            left_count -= 1
+                            self.check.play(loops=0)
+                        else:
+                            pass
+                        self.word = random.choice(words)
+                        our_word = "|"
                     elif event.key == pygame.K_BACKSPACE:
                         our_word = our_word[0:(l-2)]
                         our_word += "|"
                     elif event.key == pygame.K_RSHIFT or event.key == pygame.K_LSHIFT:
-                        print("shift")
+                        pass
                     else:
                         our_key = self.myfont.render(chr(event.key), True, (0,0,0))
                         our_word = our_word[0:(l-1)]
@@ -71,3 +88,4 @@ class Typing:
             self.window.blit(display_ours, (40, 475))
 
             pygame.display.flip()
+Typing()
