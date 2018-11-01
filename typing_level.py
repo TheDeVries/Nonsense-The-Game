@@ -33,6 +33,7 @@ class Typing:
         words += S1_L1
         our_word = "|"
         self.word = random.choice(words)
+        self.strike_count = 0
 
         self.window = pygame.display.set_mode((800,600))
         self.welcome_jingle.play(loops=0)
@@ -53,7 +54,15 @@ class Typing:
             self.window.blit(display_line, (10, 475))
             display_count = self.myfont.render(str(left_count), True, (0,0,0))
             self.window.blit(display_count, (574, 210))
-            self.window.blit(self.strike, (574, 335))
+            if self.strike_count == 1:
+                self.window.blit(self.strike, (574, 335))
+            elif self.strike_count == 2:
+                self.window.blit(self.strike, (574, 335))
+                self.window.blit(self.strike, (624, 335))
+            elif self.strike_count >= 3:
+                self.window.blit(self.strike, (574, 335))
+                self.window.blit(self.strike, (624, 335))
+                self.window.blit(self.strike, (674, 335))
             l = len(our_word)
 
             for event in pygame.event.get():
@@ -67,11 +76,12 @@ class Typing:
                         pygame.quit()
                         exit()
                     elif event.key == pygame.K_RETURN:
+
                         if our_word[0:l-1] == self.word:
                             left_count -= 1
                             self.check.play(loops=0)
                         else:
-                            pass
+                            self.strike_count += 1
                         self.word = random.choice(words)
                         our_word = "|"
                     elif event.key == pygame.K_BACKSPACE:
