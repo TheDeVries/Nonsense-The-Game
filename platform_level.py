@@ -14,8 +14,10 @@ class PlatformLevel:
         self.rect = self.background.get_rect()
         self.rect.move_ip((0,0))
         self.window.fill((255,255,255))
+        self.platform_list = []
         self.running = True
         player = Player_Platform()
+        bullet = Bullet()
         active_sprite_list2 = pygame.sprite.Group()
         active_sprite_list2.add(player)
         while self.running:
@@ -43,6 +45,10 @@ class PlatformLevel:
                         if event.key == pygame.K_RIGHT:
                             self.move_camera = 2
                             player.go_right()
+                        if event.key == pygame.K_SPACE:
+                            player.shot()
+                            active_sprite_list2.add(bullet)
+                            bullet.shot()
                     elif event.type == pygame.KEYUP:
                         player.stop()
                         self.move_camera = 0
@@ -50,17 +56,23 @@ class PlatformLevel:
                 PlatformLevel.x_camera -= 5
             elif self.move_camera == 2:
                 PlatformLevel.x_camera += 5
-
-
+            for platform in self.platform_list:
+                if platform.colliderect(player):
+                    self.move_camera = 0
             self.window.blit(self.background, (0, 0))
             self.platforms()
             active_sprite_list2.update()
 
             active_sprite_list2.draw(self.window)
+            if bullet.done == True:
+                active_sprite_list2.remove(bullet)
+                bullet.done = False
 
             pygame.display.flip()
     def platforms(self):
-        pygame.draw.rect(self.window, (255,255,255), pygame.Rect(100 - PlatformLevel.x_camera,100,100,100))
+        self.platform1 = pygame.draw.rect(self.window, (255,255,255), pygame.Rect(0,500,800,100))
+        self.platform_list.append(self.platform1)
+
 class Player_Platform(pygame.sprite.Sprite):
     def __init__(self):
         super().__init__()
@@ -70,10 +82,12 @@ class Player_Platform(pygame.sprite.Sprite):
         self.walking_frames_l = []
         self.walking_frames_r = []
         self.walking_frames_f = []
+        self.shooting = []
 
         self.direction = "F"
 
         sprite_sheet = SpriteSheet("Sprites//stickman.png")
+        sprite_sheet_shot = SpriteSheet("Sprites//shot1.png")
 
         color_key_player = (255,255,255,255)
         image = sprite_sheet.get_image(0, 0, 180, 221, color_key_player)
@@ -106,6 +120,22 @@ class Player_Platform(pygame.sprite.Sprite):
         image = pygame.transform.scale(image, (36,44))
         self.walking_frames_f.append(image)
 
+        image = sprite_sheet_shot.get_image(0, 0, 197, 218, color_key_player)
+        image = pygame.transform.scale(image, (40,44))
+        self.shooting.append(image)
+        image = sprite_sheet_shot.get_image(197, 0, 197, 218, color_key_player)
+        image = pygame.transform.scale(image, (40,44))
+        self.shooting.append(image)
+        image = sprite_sheet_shot.get_image(0, 218, 197, 218, color_key_player)
+        image = pygame.transform.scale(image, (40,44))
+        self.shooting.append(image)
+
+        image = sprite_sheet_shot.get_image(197, 218, 197, 218, color_key_player)
+        image = pygame.transform.scale(image, (40,44))
+        self.shooting.append(image)
+
+
+
 
         # Set the image the player starts with
         self.image = self.walking_frames_f[0]
@@ -114,6 +144,8 @@ class Player_Platform(pygame.sprite.Sprite):
         self.rect.move_ip(400,300)
         self.frame = 0
         self.frame_right = 0
+        self.shot_frame = 0
+        self.shot_frame_L = 2
         self.time = 0
 
     def update(self):
@@ -135,7 +167,14 @@ class Player_Platform(pygame.sprite.Sprite):
                     self.frame_right = 0
                     self.image = self.walking_frames_l[self.frame_right]
                 self.image = self.walking_frames_l[self.frame_right]
-
+        elif self.direction == "SR":
+            self.time += 1
+            if self.time % 3 == 0:
+                self.shot_frame += 1
+                if self.shot_frame > 1:
+                    self.shot_frame = 0
+                    self.image = self.shooting[self.shot_frame]
+                self.image = self.shooting[self.shot_frame]
 
 
 
@@ -158,3 +197,76 @@ class Player_Platform(pygame.sprite.Sprite):
         self.image = self.walking_frames_f[0]
         self.frame_right = 0
         self.frame = 0
+    def shot(self):
+        self.direction = "SR"
+class Bullet(pygame.sprite.Sprite):
+    def __init__(self):
+        super().__init__()
+        self.x = 0
+        self.y = 0
+        self.damage = 50
+        self.frames_bullet = []
+        sprite_sheet = SpriteSheet("Sprites//bullet.png")
+
+        color_key_player = (0,0,0,0)
+        image = sprite_sheet.get_image(0, 0, 16, 12, color_key_player)
+        self.frames_bullet.append(image)
+        image = sprite_sheet.get_image(16, 0, 16, 12, color_key_player)
+        self.frames_bullet.append(image)
+        image = sprite_sheet.get_image(32, 0, 16, 12, color_key_player)
+        self.frames_bullet.append(image)
+        image = sprite_sheet.get_image(0, 12, 16, 12, color_key_player)
+        self.frames_bullet.append(image)
+
+        image = sprite_sheet.get_image(16, 12, 16, 12, color_key_player)
+        self.frames_bullet.append(image)
+        image = sprite_sheet.get_image(32, 12, 16, 12, color_key_player)
+        self.frames_bullet.append(image)
+        image = sprite_sheet.get_image(0, 24, 16, 12, color_key_player)
+        self.frames_bullet.append(image)
+        image = sprite_sheet.get_image(16, 24, 16, 12, color_key_player)
+        self.frames_bullet.append(image)
+
+        image = sprite_sheet.get_image(32, 24, 16, 12, color_key_player)
+        self.frames_bullet.append(image)
+
+        image = sprite_sheet.get_image(0, 36, 16, 12, color_key_player)
+        self.frames_bullet.append(image)
+        image = sprite_sheet.get_image(16, 36, 16, 12, color_key_player)
+        self.frames_bullet.append(image)
+        image = sprite_sheet.get_image(32, 36, 16, 12, color_key_player)
+        self.frames_bullet.append(image)
+
+        image = sprite_sheet.get_image(0, 48, 16, 12, color_key_player)
+        self.frames_bullet.append(image)
+        image = sprite_sheet.get_image(16,48,16,12, color_key_player)
+        self.frames_bullet.append(image)
+        self.image = self.frames_bullet[-1]
+        self.rect = self.image.get_rect()
+        self.rect = self.rect.move(430,300)
+        self.toggle = False
+        self.frame = 0
+        self.time = 0
+        self.done = False
+    def update(self):
+        if self.toggle == True:
+            self.time += 1
+            if self.time % 3 == 0:
+                self.x += 10
+                self.frame += 1
+                if self.frame > 12:
+                    self.frame = 0
+                    self.image = self.frames_bullet[self.frame]
+                self.image = self.frames_bullet[self.frame]
+                self.rect = self.rect.move(self.x, self.y)
+        if self.rect.x >= 800:
+            self.done = True
+            self.reset()
+            self.x = 0
+            self.image = self.frames_bullet[-1]
+
+    def shot(self):
+        self.toggle = True
+    def reset(self):
+        self.toggle = False
+        self.rect = self.rect.move(-370,0)
