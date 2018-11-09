@@ -25,7 +25,11 @@ class Controller:
                 platform_level = PlatformLevel()
             elif Controller.scene == 4:
                 typing = Typing()
-            
+            elif Controller.scence == 5:
+                space = Space()
+
+
+
 
 
 
@@ -83,3 +87,4 @@ from typing_level import *
 from main_menu import *
 from maze_level import *
 from platform_level import *
+from spaceshooter_level import *
