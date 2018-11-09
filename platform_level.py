@@ -16,6 +16,7 @@ class PlatformLevel:
         self.window.fill((255,255,255))
         self.platform_list = []
         self.running = True
+        self.player_jump = False
         player = Player_Platform()
         bullet = Bullet()
         active_sprite_list2 = pygame.sprite.Group()
@@ -31,47 +32,63 @@ class PlatformLevel:
                     if event.key == pygame.K_ESCAPE:
                         pygame.quit()
                         exit()
-                if Controller.sanity <= 2:
-                    if event.type == pygame.KEYDOWN:
-                        if event.key == pygame.K_a:
-                            self.move_camera = 1
-                            player.go_left()
-                        if event.key == pygame.K_d:
-                            self.move_camera = 2
-                            player.go_right()
-                        if event.key == pygame.K_LEFT:
-                            self.move_camera = 1
-                            player.go_left()
-                        if event.key == pygame.K_RIGHT:
-                            self.move_camera = 2
-                            player.go_right()
-                        if event.key == pygame.K_SPACE:
-                            player.shot()
-                            active_sprite_list2.add(bullet)
-                            bullet.shot()
-                    elif event.type == pygame.KEYUP:
+                if event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_a:
+                        player.go_left()
+                        self.move_camera = 1
+                    if event.key == pygame.K_d:
+                        self.move_camera = 2
+                        player.go_right()
+                    if event.key == pygame.K_LEFT:
+                        self.move_camera = 1
+                        player.go_left()
+                    if event.key == pygame.K_RIGHT:
+                        self.move_camera = 2
+                        player.go_right()
+                    if event.key == pygame.K_LSHIFT:
+                        player.shot()
+                        active_sprite_list2.add(bullet)
+                        bullet.shot()
+                    if event.key == pygame.K_SPACE:
+                        if self.player_jump == True:
+                            self.move_camera = 4
+                elif event.type == pygame.KEYUP:
+                    if event.key != pygame.K_SPACE:
                         player.stop()
                         self.move_camera = 0
             if self.move_camera == 1:
                 PlatformLevel.x_camera -= 5
             elif self.move_camera == 2:
                 PlatformLevel.x_camera += 5
-            for platform in self.platform_list:
-                if platform.colliderect(player):
-                    self.move_camera = 0
+            elif self.move_camera == 3:
+                PlatformLevel.y_camera += 10
+            elif self.move_camera == 4:
+                PlatformLevel.y_camera -=100
             self.window.blit(self.background, (0, 0))
             self.platforms()
+            for plat in range(0, len(self.platform_list)-1):
+                if self.platform_list[plat].colliderect(player):
+                    self.move_camera = 0
+                    self.player_jump = True
+                else:
+                    self.move_camera =  3
+                    self.player_jump = False
             active_sprite_list2.update()
-
             active_sprite_list2.draw(self.window)
             if bullet.done == True:
                 active_sprite_list2.remove(bullet)
                 bullet.done = False
-
+            print(PlatformLevel.x_camera)
             pygame.display.flip()
     def platforms(self):
-        self.platform1 = pygame.draw.rect(self.window, (255,255,255), pygame.Rect(0,500,800,100))
+        #Floor
+        self.platform1 = pygame.draw.rect(self.window, (255,255,255), pygame.Rect(0,500 - PlatformLevel.y_camera,800,400))
         self.platform_list.append(self.platform1)
+        #platforms_list
+        self.platform2 = pygame.draw.rect(self.window, (255,255,255), pygame.Rect(0 - PlatformLevel.x_camera,425 - PlatformLevel.y_camera,100,40))
+        self.platform_list.append(self.platform2)
+
+
 
 class Player_Platform(pygame.sprite.Sprite):
     def __init__(self):
@@ -147,6 +164,7 @@ class Player_Platform(pygame.sprite.Sprite):
         self.shot_frame = 0
         self.shot_frame_L = 2
         self.time = 0
+        self.move = False
 
     def update(self):
 
@@ -252,13 +270,13 @@ class Bullet(pygame.sprite.Sprite):
         if self.toggle == True:
             self.time += 1
             if self.time % 3 == 0:
-                self.x += 10
+                self.x += 25
                 self.frame += 1
                 if self.frame > 12:
                     self.frame = 0
                     self.image = self.frames_bullet[self.frame]
                 self.image = self.frames_bullet[self.frame]
-                self.rect = self.rect.move(self.x, self.y)
+            self.rect = self.rect.move(self.x, self.y)
         if self.rect.x >= 800:
             self.done = True
             self.reset()

@@ -129,7 +129,8 @@ class Menu:
         self.text(47,410,60,"Start")
         if x[0] == 1 and y == True:
             pygame.mixer.music.stop()
-            x = random.randint(1,4)
+            # this is where you add levels
+            x = random.randint(1,5)
             Controller.scene += x
             c = Controller()
         # Instruction button
