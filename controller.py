@@ -25,6 +25,7 @@ class Controller:
                 platform_level = PlatformLevel()
             elif Controller.scene == 4:
                 typing = Typing()
+            
 
 
 
