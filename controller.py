@@ -25,7 +25,7 @@ class Controller:
                 platform_level = PlatformLevel()
             elif Controller.scene == 4:
                 typing = Typing()
-            elif Controller.scence == 5:
+            elif Controller.scene == 5:
                 space = Space()
 
 
