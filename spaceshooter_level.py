@@ -3,18 +3,18 @@ import random
 from controller import *
 pygame.init()
 
-class Space:
+class Space: #spaceship model
     def __init__(self, running = True, isJump = False, jumpCount = 10, x = 50, y = 440):
         self.x = x
         self.y = y
         self.running = running
-        self.isJump = isJump
-        self.jumpCount = jumpCount
         self.win = pygame.display.set_mode((800,600))
         self.image = pygame.image.load("Sprites//THEspaceship.png")
+        self.enemyship = pygame.image.load("Sprites//enemyship.png")
         self.background = pygame.image.load("Sprites//space background.png")
         self.win.blit(self.background, (0,0))
         self.win.blit(self.image, (self.x,self.y))
+        self.win.blit(self.enemyship, (50,50))
         self.speed = 5
         pygame.display.update()
 
@@ -40,22 +40,26 @@ class Space:
 
                     if event.key == pygame.K_UP: #and y > speed:   #y < speed and y < 800 - height - speed limits character to only left and right
                         self.y -= self.speed
-                    if not (self.isJump):
-                        if event.key == pygame.K_DOWN: #and y < 500 - height - speed:
-                            self.y += self.speed
 
-                        if event.key == pygame.K_SPACE:
-                            self.isJump = True
+                    if event.key == pygame.K_DOWN: #and y < 500 - height - speed:
+                        self.y += self.speed
 
-
-                    else:
-                        if self.jumpCount >= -10:
-                            self.neg = 1
-                            if self.jumpCount < 0:
-                                self.neg = -1 #used to move downwards after jump
-                            self.y -= (self.jumpCount ** 2) * 0.5 * self.neg
-                            self.jumpCount -= 1
-                            self.y
-                        else:
-                            self.isJump = False
-                            self.jumpCount = 10
+                    if event.key == pygame.K_SPACE:
+                        self.image.shot()
+                        active_sprite_list2.add(bullet)
+                        bullet.shot()
+# 
+# class Bullet(pygame.sprite.Sprite):
+#     def __init__(self):
+#         self.x = 0
+#         self.y = 0
+#         self.damage = 50
+#         self.frames_bullet = []
+#         sprite_sheet = SpriteSheet("Sprites//bullet.png")
+#
+#     def update(self):
+#
+#
+#     def shot(self):
+#
+#     def reset(self):
