@@ -18,13 +18,13 @@ class Controller:
             if Controller.scene == 0:
                 men = Menu()
             elif Controller.scene == 1:
-                club = Club()
+                space = Space()
             elif Controller.scene == 2:
-                mazey = Maze()
+                space = Space()
             elif Controller.scene == 3:
-                platform_level = PlatformLevel()
+                space = Space()
             elif Controller.scene == 4:
-                typing = Typing()
+                space = Space()
             elif Controller.scene == 5:
                 space = Space()
 

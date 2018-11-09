@@ -3,8 +3,9 @@ import random
 from controller import *
 pygame.init()
 
-class Space: #spaceship model
+class Space(pygame.sprite.Sprite): #spaceship model
     def __init__(self, running = True, isJump = False, jumpCount = 10, x = 50, y = 440):
+        pygame.sprite.Sprite.__init__(self)
         self.x = x
         self.y = y
         self.running = running
@@ -12,10 +13,7 @@ class Space: #spaceship model
         self.image = pygame.image.load("Sprites//THEspaceship.png")
         self.enemyship = pygame.image.load("Sprites//enemyship.png")
         self.background = pygame.image.load("Sprites//space background.png")
-        self.win.blit(self.background, (0,0))
-        self.win.blit(self.image, (self.x,self.y))
-        self.win.blit(self.enemyship, (50,50))
-        self.speed = 5
+        self.speed = 10
         pygame.display.update()
 
         while self.running:
@@ -48,7 +46,12 @@ class Space: #spaceship model
                         self.image.shot()
                         active_sprite_list2.add(bullet)
                         bullet.shot()
-# 
+                self.win.blit(self.background, (0,0))
+                self.win.blit(self.image, (self.x,self.y))
+                self.win.blit(self.enemyship, (50,50))
+                pygame.display.flip()
+
+#
 # class Bullet(pygame.sprite.Sprite):
 #     def __init__(self):
 #         self.x = 0
