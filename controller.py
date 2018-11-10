@@ -47,7 +47,7 @@ class Controller:
         elif Controller.insanity == 5:
             window.blit(Controller.insanity5, (0,0))
         myfont = pygame.font.Font("Sprites//times.ttf", 30)
-        textsurface = myfont.render("Ininsanity:", True, color)
+        textsurface = myfont.render("Insanity:", True, color)
         scores = str(Controller.score_current)
         score_surface = myfont.render(str(Controller.insanity), True, color)
         window.blit(textsurface,(130,0))
