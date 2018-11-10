@@ -118,9 +118,9 @@ class Club:
         return self.chosen_characters
 
 #Club Models
-class Arrows(pygame.Sprite.sprite):
+class Arrows(pygame.sprite.Sprite):
     pass
-class Characters(pygame.Sprite.sprite):
+class Characters(pygame.sprite.Sprite):
     pass
-class Dialogue(pygame.Sprite.sprite):
+class Dialogue(pygame.sprite.Sprite):
     pass

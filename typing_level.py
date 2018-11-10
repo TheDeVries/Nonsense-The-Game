@@ -46,6 +46,8 @@ class Typing:
         running = True
         while running:
 
+            Controller.score(self, self.window, (255,255,255))
+            Controller.insanity_meter(self, self.window, (255,255,255))
             self.window.blit(self.ty_background, (0,0))
             display_word = self.myfont.render(self.word, True, (0, 0, 0))
             display_line = self.myfont.render(">", True, (0,0,0))
