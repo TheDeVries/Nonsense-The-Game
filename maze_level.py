@@ -270,7 +270,7 @@ class Maze:
         if Controller.insanity == 5:
             pass
     def clock(self):
-        myfont = pygame.font.SysFont('Times New Roman', 45)
+        myfont = pygame.font.Font("Sprites//times.ttf", 45)
         timefont = myfont.render("Time:", True, (255, 255, 255))
         strtimer = str(self.time)
         clocktimer = myfont.render(strtimer, True, (255, 255, 255))

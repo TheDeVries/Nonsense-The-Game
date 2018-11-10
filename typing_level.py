@@ -1,5 +1,6 @@
 import pygame
 import random
+from controller import *
 pygame.init()
 
 class Typing:
@@ -37,7 +38,7 @@ class Typing:
 
         self.window = pygame.display.set_mode((800,600))
         self.welcome_jingle.play(loops=0)
-        self.myfont = pygame.font.SysFont('Times New Roman', 40)
+        self.myfont = pygame.font.Font("Sprites//times.ttf", 40)
         self.strike = pygame.image.load("Sprites//strike.png").convert()
         self.strike = pygame.transform.scale(self.strike, (40, 40))
         self.strike.set_colorkey((0,0,0))

@@ -107,7 +107,7 @@ class Menu:
         self.title.set_colorkey((255,255,255))
         self.window.blit(self.title, (200,100))
     def text(self, x, y, z, a):
-        myfont = pygame.font.SysFont('Times New Roman', z)
+        myfont = pygame.font.Font("Sprites//times.ttf", z)
         textsurface = myfont.render(a, True, (0, 0, 0))
         self.window.blit(textsurface,(x,y))
     def button_method(self, blit1, blit2, x1, x2, y1, y2, unpressed, pressed):
@@ -157,7 +157,7 @@ class Menu:
         #it 'flips over' and on the back it says our names and can be clicked to flip back again.
         #y = self.button_method(150, 50, 150, 50, )
     def instruct(self):
-        myfont = pygame.font.SysFont('Times New Roman', 30)
+        myfont = pygame.font.Font("Sprites//times.ttf", 30)
         textsurface = myfont.render('Instructions: Example instructions...', True, (0, 0, 0))
         self.window.blit(textsurface,(0,0))
     def music_buttons(self):
