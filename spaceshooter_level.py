@@ -30,13 +30,13 @@ class Space(pygame.sprite.Sprite): #spaceship model
             if keys[pygame.K_LEFT] and x > self.speed:
                 self.x -= self.speed
 
-            if keys[pygame.K_RIGHT] and x < 500 - self.width - self.speed:
+            if keys[pygame.K_RIGHT] and x < 800 - self.width - self.speed:
                 self.x += self.speed
 
             if keys[pygame.K_UP] and y < self.speed:   #y < speed and y < 800 - height - speed limits character to only left and right
                 self.y -= self.speed
 
-            if keys[pygame.K_DOWN] and y < 500 - self.height - self.speed:
+            if keys[pygame.K_DOWN] and y < 800 - self.height - self.speed:
                 self.y += self.speed
 
             if keys[pygame.K_SPACE]:
