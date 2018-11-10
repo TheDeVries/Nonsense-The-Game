@@ -1,8 +1,7 @@
 import pygame
 from controller import *
 
-
-class PlatformLevel:
+class Platformer:
     x_camera = 0
     y_camera = 0
     def __init__(self):

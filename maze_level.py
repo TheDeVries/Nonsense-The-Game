@@ -12,12 +12,12 @@ class Maze:
         self.wn = pygame.display.set_mode((800,600), pygame.HWSURFACE)
         self.hedge = pygame.image.load("Sprites//hedge.png")
         self.grass = pygame.image.load("Sprites//grass.png")
-        self.hedge_sanity4 = pygame.image.load("Sprites//hedge_sanity4.png")
+        self.hedge_insanity4 = pygame.image.load("Sprites//hedge_insanity4.png")
 
         self.finish = pygame.image.load("Sprites//finish.png")
         self.song = pygame.mixer.music.load("Sounds//Tchaikovsky - Valse Sentimentale.wav")
         self.boo = pygame.mixer.Sound("Sounds//Demon_Your_Soul_is_mine-BlueMann-1903732045.wav")
-        self.sanity2_graphics = pygame.image.load("Sprites//Sanity2_maze.png").convert()
+        self.insanity2_graphics = pygame.image.load("Sprites//insanity2_maze.png").convert()
         player = Player()
         active_sprite_list = pygame.sprite.Group()
         active_sprite_list.add(player)
@@ -34,9 +34,9 @@ class Maze:
         self.eno = 10
         self.toggle = True
         self.test = True
-        self.sanity2_pos = -800
-        self.sanity5toggle = False
-        if Controller.sanity == 1:
+        self.insanity2_pos = -800
+        self.insanity5toggle = False
+        if Controller.insanity == 1:
             pygame.mixer.music.play(loops=-1, start=0.0)
         self.map_list = [["1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1"],
                     ["1","2","2","2","2","1","1","1","1","1","1","1","1","1","1","1","1","1","2","2","2","1","2","1","1"],
@@ -100,7 +100,7 @@ class Maze:
                     if event.key == pygame.K_ESCAPE:
                         pygame.quit()
                         exit()
-                if Controller.sanity <= 2:
+                if Controller.insanity <= 2:
                     if event.type == pygame.KEYDOWN:
                         if event.key == pygame.K_w:
                             player.go_up()
@@ -129,7 +129,7 @@ class Maze:
                     elif event.type == pygame.KEYUP:
                         self.move_camera = 0
                         player.stop()
-                if Controller.sanity >= 3:
+                if Controller.insanity >= 3:
                     if event.type == pygame.KEYDOWN:
                         if event.key == pygame.K_s:
                             player.go_up()
@@ -164,43 +164,43 @@ class Maze:
             elif self.move_camera == 2:
                 self.posx -= self.eno
                 Maze.x_camera -= self.eno
-                self.sanity2_pos -= self.eno
+                self.insanity2_pos -= self.eno
             elif self.move_camera == 3:
                 self.posy += self.eno
                 Maze.y_camera += self.eno
             elif self.move_camera == 4:
                 self.posx += self.eno
                 Maze.x_camera += self.eno
-                self.sanity2_pos += self.eno
+                self.insanity2_pos += self.eno
             self.player_rec = pygame.Rect(self.posx,self.posy,48,48)
             self.wn.fill((0,0,0))
             if self.maze_map == 1:
                 self.map_build(self.map_list)
             elif self.maze_map == 2:
                 self.map_build(self.map_list2)
-            if Controller.sanity == 5 and self.sanity5toggle == False:
-                face = Sanity5Face()
+            if Controller.insanity == 5 and self.insanity5toggle == False:
+                face = insanity5Face()
                 active_sprite_list.add(face)
-                self.sanity5toggle = True
+                self.insanity5toggle = True
             self.time = int((pygame.time.get_ticks()-self.start_tick)/1000)
 
             active_sprite_list.update()
 
             active_sprite_list.draw(self.wn)
-            Controller.sanity_meter(self, self.wn, (255,255,255))
+            Controller.insanity_meter(self, self.wn, (255,255,255))
             Controller.score(self, self.wn, (255,255,255))
             for x in self.blacklist:
                 if x.colliderect(self.player_rec):
                     self.move_camera = 0
                 if x.contains(self.player_rec):
-                    print("Boo! Sanity level 5, score reduction!")
+                    print("Boo! insanity level 5, score reduction!")
                     Controller.score_current -= 1
                     self.boo.play(loops=1)
-                    Controller.sanity += 1
-                    if Controller.sanity > 5:
+                    Controller.insanity += 1
+                    if Controller.insanity > 5:
                         pygame.mixer.music.load("Sounds//Tchaikovsky Distorted.wav")
                         pygame.mixer.music.play(loops=-1, start=0.0)
-                        Controller.sanity = 5
+                        Controller.insanity = 5
             for y in self.finish_list:
                 if y.colliderect(self.player_rec):
                     x = random.randint(1,2)
@@ -223,31 +223,31 @@ class Maze:
                     elif self.time > 120:
                         Controller.score_current += 1000
                         print("1000 points added for completion!")
-                    Controller.sanity -= 1
+                    Controller.insanity -= 1
                     pygame.mixer.music.stop()
                     self.toggle = False
                     c1 = Controller()
-            if Controller.sanity >= 2:
-                self.sanity_results(Controller.sanity)
-            if self.time == 30 and Controller.sanity < 2:
-                Controller.sanity = 2
-            elif self.time == 45 and Controller.sanity < 3:
-                Controller.sanity = 3
+            if Controller.insanity >= 2:
+                self.insanity_results(Controller.insanity)
+            if self.time == 30 and Controller.insanity < 2:
+                Controller.insanity = 2
+            elif self.time == 45 and Controller.insanity < 3:
+                Controller.insanity = 3
                 pygame.mixer.music.load("Sounds//Tchaikovsky Distorted.wav")
                 pygame.mixer.music.play(loops=-1, start=0.0)
-            elif self.time == 60 and Controller.sanity < 4:
-                Controller.sanity = 4
+            elif self.time == 60 and Controller.insanity < 4:
+                Controller.insanity = 4
             elif self.time >= 120:
-                Controller.sanity = 5
+                Controller.insanity = 5
 
             self.clock()
             pygame.display.flip()
 
     def map_build(self, map_list):
-        if Controller.sanity < 4:
+        if Controller.insanity < 4:
             textures = {"1":self.hedge, "2":self.grass, "3":self.finish}
-        elif Controller.sanity >= 3:
-            textures = {"1":self.hedge_sanity4, "2":self.grass, "3":self.finish}
+        elif Controller.insanity >= 3:
+            textures = {"1":self.hedge_insanity4, "2":self.grass, "3":self.finish}
 
 
         for rows in range(self.map_height):
@@ -259,15 +259,15 @@ class Maze:
                     self.rec1 = textures[map_list[rows][columns]].get_rect()
                     self.finish_list += [self.rec1.move(columns*self.tile_size, rows*self.tile_size)]
                 self.wn.blit(textures[map_list[rows][columns]], (columns*self.tile_size - Maze.x_camera, rows*self.tile_size - Maze.y_camera))
-    def sanity_results(self, sanity):
-        sanity_graphics = []
-        self.sanity2_graphics.set_colorkey((0,0,0,0))
-        if self.sanity2_pos <= -2400:
-            self.sanity2_pos = 0
-        elif self.sanity2_pos >= 0:
-            self.sanity2_pos = -2400
-        self.wn.blit(self.sanity2_graphics, (self.sanity2_pos,0))
-        if Controller.sanity == 5:
+    def insanity_results(self, insanity):
+        insanity_graphics = []
+        self.insanity2_graphics.set_colorkey((0,0,0,0))
+        if self.insanity2_pos <= -2400:
+            self.insanity2_pos = 0
+        elif self.insanity2_pos >= 0:
+            self.insanity2_pos = -2400
+        self.wn.blit(self.insanity2_graphics, (self.insanity2_pos,0))
+        if Controller.insanity == 5:
             pass
     def clock(self):
         myfont = pygame.font.SysFont('Times New Roman', 45)
@@ -380,62 +380,62 @@ class Player(pygame.sprite.Sprite):
 
     def stop(self):
         self.change_x = 0
-class Sanity5Face(pygame.sprite.Sprite):
+class insanity5Face(pygame.sprite.Sprite):
     def __init__(self):
         super().__init__()
         sprite_sheet = SpriteSheet("Sprites//creepy.png")
-        self.sanity5_frames = []
-        color_key_sanity5 = (255,188,200,100)
+        self.insanity5_frames = []
+        color_key_insanity5 = (255,188,200,100)
         for xyx in range(0,321,32):
-            image = sprite_sheet.get_image(xyx, 0, 32, 32, color_key_sanity5)
+            image = sprite_sheet.get_image(xyx, 0, 32, 32, color_key_insanity5)
             image = pygame.transform.scale(image, (800, 800))
-            self.sanity5_frames.append(image)
+            self.insanity5_frames.append(image)
         for xy in range(0,321,32):
-            image = sprite_sheet.get_image(xy, 32, 32, 32, color_key_sanity5)
+            image = sprite_sheet.get_image(xy, 32, 32, 32, color_key_insanity5)
             image = pygame.transform.scale(image, (800, 800))
-            self.sanity5_frames.append(image)
+            self.insanity5_frames.append(image)
         for xy1 in range(0,321,32):
-            image = sprite_sheet.get_image(xy1, 64, 32, 32, color_key_sanity5)
+            image = sprite_sheet.get_image(xy1, 64, 32, 32, color_key_insanity5)
             image = pygame.transform.scale(image, (800, 800))
-            self.sanity5_frames.append(image)
+            self.insanity5_frames.append(image)
         for xy2 in range(0,321,32):
-            image = sprite_sheet.get_image(xy2, 96, 32, 32, color_key_sanity5)
+            image = sprite_sheet.get_image(xy2, 96, 32, 32, color_key_insanity5)
             image = pygame.transform.scale(image, (800, 800))
-            self.sanity5_frames.append(image)
+            self.insanity5_frames.append(image)
         for xy3 in range(0,321,32):
-            image = sprite_sheet.get_image(xy3, 128, 32, 32, color_key_sanity5)
+            image = sprite_sheet.get_image(xy3, 128, 32, 32, color_key_insanity5)
             image = pygame.transform.scale(image, (800, 800))
-            self.sanity5_frames.append(image)
+            self.insanity5_frames.append(image)
         for xy4 in range(0,321,32):
-            image = sprite_sheet.get_image(xy4, 160, 32, 32, color_key_sanity5)
+            image = sprite_sheet.get_image(xy4, 160, 32, 32, color_key_insanity5)
             image = pygame.transform.scale(image, (800, 800))
-            self.sanity5_frames.append(image)
+            self.insanity5_frames.append(image)
         for xy5 in range(0,321,32):
-            image = sprite_sheet.get_image(xy5, 192, 32, 32, color_key_sanity5)
+            image = sprite_sheet.get_image(xy5, 192, 32, 32, color_key_insanity5)
             image = pygame.transform.scale(image, (800, 800))
-            self.sanity5_frames.append(image)
+            self.insanity5_frames.append(image)
         for xy6 in range(0,321,32):
-            image = sprite_sheet.get_image(xy6, 224, 32, 32, color_key_sanity5)
+            image = sprite_sheet.get_image(xy6, 224, 32, 32, color_key_insanity5)
             image = pygame.transform.scale(image, (800, 800))
-            self.sanity5_frames.append(image)
+            self.insanity5_frames.append(image)
         for xy7 in range(0, 321,32):
-            image = sprite_sheet.get_image(xy7, 256, 32, 32, color_key_sanity5)
+            image = sprite_sheet.get_image(xy7, 256, 32, 32, color_key_insanity5)
             image = pygame.transform.scale(image, (800, 800))
-            self.sanity5_frames.append(image)
+            self.insanity5_frames.append(image)
         for xy8 in range(0,321,32):
-            image = sprite_sheet.get_image(xy8, 288, 32, 32, color_key_sanity5)
+            image = sprite_sheet.get_image(xy8, 288, 32, 32, color_key_insanity5)
             image = pygame.transform.scale(image, (800, 800))
-            self.sanity5_frames.append(image)
+            self.insanity5_frames.append(image)
         for xy9 in range(0,321,32):
-            image = sprite_sheet.get_image(xy9, 320, 32, 32, color_key_sanity5)
+            image = sprite_sheet.get_image(xy9, 320, 32, 32, color_key_insanity5)
             image = pygame.transform.scale(image, (800, 800))
-            self.sanity5_frames.append(image)
+            self.insanity5_frames.append(image)
         self.index = 0
-        self.image = self.sanity5_frames[self.index]
+        self.image = self.insanity5_frames[self.index]
         self.rect = self.image.get_rect()
         self.rect.move_ip(0,-100)
     def update(self):
         self.index += 1
-        if self.index >= len(self.sanity5_frames)-1:
+        if self.index >= len(self.insanity5_frames)-1:
             self.index = 120
-        self.image = self.sanity5_frames[self.index]
+        self.image = self.insanity5_frames[self.index]
