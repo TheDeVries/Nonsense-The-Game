@@ -10,46 +10,49 @@ class Space(pygame.sprite.Sprite): #spaceship model
         self.y = y
         self.running = running
         self.win = pygame.display.set_mode((800,600))
+        self.width = 64
+        self.height = 64
         self.image = pygame.image.load("Sprites//THEspaceship.png")
         self.enemyship = pygame.image.load("Sprites//enemyship.png")
         self.background = pygame.image.load("Sprites//space background.png")
-        self.speed = 10
+        self.speed = 44
         pygame.display.update()
 
         while self.running:
             pygame.time.delay(100)
 
+            keys = pygame.key.get_pressed()
+
+            if keys[pygame.K_ESCAPE]:
+                pygame.quit()
+                exit()
+
+            if keys[pygame.K_LEFT] and x > self.speed:
+                self.x -= self.speed
+
+            if keys[pygame.K_RIGHT] and x < 500 - self.width - self.speed:
+                self.x += self.speed
+
+            if keys[pygame.K_UP] and y < self.speed:   #y < speed and y < 800 - height - speed limits character to only left and right
+                self.y -= self.speed
+
+            if keys[pygame.K_DOWN] and y < 500 - self.height - self.speed:
+                self.y += self.speed
+
+            if keys[pygame.K_SPACE]:
+                self.image.shot()
+                active_sprite_list2.add(bullet)
+                bullet.shot()
+            self.win.blit(self.background, (0,0))
+            self.win.blit(self.image, (self.x,self.y))
+            self.win.blit(self.enemyship, (50,50))
+            pygame.display.flip()
+
+
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     self.running = False
 
-            # keys = pygame.key.get_pressed()
-
-                if event.type == pygame.KEYDOWN:
-                    if event.key == pygame.K_ESCAPE:
-                        pygame.quit()
-                        exit()
-
-                    if event.key == pygame.K_LEFT: #and x > speed:
-                        self.x -= self.speed
-
-                    if event.key == pygame.K_RIGHT: #and x < 500 - width - speed:
-                        self.x += self.speed
-
-                    if event.key == pygame.K_UP: #and y > speed:   #y < speed and y < 800 - height - speed limits character to only left and right
-                        self.y -= self.speed
-
-                    if event.key == pygame.K_DOWN: #and y < 500 - height - speed:
-                        self.y += self.speed
-
-                    if event.key == pygame.K_SPACE:
-                        self.image.shot()
-                        active_sprite_list2.add(bullet)
-                        bullet.shot()
-                self.win.blit(self.background, (0,0))
-                self.win.blit(self.image, (self.x,self.y))
-                self.win.blit(self.enemyship, (50,50))
-                pygame.display.flip()
 
 #
 # class Bullet(pygame.sprite.Sprite):
