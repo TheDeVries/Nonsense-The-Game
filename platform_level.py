@@ -1,8 +1,7 @@
 import pygame
 from controller import *
 
-
-class PlatformLevel:
+class Platformer:
     x_camera = 0
     y_camera = 0
     def __init__(self):
@@ -10,7 +9,7 @@ class PlatformLevel:
         self.move_camera = 0
         self.window = pygame.display.set_mode((800,600))
         self.background = pygame.image.load("Sprites//sky.png")
-        self.background = pygame.transform.scale(self.background, (2000 + PlatformLevel.x_camera,600 + PlatformLevel.y_camera))
+        self.background = pygame.transform.scale(self.background, (2000 + Platformer.x_camera,600 + Platformer.y_camera))
         self.rect = self.background.get_rect()
         self.rect.move_ip((0,0))
         self.window.fill((255,255,255))
@@ -57,13 +56,13 @@ class PlatformLevel:
                         player.stop()
                         self.move_camera = 0
             if self.move_camera == 1:
-                PlatformLevel.x_camera -= 5
+                Platformer.x_camera -= 5
             elif self.move_camera == 2:
-                PlatformLevel.x_camera += 5
+                Platformer.x_camera += 5
             elif self.move_camera == 3:
-                PlatformLevel.y_camera += 10
+                Platformer.y_camera += 10
             elif self.move_camera == 4:
-                PlatformLevel.y_camera -=100
+                Platformer.y_camera -=100
             self.window.blit(self.background, (0, 0))
             self.platforms()
             for plat in range(0, len(self.platform_list)-1):
@@ -78,14 +77,14 @@ class PlatformLevel:
             if bullet.done == True:
                 active_sprite_list2.remove(bullet)
                 bullet.done = False
-            print(PlatformLevel.x_camera)
+            print(Platformer.x_camera)
             pygame.display.flip()
     def platforms(self):
         #Floor
-        self.platform1 = pygame.draw.rect(self.window, (255,255,255), pygame.Rect(0,500 - PlatformLevel.y_camera,800,400))
+        self.platform1 = pygame.draw.rect(self.window, (255,255,255), pygame.Rect(0,500 - Platformer.y_camera,800,400))
         self.platform_list.append(self.platform1)
         #platforms_list
-        self.platform2 = pygame.draw.rect(self.window, (255,255,255), pygame.Rect(0 - PlatformLevel.x_camera,425 - PlatformLevel.y_camera,100,40))
+        self.platform2 = pygame.draw.rect(self.window, (255,255,255), pygame.Rect(0 - Platformer.x_camera,425 - Platformer.y_camera,100,40))
         self.platform_list.append(self.platform2)
 
 

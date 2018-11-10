@@ -43,6 +43,10 @@ class Club:
         self.chosens = self.Randomize()
         '''
         while self.running == True:
+
+            Controller.score(self, self.window, (255,255,255))
+            Controller.insanity_meter(self, self.window, (255,255,255))
+
             for event in pygame.event.get():
                 # Quit button
                 if event.type == pygame.QUIT:
@@ -83,7 +87,7 @@ class Club:
             self.window.blit(la_left, (5, 64))
             self.window.blit(la_right, (305, 64))
 
-            Controller.sanity_meter(self, self.window, (255,255,255))
+            Controller.insanity_meter(self, self.window, (255,255,255))
             pygame.display.flip()
 
     def Randomize(self):
@@ -112,3 +116,11 @@ class Club:
                 self.characters.remove(self.choice)
 
         return self.chosen_characters
+
+#Club Models
+class Arrows(pygame.sprite.Sprite):
+    pass
+class Characters(pygame.sprite.Sprite):
+    pass
+class Dialogue(pygame.sprite.Sprite):
+    pass
