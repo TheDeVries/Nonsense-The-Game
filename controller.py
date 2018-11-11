@@ -28,13 +28,6 @@ class Controller:
             elif Controller.scene == 5:
                 typing = Typing()
 
-
-
-
-
-
-
-
     def insanity_meter(self, window, color):
         if Controller.insanity == 1:
             window.blit(Controller.insanity1, (0,0))
@@ -50,15 +43,15 @@ class Controller:
         textsurface = myfont.render("Insanity:", True, color)
         scores = str(Controller.score_current)
         score_surface = myfont.render(str(Controller.insanity), True, color)
-        window.blit(textsurface,(130,0))
-        window.blit(score_surface,(235,0))
+        window.blit(textsurface,(0,18))
+        window.blit(score_surface,(105,18))
     def score(self, window, color):
         myfont = pygame.font.Font("Sprites//times.ttf", 45)
         textsurface = myfont.render("Score:", True, color)
         scores = str(Controller.score_current)
         score_surface = myfont.render(scores, True, color)
-        window.blit(textsurface,(500,0))
-        window.blit(score_surface,(600,0))
+        window.blit(textsurface,(650,0))
+        window.blit(score_surface,(775,0))
 class SpriteSheet(object):
 
     def __init__(self, file_name):

@@ -126,7 +126,7 @@ class Menu:
         # Start button
         y = self.button_method(37,400,163,37,400,460, self.start_button_unpressed, self.start_button_pressed)
         x = pygame.mouse.get_pressed()
-        self.text(47,410,60,"Start")
+        self.text(47,402,50,"Start")
         if x[0] == 1 and y == True:
             pygame.mixer.music.stop()
             # this is where you add levels
@@ -136,19 +136,19 @@ class Menu:
         # Instruction button
         y = self.button_method(237,400,363,237,400,460, self.instruct_button_unpressed, self.instruct_button_pressed)
         x = pygame.mouse.get_pressed()
-        self.text(262,410,60,"Info")
+        self.text(259,402,50,"Info")
         if x[0] == 1 and y == True:
             self.menu_act = 1
         # Settings button
         y = self.button_method(437,400,563,437,400,460, self.setting_button_unpressed, self.setting_button_pressed)
         x = pygame.mouse.get_pressed()
-        self.text(462,420,30,"Settings")
+        self.text(458,418,30,"Settings")
         if x[0] == 1 and y == True:
             self.menu_act = 2
         #Quit button
         y = self.button_method(637,400,763,637,400,460, self.quit_button_unpressed, self.quit_button_pressed)
         x = pygame.mouse.get_pressed()
-        self.text(652,410,60,"Quit")
+        self.text(657,402,50,"Quit")
         if x[0] == 1 and y == True:
             pygame.quit()
             exit()
@@ -165,7 +165,7 @@ class Menu:
         # Music on button
         y = self.button_method(237,200,363,237,200,260, self.res_button_unpressed, self.res_button_pressed)
         x = pygame.mouse.get_pressed()
-        self.text(255,220,30,"Music On")
+        self.text(250,220,22,"Music On")
         if x[0] == 1 and y == True:
             if self.music != True:
                 self.music = True
@@ -173,7 +173,7 @@ class Menu:
         # Music off
         y = self.button_method(437,200,563,437,200,260, self.res_button_unpressed, self.res_button_pressed)
         x = pygame.mouse.get_pressed()
-        self.text(455,220,30,"Music Off")
+        self.text(450,220,22,"Music Off")
         if x[0] == 1 and y == True:
             self.music = False
-        self.text(335, 120, 30, "Sound Settings")
+        self.text(325, 120, 30, "Sound Settings")
