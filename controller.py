@@ -52,6 +52,31 @@ class Controller:
         score_surface = myfont.render(scores, True, color)
         window.blit(textsurface,(650,0))
         window.blit(score_surface,(775,0))
+    def scene_selector(self, scene_finished):
+        Controller.scenes_done.append(scene_finished)
+        rand = random.randrange(0,101,25)
+        if rand == 25:
+            Controller.scene = 1
+            Controller.scenes_done.append(1)
+        elif rand == 50:
+            Controller.scene = 2
+            Controller.scenes_done.append(2)
+        elif rand == 75:
+            Controller.scene = 3
+            Controller.scenes_done.append(3)
+        elif rand == 100:
+            Controller.scene = 4
+            Controller.scenes.done.append(4)
+        elif rand == 0:
+            Controller.scene = 5
+            Controller.scenes_done.append(5)
+
+
+
+
+
+
+
 class SpriteSheet(object):
 
     def __init__(self, file_name):

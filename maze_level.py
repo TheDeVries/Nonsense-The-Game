@@ -38,7 +38,7 @@ class Maze:
         self.insanity5toggle = False
         if Controller.insanity == 1:
             pygame.mixer.music.play(loops=-1, start=0.0)
-        self.map_list = [["1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1"],
+        self.map_list = [["1","1","3","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1"],
                     ["1","2","2","2","2","1","1","1","1","1","1","1","1","1","1","1","1","1","2","2","2","1","2","1","1"],
                     ["1","2","2","2","2","1","1","1","2","2","2","2","2","2","2","2","2","1","2","1","2","1","2","1","1"],
                     ["1","2","2","2","2","2","2","1","2","1","1","1","1","1","2","1","2","1","2","1","2","1","2","1","1"],
@@ -64,7 +64,7 @@ class Maze:
                     ["1","1","1","1","2","2","2","2","2","1","1","1","2","2","2","2","2","2","2","2","2","2","2","2","1"],
                     ["1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1"]]
 
-        self.map_list2 = [["1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1"],
+        self.map_list2 = [["1","1","3","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1"],
                           ["1","2","2","2","2","2","2","2","2","2","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1"],
                           ["1","2","2","2","2","1","1","1","1","2","2","2","2","2","2","2","2","2","2","2","2","1","1","1","1"],
                           ["1","2","2","2","2","2","2","1","1","2","1","1","1","1","1","1","1","1","1","1","2","1","1","1","1"],
@@ -203,27 +203,8 @@ class Maze:
                         Controller.insanity = 5
             for y in self.finish_list:
                 if y.colliderect(self.player_rec):
-                    x = random.randint(1,2)
-                    Controller.scenes_done.append(2)
-                    if x in Controller.scenes_done:
-                        print("Already done this level... Making some changes")
-                        x = 1
-                        if x in Controller.scenes_done:
-                            x = 3
-                    Controller.scene = x
-                    if self.time <= 75:
-                        Controller.score_current += 10000
-                        print("10000 points added for completion!")
-                    elif self.time <= 100:
-                        Controller.score_current += 5000
-                        print("5000 points added for completion!")
-                    elif self.time <= 120:
-                        Controller.score_current += 2500
-                        print("2500 points added for completion!")
-                    elif self.time > 120:
-                        Controller.score_current += 1000
-                        print("1000 points added for completion!")
-                    Controller.insanity -= 1
+                    Controller.scene_selector(self, 2)
+                    Controller.score_current += 1
                     pygame.mixer.music.stop()
                     self.toggle = False
                     c1 = Controller()
