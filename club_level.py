@@ -6,6 +6,10 @@ pygame.init()
 class Club:
     def __init__(self):
         self.running = True
+        #Sounds
+        self.club_music = pygame.mixer.music.load("Sounds//HOME - Above All.wav")
+        pygame.mixer.music.play(loops=-1, start=0.0)
+
         #Club & Characters
         self.window = pygame.display.set_mode((800, 600))
         self.club_background = pygame.image.load("Sprites//club.png").convert()
