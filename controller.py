@@ -54,22 +54,47 @@ class Controller:
         window.blit(score_surface,(775,0))
     def scene_selector(self, scene_finished):
         Controller.scenes_done.append(scene_finished)
-        rand = random.randrange(0,101,25)
-        if rand == 25:
-            Controller.scene = 1
-            Controller.scenes_done.append(1)
-        elif rand == 50:
-            Controller.scene = 2
-            Controller.scenes_done.append(2)
-        elif rand == 75:
-            Controller.scene = 3
-            Controller.scenes_done.append(3)
-        elif rand == 100:
-            Controller.scene = 4
-            Controller.scenes.done.append(4)
-        elif rand == 0:
-            Controller.scene = 5
-            Controller.scenes_done.append(5)
+        rand = random.randrange(0,101)
+        if rand < 20:
+            if Controller.scene != 1:
+                Controller.scene = 1
+                Controller.scenes_done.append(1)
+            elif Controller.scene == 1:
+                rand = random.randrange(0,101)
+                if rand < 15:
+                    Controller.scene = 1
+        elif rand > 20 and rand < 40:
+            if Controller.scene != 2:
+                Controller.scene = 2
+                Controller.scenes_done.append(2)
+            elif Controller.scene == 2:
+                rand = random.randrange(0,101)
+                if rand < 15:
+                    Controller.scene = 2
+        elif rand > 40 and rand < 60:
+            if Controller.scene != 3:
+                Controller.scene = 3
+                Controller.scenes_done.append(3)
+            elif Controller.scene == 3:
+                rand = random.randrange(0,101)
+                if rand < 15:
+                    Controller.scene = 3
+        elif rand > 60 and rand < 80:
+            if Controller.scene != 4:
+                Controller.scene = 4
+                Controller.scenes_done.append(4)
+            elif Controller.scene == 4:
+                rand = random.randrange(0,101)
+                if rand < 15:
+                    Controller.scene = 4
+        elif rand > 80 and rand < 100:
+            if Controller.scene != 5:
+                Controller.scene = 5
+                Controller.scenes_done.append(5)
+            elif Controller.scene == 5:
+                rand = random.randrange(0,101)
+                if rand < 15:
+                    Controller.scene = 5
 
 
 
