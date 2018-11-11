@@ -69,7 +69,8 @@ class Typing:
             l = len(our_word)
 
             if left_count == 0:
-                Controller.scene_selector(5)
+                Controller.scene_selector(self, 5)
+                c = Controller()
 
             for event in pygame.event.get():
                 # Quit button
