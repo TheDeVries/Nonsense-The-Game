@@ -68,6 +68,9 @@ class Typing:
                 self.window.blit(self.strike, (674, 335))
             l = len(our_word)
 
+            if left_count == 0:
+                Controller.scene_selector(5)
+
             for event in pygame.event.get():
                 # Quit button
                 if event.type == pygame.QUIT:
