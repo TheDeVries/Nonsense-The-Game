@@ -176,4 +176,4 @@ class Menu:
         self.text(450,220,22,"Music Off")
         if x[0] == 1 and y == True:
             self.music = False
-        self.text(325, 120, 30, "Sound Settings")
+        self.text(320, 120, 30, "Sound Settings")
