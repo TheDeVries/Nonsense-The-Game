@@ -14,6 +14,7 @@ class Controller:
         pygame.init()
         self.running_menu = True
         self.window = pygame.display.set_mode((800,600))
+        pygame.display.set_icon(pygame.image.load("Sprites//eyecon.png"))
         while self.running_menu:
             if Controller.scene == 0:
                 men = Menu()
