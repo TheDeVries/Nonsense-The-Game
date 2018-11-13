@@ -16,7 +16,7 @@ class Space(pygame.sprite.Sprite): #spaceship model
         self.background = pygame.image.load("Sprites//space background.png")
         self.image = pygame.transform.scale(self.image, (50,50))
         self.speed = 44
-        enemy = Enemy(380,380, "Sprites//Enemy-5.png")
+        enemy = Enemy(380,380, "Sprites//enemyship.png")
         pygame.display.update()
 
         while self.running:
@@ -67,7 +67,7 @@ class Enemy(pygame.sprite.Sprite):
         self.speed = 10
 
     def update(self):
-        self.movex = random.randrange(10)
+        self.movex = random.randint(-10,10)
         self.rect.x += self.movex
 
 
@@ -75,6 +75,8 @@ class Enemy(pygame.sprite.Sprite):
         win.blit(self.image, self.rect)
 
 Space()
+
+
 #
 # class Bullet(pygame.sprite.Sprite):
 #     def __init__(self):
