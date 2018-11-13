@@ -15,6 +15,9 @@ class Space(pygame.sprite.Sprite): #spaceship model
         self.image = pygame.image.load("Sprites//THEspaceship.png")
         self.background = pygame.image.load("Sprites//space background.png")
         self.image = pygame.transform.scale(self.image, (50,50))
+        pygame.mixer.music.load("Sounds//space music.wav")
+        pygame.mixer.music.play(-1,0.0)
+        self.music = True
         self.speed = 44
         enemy = Enemy(380,380, "Sprites//enemyship.png")
         pygame.display.update()
@@ -74,7 +77,7 @@ class Enemy(pygame.sprite.Sprite):
     def draw(self, win):
         win.blit(self.image, self.rect)
 
-Space()
+
 
 
 #
