@@ -4,7 +4,7 @@ from controller import *
 pygame.init()
 
 class Space(pygame.sprite.Sprite): #spaceship model
-    def __init__(self, running = True, isJump = False, jumpCount = 10, x = 50, y = 440):
+    def __init__(self, running = True, isJump = False, jumpCount = 10, x = 50, y = 530):
         pygame.sprite.Sprite.__init__(self)
         self.x = x
         self.y = y
@@ -13,9 +13,10 @@ class Space(pygame.sprite.Sprite): #spaceship model
         self.width = 64
         self.height = 64
         self.image = pygame.image.load("Sprites//THEspaceship.png")
-        self.enemyship = pygame.image.load("Sprites//enemyship.png")
         self.background = pygame.image.load("Sprites//space background.png")
+        self.image = pygame.transform.scale(self.image, (50,50))
         self.speed = 44
+        enemy = Enemy(380,380, "Sprites//Enemy-5.png")
         pygame.display.update()
 
         while self.running:
@@ -27,16 +28,16 @@ class Space(pygame.sprite.Sprite): #spaceship model
                 pygame.quit()
                 exit()
 
-            if keys[pygame.K_LEFT] and x > self.speed:
+            if keys[pygame.K_LEFT] and self.x > self.speed:
                 self.x -= self.speed
 
-            if keys[pygame.K_RIGHT] and x < 500 - self.width - self.speed:
+            if keys[pygame.K_RIGHT] and self.x < 819 - self.width - self.speed:
                 self.x += self.speed
 
-            if keys[pygame.K_UP] and y < self.speed:   #y < speed and y < 800 - height - speed limits character to only left and right
+            if keys[pygame.K_UP] and self.y < self.speed:   #y < speed and y < 800 - height - speed limits character to only left and right
                 self.y -= self.speed
 
-            if keys[pygame.K_DOWN] and y < 500 - self.height - self.speed:
+            if keys[pygame.K_DOWN] and self.y < 800 - self.height - self.speed:
                 self.y += self.speed
 
             if keys[pygame.K_SPACE]:
@@ -45,7 +46,9 @@ class Space(pygame.sprite.Sprite): #spaceship model
                 bullet.shot()
             self.win.blit(self.background, (0,0))
             self.win.blit(self.image, (self.x,self.y))
-            self.win.blit(self.enemyship, (50,50))
+
+            enemy.draw(self.win)
+            enemy.update()
             pygame.display.flip()
 
 
@@ -53,7 +56,25 @@ class Space(pygame.sprite.Sprite): #spaceship model
                 if event.type == pygame.QUIT:
                     self.running = False
 
+class Enemy(pygame.sprite.Sprite):
+    def __init__(self,x,y,filename):
+        pygame.sprite.Sprite.__init__(self)
+        self.image = pygame.image.load(filename)
+        self.rect = self.image.get_rect()
+        self.x = x
+        self.y = y
+        self.enemyship = pygame.transform.scale(self.image, (380,380))
+        self.speed = 10
 
+    def update(self):
+        self.movex = random.randrange(10)
+        self.rect.x += self.movex
+
+
+    def draw(self, win):
+        win.blit(self.image, self.rect)
+
+Space()
 #
 # class Bullet(pygame.sprite.Sprite):
 #     def __init__(self):
