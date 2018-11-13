@@ -98,4 +98,3 @@ class Enemy(pygame.sprite.Sprite):
 #     def shot(self):
 #
 #     def reset(self):
-Space()
