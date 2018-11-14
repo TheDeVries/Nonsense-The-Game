@@ -5,6 +5,7 @@ pygame.init()
 
 class Club:
     def __init__(self):
+        self.start_tick = pygame.time.get_ticks()
         self.running = True
         #Sounds
         self.club_music = pygame.mixer.music.load("Sounds//HOME - Above All.wav")
@@ -41,6 +42,7 @@ class Club:
 
             Controller.score(self, self.window, (255,255,255))
             Controller.insanity_meter(self, self.window, (255,255,255))
+            Controller.clock(self, self.window, 1, 30, self.start_tick)
 
             if self.setting == 1:
 
@@ -51,33 +53,48 @@ class Club:
                 if self.chosens[5] == "Sprites//bar_server.png":
                     Character(self.chosens[5], self.chosens[2], self.setting, self.window)
 
-                for event in pygame.event.get():
-                    # Quit button
-                    if event.type == pygame.QUIT:
-                        pygame.quit()
-                        exit()
-                    # Keybinds
-                    if event.type == pygame.KEYDOWN:
-                        if event.key == pygame.K_ESCAPE:
-                            pygame.quit()
-                            exit()
-                        #elif event.key == pygame.K_SPACE:
-                            #Club()
-
-                pygame.display.flip()
-
             elif self.setting == 2:
-                '''
-                self.bar_man2_front.set_colorkey((255,255,255))
-                self.window.blit(self.bar_man2_front, (400, 300))
+
+                Character("Sprites//bar_server_front.png", (400, 300), self.setting, self.window)
                 self.speech_bubble.set_colorkey((255,255,255))
                 self.window.blit(self.speech_bubble, (400, 65))
                 self.window.blit(la_up, (105, 64))
                 self.window.blit(la_down, (205, 64))
                 self.window.blit(la_left, (5, 64))
                 self.window.blit(la_right, (305, 64))
-                '''
+
+            for event in pygame.event.get():
+                # Quit button
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+                    exit()
+                # Keybinds
+                if event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_ESCAPE:
+                        pygame.quit()
+                        exit()
+                    if event.key == pygame.K_SPACE:
+                        Club()
+                    if event.key == pygame.K_p:
+                        Controller.scene_selector(self, 3)
+                        pygame.mixer.music.stop()
+                        Controller.score_current += 1
+                        self.toggle = False
+                        c1 = Controller()
+                # Mouseclick
+                if event.type == pygame.MOUSEBUTTONDOWN and self.setting == 1:
+                    self.window.blit(self.club_background2, (0,0))
+                    clicked_pos = pygame.mouse.get_pos()
+                    self.setting = 2
+
+            pygame.display.flip()
+
     def Randomize(self):
+        '''
+        Returns a list where the first three items are position tuples randomly picked from five possible options
+        and the last three items are sprite strings that match with the position three indexes prior.
+        Example: (pos1, pos2, pos3, sprite1, sprite2, sprite3)
+        '''
         self.chosens = []
         self.positions = self.rand_positions()
         self.characters = self.rand_characters(self.positions)
@@ -85,6 +102,9 @@ class Club:
         return self.chosens
 
     def rand_positions(self):
+        '''
+        Removes two of the possible character blit positions leaving the three chosen positions to return
+        '''
         self.positions = [(200, 210), (325, 150), (450, 90), (575, 30), (550, 200)]
         for i in range(2):
             self.choice = random.choice(self.positions)
@@ -92,6 +112,11 @@ class Club:
         return self.positions
 
     def rand_characters(self, positions):
+        '''
+        Takes positions as paramter and selects characters to return based on those positions
+        This is mostly randomized except when the bar_server position is selected and this sprite is confirmed
+        to be a part of the returned list of chosen characters.
+        '''
         self.characters = ["Sprites//bar_man.png", "Sprites//bar_man2.png", "Sprites//bar_woman.png", "Sprites//bar_woman2.png"]
         self.chosen_characters = []
         for i in range(len(self.positions)):
@@ -104,7 +129,7 @@ class Club:
 
         return self.chosen_characters
 
-#Club Models
+# Club Models
 class Character(pygame.sprite.Sprite):
     def __init__(self, image, position, setting, window):
         pygame.sprite.Sprite.__init__(self)
@@ -119,12 +144,12 @@ class Character(pygame.sprite.Sprite):
         else:
             self.rect.x = 400
             self.rect.y = 300
-    def clickable(self, setting):
-        if setting == 1:
-            pass
-#Setting 2 Exclusive
-class Dialogue(pygame.sprite.Sprite):
-    pass
+            self.character = self.image
+            window.blit(self.character, position)
+# Setting 2 Exclusive
+class Dialogue:
+    def __init__(self, position, window):
+        myfont = pygame.font.Font("Sprites//times.ttf", 45)
 
 class Arrows(pygame.sprite.Sprite):
     pass

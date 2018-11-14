@@ -58,6 +58,12 @@ class Space(pygame.sprite.Sprite): #spaceship model
             self.win.blit(self.background, (0,0))
             self.win.blit(self.image, (self.x,self.y))
 
+            if keys[pygame.K_p]:
+                Controller.scene_selector(self, 1)
+                pygame.mixer.music.stop()
+                Controller.score_current += 1
+                self.toggle = False
+                c1 = Controller()
             enemy.draw(self.win)
             enemy.update()
             pygame.display.flip()
