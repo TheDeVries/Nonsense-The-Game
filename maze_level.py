@@ -7,7 +7,6 @@ class Maze:
     y_camera = 0
     def __init__(self):
         self.start_tick = pygame.time.get_ticks()
-
         self.running = True
         self.wn = pygame.display.set_mode((800,600), pygame.HWSURFACE)
         self.hedge = pygame.image.load("Sprites//hedge.png")
@@ -203,6 +202,8 @@ class Maze:
                         Controller.insanity = 5
             for y in self.finish_list:
                 if y.colliderect(self.player_rec):
+                    Maze.x_camera = 0
+                    Maze.y_camera = 0
                     Controller.scene_selector(self, 2)
                     Controller.score_current += 1
                     pygame.mixer.music.stop()
