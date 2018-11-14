@@ -96,6 +96,11 @@ class Typing:
                         our_word += "|"
                     elif event.key == pygame.K_RSHIFT or event.key == pygame.K_LSHIFT:
                         pass
+                    elif event.key == pygame.K_p:
+                        Controller.scene_selector(self, 5)
+                        Controller.score_current += 1
+                        self.toggle = False
+                        c1 = Controller()
                     else:
                         our_key = self.myfont.render(chr(event.key), True, (0,0,0))
                         our_word = our_word[0:(l-1)]
