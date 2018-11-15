@@ -5,15 +5,17 @@ pygame.init()
 
 class Typing:
     def __init__(self):
+        self.start_tick = pygame.time.get_ticks()
         #Sounds
         self.window = pygame.display.set_mode((800,600))
         self.welcome_jingle = pygame.mixer.Sound("Sounds//Computer Magic.wav")
         self.chime = pygame.mixer.Sound("Sounds//Electronic_Chime.wav")
         self.check = pygame.mixer.Sound("Sounds//Check Mark.wav")
 
+        #Sprites
         self.ty_background = pygame.image.load("Sprites//Pro Typing.png").convert()
         self.walmart = pygame.image.load("Sprites//walmart.png").convert()
-        #S refers to Sanity and L to level of difficulty
+
         S1_L1 = ["cat", "tractor", "monkey", "boat", "house", "man", "hat", "run",
         "elephant", "mouse", "computer", "pick", "police", "sports", "fruit",
         "ocean", "money", "game", "snake", "car", "factory", "food", "family"]
@@ -50,6 +52,7 @@ class Typing:
             self.window.blit(self.ty_background, (0,0))
             Controller.score(self, self.window, (255,255,255))
             Controller.insanity_meter(self, self.window, (255,255,255))
+            Controller.clock(self, self.window, (240, 93, 93), 30, self.start_tick)
             display_word = self.myfont.render(self.word, True, (0, 0, 0))
             display_line = self.myfont.render(">", True, (0,0,0))
             display_cursor = self.myfont.render("|", True, (0,0,0))

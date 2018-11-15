@@ -36,14 +36,15 @@ class Club:
         la_right = pygame.transform.rotate(self.arrow_orange, 180)
 
         self.setting = 1
-        self.window.blit(self.club_background, (0,0))
+        our_background = self.club_background
         self.chosens = self.Randomize()
 
         while self.running == True:
 
+            self.window.blit(our_background, (0,0))
             Controller.score(self, self.window, (255,255,255))
             Controller.insanity_meter(self, self.window, (255,255,255))
-            Controller.clock(self, self.window, 1, 30, self.start_tick)
+            Controller.clock(self, self.window, (93, 240, 93), 30, self.start_tick)
 
             if self.setting == 1:
 
@@ -90,7 +91,7 @@ class Club:
                     print(sprite)
                     print(sprite2)
                     if pygame.sprite.collide_rect(sprite, sprite2) == True:
-                        self.window.blit(self.club_background2, (0,0))
+                        our_background = self.club_background2
                         self.setting = 2
 
             pygame.display.flip()
