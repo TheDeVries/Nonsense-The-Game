@@ -49,10 +49,10 @@ class Club:
 
                 for i in range(-1, -len(self.chosens)+2, -1):
                     if self.chosens[i] != "Sprites//bar_server.png":
-                        character = Character(self.chosens[i], self.chosens[i-3], self.setting, self.window)
+                        sprite = Character(self.chosens[i], self.chosens[i-3], self.setting, self.window)
                 self.window.blit(self.bar, (200, 300))
                 if self.chosens[5] == "Sprites//bar_server.png":
-                    character = Character(self.chosens[5], self.chosens[2], self.setting, self.window)
+                    sprite = Character(self.chosens[5], self.chosens[2], self.setting, self.window)
             elif self.setting == 2:
 
                 Character("Sprites//bar_server_front.png", (400, 300), self.setting, self.window)
@@ -82,9 +82,16 @@ class Club:
                         c1 = Controller()
                 # Mouseclick
                 if event.type == pygame.MOUSEBUTTONDOWN and self.setting == 1:
-                    self.window.blit(self.club_background2, (0,0))
                     clicked_pos = pygame.mouse.get_pos()
-                    self.setting = 2
+                    sprite2 = pygame.sprite.Sprite()
+                    self.rect2 = pygame.Rect((clicked_pos), (30, 30))
+                    pygame.draw.rect(self.window, (255,255,255), [(clicked_pos), (30, 30)])
+                    sprite2.rect = self.rect2
+                    print(sprite)
+                    print(sprite2)
+                    if pygame.sprite.collide_rect(sprite, sprite2) == True:
+                        self.window.blit(self.club_background2, (0,0))
+                        self.setting = 2
 
             pygame.display.flip()
 
@@ -136,8 +143,8 @@ class Character(pygame.sprite.Sprite):
         self.rect = self.image.get_rect()
         self.image.set_colorkey((255,255,255))
         if setting == 1:
-            self.rect.x = 125
-            self.rect.y = 250
+            self.rect.x = 250
+            self.rect.y = 500
             self.character = pygame.transform.scale(self.image, (250, 500))
             window.blit(self.character, position)
         else:
@@ -145,6 +152,8 @@ class Character(pygame.sprite.Sprite):
             self.rect.y = 300
             self.character = self.image
             window.blit(self.character, position)
+    def getRect(self):
+        return self.rect
 # Setting 2 Exclusive
 class Dialogue:
     def __init__(self, position, window):
@@ -152,4 +161,3 @@ class Dialogue:
 
 class Arrows(pygame.sprite.Sprite):
     pass
-Club()
