@@ -14,7 +14,7 @@
 ***
 
 ## Project Description
- __Nonsense: The Game__ is a pixelated horror game under a facade of simplicity. Gameplay goes a little bit like this: The player is led through an assortment of games and scenarios that are rotated according to a randomized timer. Success in each scene will raise the player’s score. Failure will decrease the sanity meter, resulting in a series of undesirable graphical, audio, and logical distortions. It’s game over once the sanity meter reaches zero.
+ __Nonsense: The Game__ is a pixelated horror game under a facade of simplicity. Gameplay is as follows: The player is led through an assortment of games and scenarios that are rotated according to a randomized timer. Success in each scene will raise the player’s score. Failure will increase the insanity meter, resulting in a series of undesirable graphical, audio, and logical distortions. It’s game over once the insanity meter reaches 6.
 
 
 ***    
@@ -34,12 +34,22 @@
 * Decide upon a class interface for the classes in your project.
     * A simple drawing that shows the class relationships in your code (see the sample Proposal document for an example).
     * This does not need to be overly detailed, but should show how your code fits into the Model/View/Controller paradigm.
-* You should have a list of each of your classes with a description.
-
+* List of Classes:
+    * Controller Class: Randomly chooses a new scene based off of the levels that have already been completed. Used to display insanity and score and handle related effects.
+    * Club Class: Contains the game loop for club level
+      * Model Classes include Character, Arrows, and Dialogue
+    * Typing Class: Contains the game loop for typing level
+      * Model Classes include Feedback and word
+    * Platformer Class: Contains the game loop for platformer level
+      * Model Classes include: Player_Platform, Bullet, and enemy
+    * Maze Class: Contains the game loop for maze level
+      * Model Classes include: Player, insanity5face
+    * Space Class: Contains the game loop for space shooter level
+      * Model Classes include: Player, enemy, and bullet
 ***
 
 ## Tasks and Responsibilities
-### Software Lead - Brain DeVries
+### Software Lead - Brian DeVries
 TBT
 
 ### Front End Specialist - Kevin Apyapong

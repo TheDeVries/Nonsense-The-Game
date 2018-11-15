@@ -51,6 +51,11 @@ class Platformer:
                     if event.key == pygame.K_SPACE:
                         if self.player_jump == True:
                             self.move_camera = 4
+                    if event.key == pygame.K_p:
+                        Controller.scene_selector(self, 4)
+                        pygame.mixer.music.stop()
+                        self.toggle = False
+                        c1 = Controller()
                 elif event.type == pygame.KEYUP:
                     if event.key != pygame.K_SPACE:
                         player.stop()

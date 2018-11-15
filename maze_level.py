@@ -2,12 +2,12 @@ import pygame
 import random
 from controller import *
 pygame.init()
+
 class Maze:
     x_camera = 0
     y_camera = 0
     def __init__(self):
         self.start_tick = pygame.time.get_ticks()
-
         self.running = True
         self.wn = pygame.display.set_mode((800,600), pygame.HWSURFACE)
         self.hedge = pygame.image.load("Sprites//hedge.png")
@@ -155,6 +155,11 @@ class Maze:
                         if event.key == pygame.K_LEFT:
                             player.go_right()
                             self.move_camera = 4
+                        if event.key == pygame.K_p:
+                            Controller.scene_selector(self, 2)
+                            pygame.mixer.music.stop()
+                            self.toggle = False
+                            c1 = Controller()
                     elif event.type == pygame.KEYUP:
                         self.move_camera = 0
                         player.stop()
@@ -203,8 +208,9 @@ class Maze:
                         Controller.insanity = 5
             for y in self.finish_list:
                 if y.colliderect(self.player_rec):
+                    Maze.x_camera = 0
+                    Maze.y_camera = 0
                     Controller.scene_selector(self, 2)
-                    Controller.score_current += 1
                     pygame.mixer.music.stop()
                     self.toggle = False
                     c1 = Controller()
@@ -251,10 +257,10 @@ class Maze:
         if Controller.insanity == 5:
             pass
     def clock(self):
-        myfont = pygame.font.Font("Sprites//times.ttf", 45)
-        timefont = myfont.render("Time:", True, (255, 255, 255))
+        myfont = pygame.font.Font("Sprites//digital-7.ttf", 55)
+        timefont = myfont.render("Time:", True, (240, 93, 93))
         strtimer = str(self.time)
-        clocktimer = myfont.render(strtimer, True, (255, 255, 255))
+        clocktimer = myfont.render(strtimer, True, (240, 93, 93))
         self.wn.blit(timefont,(300,0))
         self.wn.blit(clocktimer,(400,0))
 
@@ -338,12 +344,6 @@ class Player(pygame.sprite.Sprite):
         elif self.direction == "D":
             frame = (posy // 30) % len(self.walking_frames_d)
             self.image = self.walking_frames_d[frame]
-
-
-
-
-
-
 
     # Player-controlled movement:
     def go_left(self):
