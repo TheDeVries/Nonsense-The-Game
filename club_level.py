@@ -17,6 +17,7 @@ class Club:
         self.club_background2 = pygame.image.load("Sprites//club2.png").convert()
         self.bar = pygame.image.load("Sprites//empty_bar.png").convert()
         self.bar.set_colorkey((0,0,64))
+        active_sprite_list = pygame.sprite.Group()
 
         #Keyboard DDR Setting
         self.speech_bubble = pygame.image.load("Sprites//speech_bubble.png").convert()
@@ -48,11 +49,10 @@ class Club:
 
                 for i in range(-1, -len(self.chosens)+2, -1):
                     if self.chosens[i] != "Sprites//bar_server.png":
-                        Character(self.chosens[i], self.chosens[i-3], self.setting, self.window)
+                        character = Character(self.chosens[i], self.chosens[i-3], self.setting, self.window)
                 self.window.blit(self.bar, (200, 300))
                 if self.chosens[5] == "Sprites//bar_server.png":
-                    Character(self.chosens[5], self.chosens[2], self.setting, self.window)
-
+                    character = Character(self.chosens[5], self.chosens[2], self.setting, self.window)
             elif self.setting == 2:
 
                 Character("Sprites//bar_server_front.png", (400, 300), self.setting, self.window)
@@ -78,7 +78,6 @@ class Club:
                     if event.key == pygame.K_p:
                         Controller.scene_selector(self, 3)
                         pygame.mixer.music.stop()
-                        Controller.score_current += 1
                         self.toggle = False
                         c1 = Controller()
                 # Mouseclick
@@ -131,9 +130,9 @@ class Club:
 
 # Club Models
 class Character(pygame.sprite.Sprite):
-    def __init__(self, image, position, setting, window):
+    def __init__(self, file, position, setting, window):
         pygame.sprite.Sprite.__init__(self)
-        self.image = pygame.image.load(image).convert()
+        self.image = pygame.image.load(file).convert()
         self.rect = self.image.get_rect()
         self.image.set_colorkey((255,255,255))
         if setting == 1:
@@ -153,3 +152,4 @@ class Dialogue:
 
 class Arrows(pygame.sprite.Sprite):
     pass
+Club()

@@ -98,7 +98,6 @@ class Typing:
                         pass
                     elif event.key == pygame.K_p:
                         Controller.scene_selector(self, 5)
-                        Controller.score_current += 1
                         self.toggle = False
                         c1 = Controller()
                     else:
