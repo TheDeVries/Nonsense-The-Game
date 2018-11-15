@@ -61,14 +61,9 @@ class Controller:
         myfont = pygame.font.Font("Sprites//digital-7.ttf", 60)
         self.time = int((amount - (pygame.time.get_ticks() - former_time)/1000))
         num_sec = self.time
-        num_10sec = self.time // 10
+        num_10sec = 0
         num_min = 0
         num_10min = 0
-        timeslots = [num_sec, num_10sec, num_min, num_10min]
-        for i in range(len(timeslots)):
-            if timeslots[i] < 0:
-                timeslots[i] = 9
-
         strtimer = str(num_10min) + str(num_min) + ":" + str(num_10sec) + str(num_sec)
         clocktimer = myfont.render(strtimer, True, color)
         if Controller.score_current < 10:
