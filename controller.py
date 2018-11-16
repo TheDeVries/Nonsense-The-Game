@@ -51,20 +51,28 @@ class Controller:
         textsurface = myfont.render("Score:", True, color)
         scores = str(Controller.score_current)
         score_surface = myfont.render(scores, True, color)
-        window.blit(textsurface,(650,0))
-        window.blit(score_surface,(775,0))
-    def clock(self, window, type, amount, former_time):
-        myfont = pygame.font.Font("Sprites//digital-7.ttf", 55)
+        if Controller.score_current < 10:
+            window.blit(textsurface,(650,0))
+            window.blit(score_surface,(775,0))
+        else:
+            window.blit(textsurface, (625, 0))
+            window.blit(score_surface, (750, 0))
+    def clock(self, window, color, amount, former_time):
+        myfont = pygame.font.Font("Sprites//digital-7.ttf", 60)
         self.time = int((amount - (pygame.time.get_ticks() - former_time)/1000))
-        strtimer = str(self.time)
-        if type == 1:
-            clocktimer = myfont.render(strtimer, True, (240, 93, 93))
-        elif type == 2:
-            clocktimer = myfont.render(strtimer, True, (93, 240, 93))
-        window.blit(clocktimer, (350, 0))
-        print(self.time)
+        num_sec = self.time
+        num_10sec = 0
+        num_min = 0
+        num_10min = 0
+        strtimer = str(num_10min) + str(num_min) + ":" + str(num_10sec) + str(num_sec)
+        clocktimer = myfont.render(strtimer, True, color)
+        if Controller.score_current < 10:
+            window.blit(clocktimer, (322, 3))
+        else:
+            window.blit(clocktimer, (297, 3))
     def scene_selector(self, scene_finished):
         Controller.scenes_done.append(scene_finished)
+        Controller.score_current += 1
         rand = random.randrange(0,101)
         if rand < 20:
             if Controller.scene != 1:

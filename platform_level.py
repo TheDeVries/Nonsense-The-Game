@@ -57,7 +57,6 @@ class Platformer:
                     if event.key == pygame.K_p:
                         Controller.scene_selector(self, 4)
                         pygame.mixer.music.stop()
-                        Controller.score_current += 1
                         self.toggle = False
                         c1 = Controller()
                 elif event.type == pygame.KEYUP:

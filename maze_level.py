@@ -158,7 +158,6 @@ class Maze:
                         if event.key == pygame.K_p:
                             Controller.scene_selector(self, 2)
                             pygame.mixer.music.stop()
-                            Controller.score_current += 1
                             self.toggle = False
                             c1 = Controller()
                     elif event.type == pygame.KEYUP:
@@ -212,7 +211,6 @@ class Maze:
                     Maze.x_camera = 0
                     Maze.y_camera = 0
                     Controller.scene_selector(self, 2)
-                    Controller.score_current += 1
                     pygame.mixer.music.stop()
                     self.toggle = False
                     c1 = Controller()

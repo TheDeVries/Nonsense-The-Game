@@ -17,6 +17,7 @@ class Club:
         self.club_background2 = pygame.image.load("Sprites//club2.png").convert()
         self.bar = pygame.image.load("Sprites//empty_bar.png").convert()
         self.bar.set_colorkey((0,0,64))
+        active_sprite_list = pygame.sprite.Group()
 
         #Keyboard DDR Setting
         self.speech_bubble = pygame.image.load("Sprites//speech_bubble.png").convert()
@@ -35,24 +36,24 @@ class Club:
         la_right = pygame.transform.rotate(self.arrow_orange, 180)
 
         self.setting = 1
-        self.window.blit(self.club_background, (0,0))
+        our_background = self.club_background
         self.chosens = self.Randomize()
 
         while self.running == True:
 
+            self.window.blit(our_background, (0,0))
             Controller.score(self, self.window, (255,255,255))
             Controller.insanity_meter(self, self.window, (255,255,255))
-            Controller.clock(self, self.window, 1, 30, self.start_tick)
+            Controller.clock(self, self.window, (93, 240, 93), 30, self.start_tick)
 
             if self.setting == 1:
 
                 for i in range(-1, -len(self.chosens)+2, -1):
                     if self.chosens[i] != "Sprites//bar_server.png":
-                        Character(self.chosens[i], self.chosens[i-3], self.setting, self.window)
+                        sprite = Character(self.chosens[i], self.chosens[i-3], self.setting, self.window)
                 self.window.blit(self.bar, (200, 300))
                 if self.chosens[5] == "Sprites//bar_server.png":
-                    Character(self.chosens[5], self.chosens[2], self.setting, self.window)
-
+                    sprite = Character(self.chosens[5], self.chosens[2], self.setting, self.window)
             elif self.setting == 2:
 
                 Character("Sprites//bar_server_front.png", (400, 300), self.setting, self.window)
@@ -78,14 +79,20 @@ class Club:
                     if event.key == pygame.K_p:
                         Controller.scene_selector(self, 3)
                         pygame.mixer.music.stop()
-                        Controller.score_current += 1
                         self.toggle = False
                         c1 = Controller()
                 # Mouseclick
                 if event.type == pygame.MOUSEBUTTONDOWN and self.setting == 1:
-                    self.window.blit(self.club_background2, (0,0))
                     clicked_pos = pygame.mouse.get_pos()
-                    self.setting = 2
+                    sprite2 = pygame.sprite.Sprite()
+                    self.rect2 = pygame.Rect((clicked_pos), (30, 30))
+                    pygame.draw.rect(self.window, (255,255,255), [(clicked_pos), (30, 30)])
+                    sprite2.rect = self.rect2
+                    print(sprite)
+                    print(sprite2)
+                    if pygame.sprite.collide_rect(sprite, sprite2) == True:
+                        our_background = self.club_background2
+                        self.setting = 2
 
             pygame.display.flip()
 
@@ -131,14 +138,14 @@ class Club:
 
 # Club Models
 class Character(pygame.sprite.Sprite):
-    def __init__(self, image, position, setting, window):
+    def __init__(self, file, position, setting, window):
         pygame.sprite.Sprite.__init__(self)
-        self.image = pygame.image.load(image).convert()
+        self.image = pygame.image.load(file).convert()
         self.rect = self.image.get_rect()
         self.image.set_colorkey((255,255,255))
         if setting == 1:
-            self.rect.x = 125
-            self.rect.y = 250
+            self.rect.x = 250
+            self.rect.y = 500
             self.character = pygame.transform.scale(self.image, (250, 500))
             window.blit(self.character, position)
         else:
@@ -146,6 +153,8 @@ class Character(pygame.sprite.Sprite):
             self.rect.y = 300
             self.character = self.image
             window.blit(self.character, position)
+    def getRect(self):
+        return self.rect
 # Setting 2 Exclusive
 class Dialogue:
     def __init__(self, position, window):
