@@ -81,6 +81,8 @@ class Club:
                         pygame.mixer.music.stop()
                         self.toggle = False
                         c1 = Controller()
+                    if event.key == pygame.K_i:
+                        Controller.insanity += 1
                 # Mouseclick
                 if event.type == pygame.MOUSEBUTTONDOWN and self.setting == 1:
                     clicked_pos = pygame.mouse.get_pos()
@@ -125,6 +127,30 @@ class Club:
         to be a part of the returned list of chosen characters.
         '''
         self.characters = ["Sprites//bar_man.png", "Sprites//bar_man2.png", "Sprites//bar_woman.png", "Sprites//bar_woman2.png"]
+
+        if Controller.insanity == 2:
+             i = random.randint(0,9)
+             if i < 4:
+                 self.characters.remove("Sprites//bar_man.png")
+                 self.characters.append("Sprites//c_man.png")
+
+        elif Controller.insanity == 3:
+            i = random.randint(0,9)
+            if i < 5:
+                self.characters.remove("Sprites//bar_man.png")
+                self.characters.append("Sprites//c_man.png")
+
+            if "Sprites//mantis.png" not in self.characters:
+                i = random.randint(0,3)
+                self.characters.remove(self.characters[i])
+                self.characters.append("Sprites//mantis.png")
+
+        elif Controller.insanity == 4:
+            pass
+
+        elif Controller.insanity == 5:
+            pass
+
         self.chosen_characters = []
         for i in range(len(self.positions)):
             if self.positions[i] == (550,200):
