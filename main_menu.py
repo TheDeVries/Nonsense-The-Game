@@ -24,6 +24,9 @@ class Menu:
         self.res_button_unpressed = pygame.image.load("Sprites//res1.png").convert()
         self.res_button_pressed = pygame.image.load("Sprites//res2.png").convert()
         self.song = pygame.mixer.music.load("Sounds//Party Hard OST - Main Theme 2 (Felipe Adorno Vassao).wav")
+        self.bg2 = pygame.Surface((800,600))
+        self.bg2.set_alpha(0)
+        self.bg2.fill((255,255,255))
         # Method Calls
         our_color = self.background()
         pygame.mixer.music.play(loops=-1, start=0.0)
@@ -34,6 +37,15 @@ class Menu:
 
         # Main Menu Loop
         while self.running:
+
+            #Scrolling Background Image
+            i -= 1
+            rel_x = i % 800
+            self.window.fill(our_color)
+            self.window.blit(self.menu_background, (rel_x - 800, 0))
+            if rel_x < 800:
+                self.window.blit(self.menu_background, (rel_x, 0))
+
             for event in pygame.event.get():
                 # Quit button
                 if event.type == pygame.QUIT:
@@ -56,13 +68,6 @@ class Menu:
                         elif self.menu_act == 2:
                             self.menu_act = 0
 
-            #Scrolling Background Image
-            i -= 1
-            rel_x = i % 800
-            self.window.fill(our_color)
-            self.window.blit(self.menu_background, (rel_x - 800, 0))
-            if rel_x < 800:
-                self.window.blit(self.menu_background, (rel_x, 0))
             #Title and Buttons
             if self.music == False:
                 pygame.mixer.music.stop()
@@ -77,10 +82,6 @@ class Menu:
                 self.running = True
             else:
                 self.running = False
-
-
-
-
 
             pygame.display.flip()
 
@@ -154,7 +155,9 @@ class Menu:
             exit()
     def instruct(self):
         myfont = pygame.font.Font("Sprites//times.ttf", 30)
-        textsurface = myfont.render('Instructions: Example instructions...', True, (0, 0, 0))
+        textsurface = myfont.render('Press start to play.', True, (0, 0, 0))
+        self.bg2.set_alpha(100)
+        self.window.blit(self.bg2, (0,0))
         self.window.blit(textsurface,(0,0))
     def music_buttons(self):
         pygame.draw.rect(self.window, (255,255,255), (150, 50, 500, 250))

@@ -73,6 +73,12 @@ class Controller:
         else:
             window.blit(clocktimer, (297, 3))
     def scene_selector(self, scene_finished):
+        if Controller.insanity == 1:
+            self.complete = pygame.mixer.Sound("Sounds//Electronic_Chime.wav")
+            self.complete.set_volume(0.3)
+        else:
+            self.complete = pygame.mixer.Sound("Sounds//switch.wav")
+        self.complete.play(loops = 0)
         Controller.scenes_done.append(scene_finished)
         Controller.score_current += 1
         rand = random.randrange(0,101)
