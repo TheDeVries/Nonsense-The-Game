@@ -44,19 +44,19 @@ class Club:
             self.window.blit(our_background, (0,0))
             Controller.score(self, self.window, (255,255,255))
             Controller.insanity_meter(self, self.window, (255,255,255))
-            Controller.clock(self, self.window, (93, 240, 93), 30, self.start_tick)
+            Controller.clock(self, self.window, (93, 240, 93), 120, self.start_tick)
 
             if self.setting == 1:
 
                 for i in range(-1, -len(self.chosens)+2, -1):
-                    if self.chosens[i] != "Sprites//bar_server.png":
+                    if self.chosens[i] != "Sprites//bar_server.png" or self.chosens[i] != "Sprites//c_server.png":
                         sprite = Character(self.chosens[i], self.chosens[i-3], self.setting, self.window)
                 self.window.blit(self.bar, (200, 300))
-                if self.chosens[5] == "Sprites//bar_server.png":
+                if self.chosens[5] == "Sprites//bar_server.png" or self.chosens[5] == "Sprites//c_server.png":
                     sprite = Character(self.chosens[5], self.chosens[2], self.setting, self.window)
             elif self.setting == 2:
 
-                Character("Sprites//bar_server_front.png", (400, 300), self.setting, self.window)
+                Character("Sprites//c_woman2_front.png", (400, 300), self.setting, self.window)
                 self.speech_bubble.set_colorkey((255,255,255))
                 self.window.blit(self.speech_bubble, (400, 65))
                 self.window.blit(la_up, (105, 64))
@@ -81,6 +81,8 @@ class Club:
                         pygame.mixer.music.stop()
                         self.toggle = False
                         c1 = Controller()
+                    if event.key == pygame.K_i:
+                        Controller.insanity += 1
                 # Mouseclick
                 if event.type == pygame.MOUSEBUTTONDOWN and self.setting == 1:
                     clicked_pos = pygame.mouse.get_pos()
@@ -123,12 +125,68 @@ class Club:
         Takes positions as paramter and selects characters to return based on those positions
         This is mostly randomized except when the bar_server position is selected and this sprite is confirmed
         to be a part of the returned list of chosen characters.
+        This also reponds to insanity by selecting creepier sprites with a higher chance of them appearing with more insanity.
         '''
         self.characters = ["Sprites//bar_man.png", "Sprites//bar_man2.png", "Sprites//bar_woman.png", "Sprites//bar_woman2.png"]
+
+        if Controller.insanity == 2:
+            i = random.randint(0,9)
+            if i < 5:
+                if i == 1:
+                    self.characters.remove("Sprites//bar_man.png")
+                    self.characters.append("Sprites//c_man.png")
+                elif i == 2:
+                    self.characters.remove("Sprites//bar_man2.png")
+                    self.characters.append("Sprites//c_man2.png")
+                elif i == 3:
+                    self.characters.remove("Sprites//bar_woman.png")
+                    self.characters.append("Sprites//c_woman.png")
+                elif i == 4:
+                    self.characters.remove("Sprites//bar_woman2.png")
+                    self.characters.append("Sprites//c_woman2.png")
+
+        elif Controller.insanity == 3:
+            i = random.randint(0,8)
+            if i < 5:
+                if i == 1:
+                    self.characters.remove("Sprites//bar_man.png")
+                    self.characters.append("Sprites//c_man.png")
+                elif i == 2:
+                    self.characters.remove("Sprites//bar_man2.png")
+                    self.characters.append("Sprites//c_man2.png")
+                elif i == 3:
+                    self.characters.remove("Sprites//bar_woman.png")
+                    self.characters.append("Sprites//c_woman.png")
+                elif i == 4:
+                    self.characters.remove("Sprites//bar_woman2.png")
+                    self.characters.append("Sprites//c_woman2.png")
+            if "Sprites//mantis.png" not in self.characters:
+                i = random.randint(0,3)
+                self.characters.remove(self.characters[i])
+                self.characters.append("Sprites//mantis.png")
+
+        elif Controller.insanity == 4:
+            pass
+
+        elif Controller.insanity == 5:
+            pass
+
         self.chosen_characters = []
         for i in range(len(self.positions)):
             if self.positions[i] == (550,200):
-                self.chosen_characters.append("Sprites//bar_server.png")
+                if Controller.insanity >= 3:
+                    top = 10
+                    if Controller.insanity == 4:
+                        top = 8
+                    if Controller.insanity == 5:
+                        top = random.randint(5, 6)
+                    i = random.randint(0, top)
+                    if i < 5:
+                        self.chosen_characters.append("Sprites//c_server.png")
+                    else:
+                        self.chosen_characters.append("Sprites//bar_server.png")
+                else:
+                    self.chosen_characters.append("Sprites//bar_server.png")
             else:
                 self.choice = random.choice(self.characters)
                 self.chosen_characters.append(self.choice)
