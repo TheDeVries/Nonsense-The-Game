@@ -42,12 +42,9 @@ class Space(pygame.sprite.Sprite): #spaceship model
                 self.x += self.speed
 
             '''
-
             You can probably just get rid of all of this if you don't want the ship moving up and down
-
             if keys[pygame.K_UP] and self.y < self.speed:   #y < speed and y < 800 - height - speed limits character to only left and right
                 self.y -= self.speed
-
             if keys[pygame.K_DOWN] and self.y < 800 - self.height - self.speed:
                 self.y += self.speed
             '''
@@ -85,7 +82,7 @@ class Enemy(pygame.sprite.Sprite):
     def draw(self, win):
         win.blit(self.image, self.rect)
 
-Space()
+
 
 
 #
@@ -102,4 +99,4 @@ Space()
 #
 #     def shot(self):
 #
-#     def reset(self):
+#     def reset(self)
