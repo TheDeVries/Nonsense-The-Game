@@ -66,7 +66,10 @@ class Controller:
         if self.time < 10:
             strtimer = "0" + str(num_min) + ":" + "0" + str(num_sec)
         else:
-            strtimer = "0" + str(num_min) + ":" + str(num_sec)
+            if num_sec < 10:
+                strtimer = "0" + str(num_min) + ":0" + str(num_sec)
+            else:
+                strtimer = "0" + str(num_min) + ":" + str(num_sec)
         clocktimer = myfont.render(strtimer, True, color)
         if Controller.score_current < 10:
             window.blit(clocktimer, (322, 3))
