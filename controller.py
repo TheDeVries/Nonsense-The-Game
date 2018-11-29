@@ -11,6 +11,7 @@ class Controller:
     insanity4 = pygame.image.load("Sprites//insanity4.png")
     insanity5 = pygame.image.load("Sprites//insanity5.png")
     score_current = 0
+    counter = {'club_count': 0, 'typing_count': 0, 'space_count': 0, 'maze_count': 0, 'platformer_count': 0}
     def __init__(self):
         pygame.init()
         self.running_menu = True

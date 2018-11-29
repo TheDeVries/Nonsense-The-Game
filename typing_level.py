@@ -31,7 +31,7 @@ class Typing:
         "koala", "gong", "tower", "wires", "wad", "lake", "shallow", "moon", "bash"]
         words = []
 
-        words += S1_L1
+        words += I1_L1
         our_word = "|"
         self.word = random.choice(words)
         self.strike_count = 0
