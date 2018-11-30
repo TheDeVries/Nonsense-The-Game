@@ -32,7 +32,6 @@ class Maze:
         self.random_map = random.randint(1,2)
         self.maze_map = self.random_map
         self.eno = 10
-        self.toggle = True
         self.test = True
         self.insanity2_pos = -800
         self.insanity5toggle = False
@@ -119,6 +118,10 @@ class Maze:
                         if event.key == pygame.K_RIGHT:
                             player.go_right()
                             self.move_camera = 4
+                        if event.key == pygame.K_p:
+                            Controller.scene_selector(self, 2)
+                            pygame.mixer.music.stop()
+                            c1 = Controller()
                     elif event.type == pygame.KEYUP:
                         self.move_camera = 0
                         player.stop()
@@ -151,7 +154,6 @@ class Maze:
                         if event.key == pygame.K_p:
                             Controller.scene_selector(self, 2)
                             pygame.mixer.music.stop()
-                            self.toggle = False
                             c1 = Controller()
                     elif event.type == pygame.KEYUP:
                         self.move_camera = 0
@@ -205,7 +207,6 @@ class Maze:
                     Maze.y_camera = 0
                     Controller.scene_selector(self, 2)
                     pygame.mixer.music.stop()
-                    self.toggle = False
                     c1 = Controller()
             if Controller.insanity >= 2:
                 self.insanity_results(Controller.insanity)
