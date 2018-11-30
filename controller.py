@@ -134,6 +134,15 @@ class Controller:
             window.blit(clocktimer, (322, 3))
         else:
             window.blit(clocktimer, (297, 3))
+    def basic_command(event):
+        if event.type == pygame.QUIT:
+            pygame.quit()
+            exit()
+        # Keybinds
+        if event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_ESCAPE:
+                pygame.quit()
+                exit()
 
 class SpriteSheet(object):
 

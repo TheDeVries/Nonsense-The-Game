@@ -25,9 +25,7 @@ class Space(pygame.sprite.Sprite): #spaceship model
         while self.running:
             pygame.time.delay(100)
             for event in pygame.event.get():
-                if event.type == pygame.QUIT:
-                    pygame.quit()
-                    exit()
+                Controller.basic_command(event)
 
             keys = pygame.key.get_pressed()
 

@@ -92,14 +92,7 @@ class Maze:
         while self.running:
             for event in pygame.event.get():
                 # Quit button
-                if event.type == pygame.QUIT:
-                    pygame.quit()
-                    exit()
-                # Keybinds
-                if event.type == pygame.KEYDOWN:
-                    if event.key == pygame.K_ESCAPE:
-                        pygame.quit()
-                        exit()
+                Controller.basic_command(event)
                 if Controller.insanity <= 2:
                     if event.type == pygame.KEYDOWN:
                         if event.key == pygame.K_w:
