@@ -95,7 +95,7 @@ class Club:
                         c1 = Controller()
                     if event.key == pygame.K_i:
                         Controller.insanity += 1
-                    if self.setting == 1:
+                    if self.setting == 2:
                         if event.key == pygame.K_LEFT or event.key == pygame.K_a:
                             pass
                         if event.key == pygame.K_UP or event.key == pygame.K_w:
