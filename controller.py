@@ -3,7 +3,6 @@ import random
 
 class Controller:
     scene = 0
-    scenes_done = []
     insanity = 1
     insanity1 = pygame.image.load("Sprites//insanity1.png")
     insanity2 = pygame.image.load("Sprites//insanity2.png")
@@ -11,12 +10,28 @@ class Controller:
     insanity4 = pygame.image.load("Sprites//insanity4.png")
     insanity5 = pygame.image.load("Sprites//insanity5.png")
     score_current = 0
-    counter = {'club_count': 0, 'typing_count': 0, 'space_count': 0, 'maze_count': 0, 'platformer_count': 0}
+    scenes_done = []
     def __init__(self):
         pygame.init()
         self.running_menu = True
         self.window = pygame.display.set_mode((800,600))
         pygame.display.set_icon(pygame.image.load("Sprites//eyecon.png"))
+        # Update number of individual scene completions to determine difficulty
+        #The number corresponds to the scene selector
+        scenes_done = Controller.scenes_done
+        if Controller.scene = 0:
+            done_counter = {1: 0,  2: 0, 3: 0, 4: 0, 5: 0}
+        if len(scenes_done) != 0:
+            if scenes_done[0] == 1:
+                done_counter[1] += 1
+            elif scenes_done[0] == 2:
+                done_counter[2] += 1
+            elif scenes_done[0] == 3:
+                done_counter[3] += 1
+            elif scenes_done[0] == 4:
+                done_counter[4] += 1
+            elif scenes_done[0] == 5:
+                done_counter[5] += 1
         while self.running_menu:
             if Controller.scene == 0:
                 men = Menu()

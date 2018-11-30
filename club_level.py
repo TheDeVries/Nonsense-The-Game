@@ -7,6 +7,8 @@ class Club:
     def __init__(self):
         self.start_tick = pygame.time.get_ticks()
         self.running = True
+        self.difficulty = Controller.done_counter[3]
+        num_seconds = 120
         #Sounds
         self.club_music = pygame.mixer.music.load("Sounds//HOME - Above All.wav")
         pygame.mixer.music.play(loops=-1, start=0.0)
@@ -25,7 +27,6 @@ class Club:
         for i in self.directions:
             sprite = Arrow(2, i)
             landing_arrows.add(sprite)
-        self.difficulty = Controller.counter['club_count']
 
         #Last considerations
         self.setting = 1
@@ -39,7 +40,7 @@ class Club:
             self.window.blit(our_background, (0,0))
             Controller.score(self, self.window, (255,255,255))
             Controller.insanity_meter(self, self.window, (255,255,255))
-            Controller.clock(self, self.window, (93, 240, 93), 120, self.start_tick)
+            Controller.clock(self, self.window, (93, 240, 93), num_seconds, self.start_tick)
 
             if self.setting == 1:
                 character_group = pygame.sprite.Group()
