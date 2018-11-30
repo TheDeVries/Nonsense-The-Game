@@ -64,10 +64,6 @@ class Platformer:
         #Floor
         self.platform1 = pygame.draw.rect(self.window, (255,255,255), pygame.Rect(0,500 - Platformer.y_camera,800,400))
         self.platform_list.append(self.platform1)
-        #platforms_list
-        self.platform2 = pygame.draw.rect(self.window, (255,255,255), pygame.Rect(0 - Platformer.x_camera,425 - Platformer.y_camera,100,40))
-        self.platform_list.append(self.platform2)
-
 
 
 class Player_Platform(pygame.sprite.Sprite):

@@ -7,6 +7,8 @@ class Club:
     def __init__(self):
         self.start_tick = pygame.time.get_ticks()
         self.running = True
+        self.difficulty = Controller.done_counter[3]
+        num_seconds = 120
         #Sounds
         self.club_music = pygame.mixer.music.load("Sounds//HOME - Above All.wav")
         pygame.mixer.music.play(loops=-1, start=0.0)
@@ -17,25 +19,19 @@ class Club:
         self.club_background2 = pygame.image.load("Sprites//club2.png").convert()
         self.bar = pygame.image.load("Sprites//empty_bar.png").convert()
         self.bar.set_colorkey((0,0,64))
-        active_sprite_list = pygame.sprite.Group()
 
         #Keyboard DDR Setting
         self.speech_bubble = pygame.image.load("Sprites//speech_bubble.png").convert()
+        self.directions = ['left', 'up', 'down', 'right']
+        landing_arrows = pygame.sprite.Group()
+        for i in self.directions:
+            sprite = Arrow(2, i)
+            landing_arrows.add(sprite)
 
-        self.arrow = pygame.image.load("Sprites//arrow.png").convert()
-        self.arrow_orange = pygame.image.load("Sprites//arrow_orange.png").convert()
-
-        self.arrow.set_colorkey((255,255,255))
-        arrow_left = self.arrow
-        arrow_up = pygame.transform.rotate(self.arrow, 270)
-        arrow_down = pygame.transform.rotate(self.arrow, 90)
-        arrow_right = pygame.transform.rotate(self.arrow, 180)
-        la_left = self.arrow_orange
-        la_up = pygame.transform.rotate(self.arrow_orange, 270)
-        la_down = pygame.transform.rotate(self.arrow_orange, 90)
-        la_right = pygame.transform.rotate(self.arrow_orange, 180)
-
+        #Last considerations
         self.setting = 1
+        self.mooded = False
+        their_moods = ["normal", "high", "low"]
         our_background = self.club_background
         self.chosens = self.Randomize()
 
@@ -44,25 +40,41 @@ class Club:
             self.window.blit(our_background, (0,0))
             Controller.score(self, self.window, (255,255,255))
             Controller.insanity_meter(self, self.window, (255,255,255))
-            Controller.clock(self, self.window, (93, 240, 93), 120, self.start_tick)
+            Controller.clock(self, self.window, (93, 240, 93), num_seconds, self.start_tick)
 
             if self.setting == 1:
+                character_group = pygame.sprite.Group()
+                server_group = pygame.sprite.Group()
 
                 for i in range(-1, -len(self.chosens)+2, -1):
-                    if self.chosens[i] != "Sprites//bar_server.png" or self.chosens[i] != "Sprites//c_server.png":
-                        sprite = Character(self.chosens[i], self.chosens[i-3], self.setting, self.window)
+                    if self.chosens[i] != "Sprites//bar_server.png" and self.chosens[i] != "Sprites//c_server.png":
+                        sprite = Character(self.chosens[i], self.chosens[i-3])
+                        if self.mooded == False:
+                            feel_num = random.randint(0, (len(their_moods)-1))
+                            the_mood = their_moods[feel_num]
+                            del their_moods[feel_num]
+                            sprite.mood = the_mood
+                        character_group.add(sprite)
+                character_group.draw(self.window)
                 self.window.blit(self.bar, (200, 300))
                 if self.chosens[5] == "Sprites//bar_server.png" or self.chosens[5] == "Sprites//c_server.png":
-                    sprite = Character(self.chosens[5], self.chosens[2], self.setting, self.window)
+                    sprite = Character(self.chosens[5], self.chosens[2])
+                    sprite.mood = their_moods[0]
+                    server_group.add(sprite)
+                server_group.draw(self.window)
+                self.mooded = True
+
             elif self.setting == 2:
 
-                Character("Sprites//c_woman2_front.png", (400, 300), self.setting, self.window)
+                image_string = self.clicked_character[:-4] + "_front.png"
+                image_surface = pygame.image.load(image_string).convert()
+                image_surface.set_colorkey((255,255,255))
+                self.window.blit(image_surface, (400, 300))
                 self.speech_bubble.set_colorkey((255,255,255))
                 self.window.blit(self.speech_bubble, (400, 65))
-                self.window.blit(la_up, (105, 64))
-                self.window.blit(la_down, (205, 64))
-                self.window.blit(la_left, (5, 64))
-                self.window.blit(la_right, (305, 64))
+                landing_arrows.draw(self.window)
+
+
 
             for event in pygame.event.get():
                 # Quit button
@@ -83,20 +95,39 @@ class Club:
                         c1 = Controller()
                     if event.key == pygame.K_i:
                         Controller.insanity += 1
+                    if self.setting == 2:
+                        if event.key == pygame.K_LEFT or event.key == pygame.K_a:
+                            pass
+                        if event.key == pygame.K_UP or event.key == pygame.K_w:
+                            pass
+                        if event.key == pygame.K_DOWN or event.key == pygame.K_s:
+                            pass
+                        if event.key == pygame.K_RIGHT or event.key == pygame.K_d:
+                            pass
+
                 # Mouseclick
                 if event.type == pygame.MOUSEBUTTONDOWN and self.setting == 1:
-                    clicked_pos = pygame.mouse.get_pos()
-                    sprite2 = pygame.sprite.Sprite()
-                    self.rect2 = pygame.Rect((clicked_pos), (30, 30))
-                    pygame.draw.rect(self.window, (255,255,255), [(clicked_pos), (30, 30)])
-                    sprite2.rect = self.rect2
-                    print(sprite)
-                    print(sprite2)
-                    if pygame.sprite.collide_rect(sprite, sprite2) == True:
+                    clicked_pos = event.pos
+                    self.clicked_character = self.check_collision(clicked_pos,character_group,server_group)
+                    if self.clicked_character != False:
+                        self.play_mood = self.clicked_character.mood
+                        self.clicked_character = self.clicked_character.file
                         our_background = self.club_background2
                         self.setting = 2
 
             pygame.display.flip()
+
+    def check_collision(self, point, *groups):
+        for group in groups:
+            for g in group:
+                if g.rect.collidepoint(point):
+                    try:
+                        if g.mask.get_at(point) != 0:
+                            return g
+                    except:
+                        return g
+
+        return False
 
     def Randomize(self):
         '''
@@ -122,9 +153,8 @@ class Club:
 
     def rand_characters(self, positions):
         '''
-        Takes positions as paramter and selects characters to return based on those positions
-        This is mostly randomized except when the bar_server position is selected and this sprite is confirmed
-        to be a part of the returned list of chosen characters.
+        Takes positions as parameter and selects characters to return based on those positions
+        This is mostly randomized except when the bar_server position is selected and this sprite is confirmed to be a part of the returned list of chosen characters.
         This also reponds to insanity by selecting creepier sprites with a higher chance of them appearing with more insanity.
         '''
         self.characters = ["Sprites//bar_man.png", "Sprites//bar_man2.png", "Sprites//bar_woman.png", "Sprites//bar_woman2.png"]
@@ -196,27 +226,44 @@ class Club:
 
 # Club Models
 class Character(pygame.sprite.Sprite):
-    def __init__(self, file, position, setting, window):
+    def __init__(self, file, position):
+        self.file = file
         pygame.sprite.Sprite.__init__(self)
-        self.image = pygame.image.load(file).convert()
+        self.image = pygame.image.load(file).convert_alpha()
+        self.image = pygame.transform.scale(self.image, (250, 500))
         self.rect = self.image.get_rect()
-        self.image.set_colorkey((255,255,255))
-        if setting == 1:
-            self.rect.x = 250
-            self.rect.y = 500
-            self.character = pygame.transform.scale(self.image, (250, 500))
-            window.blit(self.character, position)
-        else:
-            self.rect.x = 400
-            self.rect.y = 300
-            self.character = self.image
-            window.blit(self.character, position)
-    def getRect(self):
-        return self.rect
+        self.mask = pygame.mask.from_surface(self.image)
+        self.rect.topleft = position
+        self.mood = "normal"
 # Setting 2 Exclusive
 class Dialogue:
-    def __init__(self, position, window):
+    def __init__(self, position, mood):
         myfont = pygame.font.Font("Sprites//times.ttf", 45)
 
-class Arrows(pygame.sprite.Sprite):
-    pass
+class Arrow(pygame.sprite.Sprite):
+    def __init__(self, type, direction):
+        pygame.sprite.Sprite.__init__(self)
+        #Where type 1 are flying arrows and 2 are the landing arrows
+        if type == 1:
+            self.image = pygame.image.load("Sprites//arrow.png").convert()
+            ar_direc = {'left': self.image, 'right': pygame.transform.rotate(self.image, 180), 'up': pygame.transform.rotate(self.image, 270), 'down': pygame.transform.rotate(self.image, 90)}
+            self.image = ar_direc[direction]
+            self.rect = self.image.get_rect()
+            ar_start = {'left': (5, 600), 'up': (105, 600), 'down': (205, 600), 'right': (305, 600)}
+            self.position = ar_start[direction]
+            self.rect.topleft = self.position
+        elif type == 2:
+            if Controller.insanity != 5:
+                self.image = pygame.image.load("Sprites//arrow_orange.png").convert()
+            else:
+                insane_arrow = "Sprites//insane_arrow" + str(random.randint(1,3)) + ".png"
+                self.image = pygame.image.load(insane_arrow).convert_alpha()
+            ar_direc = {'left': self.image, 'right': pygame.transform.rotate(self.image, 180), 'up': pygame.transform.rotate(self.image, 270), 'down': pygame.transform.rotate(self.image, 90)}
+            self.rect = self.image.get_rect()
+            ar_end = {'left': (5, 64), 'up': (105, 64), 'down': (205, 64), 'right': (305, 64)}
+            self.image = ar_direc[direction]
+            self.end_position = ar_end[direction]
+            self.rect.topleft = self.end_position
+
+    def update(self, position, window):
+        pass
