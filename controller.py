@@ -88,6 +88,11 @@ class Controller:
                 rand = random.randrange(0,101)
                 if rand < 15:
                     Controller.scene = 5
+    def transition(self, window, lev_id):
+        if Controller.insanity == 1:
+            self.scene_selector(lev_id)
+        elif Controller.insanity == 2:
+
 
     def insanity_meter(self, window, color):
         if Controller.insanity == 1:
