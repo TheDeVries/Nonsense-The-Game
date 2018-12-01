@@ -105,30 +105,31 @@ class Controller:
         It then randomly plays a between-scene graphical interlude (or not) if the insanity is greater than 1
         '''
         pygame.mixer.music.stop()
+        self.window = pygame.display.set_mode((800,600))
         self.t_chance = random.randint(1,10)
         transition_noises = ["Crowd"]
         self.t_channel = pygame.mixer.Channel(3)
         self.noise = pygame.mixer.Sound("Sounds//" + transition_noises[random.randint(0, (len(transition_noises) -1))] + ".wav")
         sheet_transitions = ["geo_tunnel"]
-        self.transition = SpriteSheet("Sprites//" + sheet_transitions[random.randint(0, (len(sheet_transitions) -1))] + ".png")
+        #self.transition = SpriteSheet("Sprites//" + sheet_transitions[random.randint(0, (len(sheet_transitions) -1))] + ".png")
         if Controller.insanity == 1:
             pass
         elif Controller.insanity == 2:
             if self.t_chance > 8:
                 self.t_channel.play(self.noise)
         elif Controller.insanity == 3:
-            if self.t_chance > 6:
+            if self.t_chance > 7:
                 self.t_channel.play(self.noise)
         elif Controller.insanity == 4:
-            if self.t_chance > 4:
+            if self.t_chance > 5:
                 self.t_channel.play(self.noise)
         elif Controller.insanity == 5:
-            if self.t_chance > 2:
+            if self.t_chance > 4:
                 self.t_channel.play(self.noise)
         elif Controller.insanity > 5:
-            pass
-        while self.t_channel.get_busy() == True:
-            self.transition.get_image(0, 0, 800, 600, (255,255,255))
+            Controller.go_insane(self, self.window)
+        #while self.t_channel.get_busy() == True:
+            #self.transition.get_image(0, 0, 800, 600, (255,255,255))
         Controller.scene_selector(self, lev_id, success)
 
     def insanity_meter(self, window, color):
@@ -215,7 +216,14 @@ class Controller:
                     Controller.transition(self, Controller.scene, False)
                 if event.key == pygame.K_RIGHTBRACKET:
                     Controller.transition(self, Controller.scene, True)
-
+    def go_insane(self, window):
+        self.gameover_tune = pygame.mixer.music.load("Sounds//Silent Corpse.wav")
+        pygame.mixer.music.play(loops=-1, start=0.0)
+        while True:
+            window.fill((0,0,0))
+            for event in pygame.event.get():
+                Controller.basic_command(self, event)
+            pygame.display.flip()
 class SpriteSheet(object):
 
     def __init__(self, file_name):
