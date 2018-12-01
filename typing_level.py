@@ -73,15 +73,11 @@ class Typing:
 
             for event in pygame.event.get():
                 # Quit button
-                if event.type == pygame.QUIT:
-                    pygame.quit()
-                    exit()
+                Controller.basic_command(event)
                 # Keybinds
                 if event.type == pygame.KEYDOWN:
-                    if event.key == pygame.K_ESCAPE:
-                        pygame.quit()
-                        exit()
-                    elif event.key == pygame.K_RETURN:
+
+                    if event.key == pygame.K_RETURN:
 
                         if our_word[0:l-1] == self.word:
                             left_count -= 1
