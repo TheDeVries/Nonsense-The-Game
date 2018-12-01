@@ -21,7 +21,7 @@ class Platformer:
         while self.running:
             for event in pygame.event.get():
                 # Quit button
-                Controller.basic_command(event)
+                Controller.basic_command(self, event)
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_a:
                         player.go_left()
@@ -37,11 +37,6 @@ class Platformer:
                         bullet.shot()
                     if event.key == pygame.K_SPACE:
                         player.jump_method()
-                    if event.key == pygame.K_p:
-                        Controller.scene_selector(self, 4)
-                        pygame.mixer.music.stop()
-                        self.toggle = False
-                        c1 = Controller()
                 elif event.type == pygame.KEYUP:
                     if event.key != pygame.K_SPACE:
                         player.stop()

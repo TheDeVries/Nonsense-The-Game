@@ -25,7 +25,7 @@ class Space(pygame.sprite.Sprite): #spaceship model
         while self.running:
             pygame.time.delay(100)
             for event in pygame.event.get():
-                Controller.basic_command(event)
+                Controller.basic_command(self, event)
 
             keys = pygame.key.get_pressed()
 
@@ -52,12 +52,6 @@ class Space(pygame.sprite.Sprite): #spaceship model
                 bullet.shot()
             self.win.blit(self.background, (0,0))
             self.win.blit(self.image, (self.x,self.y))
-
-            if keys[pygame.K_p]:
-                Controller.scene_selector(self, 1)
-                pygame.mixer.music.stop()
-                self.toggle = False
-                c1 = Controller()
             enemy.draw(self.win)
             enemy.update()
             pygame.display.flip()

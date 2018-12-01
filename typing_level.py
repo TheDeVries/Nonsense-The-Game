@@ -68,12 +68,12 @@ class Typing:
             l = len(our_word)
 
             if left_count == 0:
-                Controller.scene_selector(self, 5)
+                Controller.transition(self, 5, True)
                 c = Controller()
 
             for event in pygame.event.get():
                 # Quit button
-                Controller.basic_command(event)
+                Controller.basic_command(self, event)
                 # Keybinds
                 if event.type == pygame.KEYDOWN:
 
@@ -91,10 +91,6 @@ class Typing:
                         our_word += "|"
                     elif event.key == pygame.K_RSHIFT or event.key == pygame.K_LSHIFT:
                         pass
-                    elif event.key == pygame.K_p:
-                        Controller.scene_selector(self, 5)
-                        self.toggle = False
-                        c1 = Controller()
                     else:
                         our_key = self.myfont.render(chr(event.key), True, (0,0,0))
                         our_word = our_word[0:(l-1)]

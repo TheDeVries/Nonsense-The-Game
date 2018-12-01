@@ -15,6 +15,7 @@ class Controller:
         clu = 0
         pla = 0
         typ = 0
+    debug_mode = True
     done_counter = {1: spa,  2: maz, 3: clu, 4: pla, 5: typ}
     score_current = 0
     scenes_done = []
@@ -36,17 +37,25 @@ class Controller:
                 platformer = Platformer()
             elif Controller.scene == 5:
                 typing = Typing()
-    def scene_selector(self, scene_finished):
-        Controller.done_counter[scene_finished] += 1
-        print(Controller.done_counter[scene_finished])
-        if Controller.insanity == 1:
-            self.complete = pygame.mixer.Sound("Sounds//Electronic_Chime.wav")
-            self.complete.set_volume(0.3)
+    def scene_selector(self, scene_finished, success):
+        '''
+        This always follows the transition call and similarly accepts the level id
+        of a completed (or not) level, as well as whether or not it was finished succesfully
+        This then plays corresponding sounds, adjusts score if needed, and randomly selects a new id
+        which means it chooses the next level in the mix.
+        '''
+        if success == True:
+            Controller.done_counter[scene_finished] += 1
+            Controller.score_current += 1
+            if Controller.insanity == 1:
+                self.complete = pygame.mixer.Sound("Sounds//Electronic_Chime.wav")
+                self.complete.set_volume(0.3)
+            else:
+                self.complete = pygame.mixer.Sound("Sounds//switch.wav")
         else:
-            self.complete = pygame.mixer.Sound("Sounds//switch.wav")
+            self.complete = pygame.mixer.Sound("Sounds//Buzzer.wav")
         self.complete.play(loops = 0)
         Controller.scenes_done.append(scene_finished)
-        Controller.score_current += 1
         rand = random.randrange(0,101)
         if rand < 20:
             if Controller.scene != 1:
@@ -88,13 +97,45 @@ class Controller:
                 rand = random.randrange(0,101)
                 if rand < 15:
                     Controller.scene = 5
-    def transition(self, window, lev_id):
+        c1 = Controller()
+    def transition(self, lev_id, success):
+        '''
+        This is called whenever the player wins or fails a level.
+        It takes a boolean indicating whether they won or not as well as that level's idenifying number
+        It then randomly plays a between-scene graphical interlude (or not) if the insanity is greater than 1
+        '''
+        pygame.mixer.music.stop()
+        self.t_chance = random.randint(1,10)
+        transition_noises = ["Crowd"]
+        self.t_channel = pygame.mixer.Channel(3)
+        self.noise = pygame.mixer.Sound("Sounds//" + transition_noises[random.randint(0, (len(transition_noises) -1))] + ".wav")
+        sheet_transitions = ["geo_tunnel"]
+        self.transition = SpriteSheet("Sprites//" + sheet_transitions[random.randint(0, (len(sheet_transitions) -1))] + ".png")
         if Controller.insanity == 1:
-            self.scene_selector(lev_id)
+            pass
         elif Controller.insanity == 2:
-
+            if self.t_chance > 8:
+                self.t_channel.play(self.noise)
+        elif Controller.insanity == 3:
+            if self.t_chance > 6:
+                self.t_channel.play(self.noise)
+        elif Controller.insanity == 4:
+            if self.t_chance > 4:
+                self.t_channel.play(self.noise)
+        elif Controller.insanity == 5:
+            if self.t_chance > 2:
+                self.t_channel.play(self.noise)
+        elif Controller.insanity > 5:
+            pass
+        while self.t_channel.get_busy() == True:
+            self.transition.get_image(0, 0, 800, 600, (255,255,255))
+        Controller.scene_selector(self, lev_id, success)
 
     def insanity_meter(self, window, color):
+        '''
+        When called, it draws the insanity_meter in the top-left corner of the screen
+        The window and color of the display text are parameters
+        '''
         if Controller.insanity == 1:
             window.blit(Controller.insanity1, (0,0))
         elif Controller.insanity == 2:
@@ -112,6 +153,10 @@ class Controller:
         window.blit(textsurface,(0,18))
         window.blit(score_surface,(105,18))
     def score(self, window, color):
+        '''
+        When called, it draws the score count in the top-right corner of the screen
+        The window and color of the display text are parameters.
+        '''
         myfont = pygame.font.Font("Sprites//times.ttf", 45)
         textsurface = myfont.render("Score:", True, color)
         scores = str(Controller.score_current)
@@ -123,6 +168,14 @@ class Controller:
             window.blit(textsurface, (625, 0))
             window.blit(score_surface, (750, 0))
     def clock(self, window, color, amount, former_time):
+        '''
+        When called, it draws the time remaining on the top of the screen
+        The window and color of the display text are parameters.
+        Color only accepts two options - red and green - based on a specific RGB,
+        where green means it's in a survival level and red means it's a countdown to demise
+        Amount is the number of seconds to set the clock at and former_time is the number of seconds since
+        the level began (as pygame is initialized every time a level is called and it's based on the get_ticks)
+        '''
         myfont = pygame.font.Font("Sprites//digital-7.ttf", 60)
         self.time = int((amount - (pygame.time.get_ticks() - former_time)/1000))
         num_sec = int(self.time % 60)
@@ -139,7 +192,11 @@ class Controller:
             window.blit(clocktimer, (322, 3))
         else:
             window.blit(clocktimer, (297, 3))
-    def basic_command(event):
+    def basic_command(self, event):
+        '''
+        Called underneath the event loop to check common events
+        It also houses debug commands if the option is turned on
+        '''
         if event.type == pygame.QUIT:
             pygame.quit()
             exit()
@@ -148,6 +205,16 @@ class Controller:
             if event.key == pygame.K_ESCAPE:
                 pygame.quit()
                 exit()
+            if Controller.debug_mode == True:
+                if event.key == pygame.K_EQUALS:
+                    Controller.insanity += 1
+                if event.key == pygame.K_MINUS:
+                    Controller.insanity -= 1
+                if event.key == pygame.K_LEFTBRACKET:
+                    Controller.insanity += 1
+                    Controller.transition(self, Controller.scene, False)
+                if event.key == pygame.K_RIGHTBRACKET:
+                    Controller.transition(self, Controller.scene, True)
 
 class SpriteSheet(object):
 
