@@ -77,24 +77,9 @@ class Club:
 
 
             for event in pygame.event.get():
-                # Quit button
-                if event.type == pygame.QUIT:
-                    pygame.quit()
-                    exit()
+                Controller.basic_command(self, event)
                 # Keybinds
                 if event.type == pygame.KEYDOWN:
-                    if event.key == pygame.K_ESCAPE:
-                        pygame.quit()
-                        exit()
-                    if event.key == pygame.K_SPACE:
-                        Club()
-                    if event.key == pygame.K_p:
-                        Controller.scene_selector(self, 3)
-                        pygame.mixer.music.stop()
-                        self.toggle = False
-                        c1 = Controller()
-                    if event.key == pygame.K_i:
-                        Controller.insanity += 1
                     if self.setting == 2:
                         if event.key == pygame.K_LEFT or event.key == pygame.K_a:
                             pass

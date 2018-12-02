@@ -6,7 +6,6 @@ class Platformer:
     y_camera = 0
     def __init__(self):
         pygame.init()
-        self.move_camera = 0
         self.window = pygame.display.set_mode((800,600))
         self.background = pygame.image.load("Sprites//sky.png")
         self.background = pygame.transform.scale(self.background, (2000 + Platformer.x_camera,600 + Platformer.y_camera))
@@ -15,8 +14,6 @@ class Platformer:
         self.window.fill((255,255,255))
         self.platform_list = []
         self.running = True
-        self.player_jump = False
-        self.direction = ""
         player = Player_Platform()
         bullet = Bullet()
         active_sprite_list2 = pygame.sprite.Group()
@@ -24,80 +21,27 @@ class Platformer:
         while self.running:
             for event in pygame.event.get():
                 # Quit button
-                if event.type == pygame.QUIT:
-                    pygame.quit()
-                    exit()
-                # Keybinds
-                if event.type == pygame.KEYDOWN:
-                    if event.key == pygame.K_ESCAPE:
-                        pygame.quit()
-                        exit()
+                Controller.basic_command(self, event)
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_a:
                         player.go_left()
-                        self.move_camera = 1
-                        self.direction = "L"
                     if event.key == pygame.K_d:
-                        self.move_camera = 2
                         player.go_right()
-                        self.direction = "R"
                     if event.key == pygame.K_LEFT:
-                        self.move_camera = 1
                         player.go_left()
                     if event.key == pygame.K_RIGHT:
-                        self.move_camera = 2
                         player.go_right()
                     if event.key == pygame.K_LSHIFT:
                         player.shot()
                         active_sprite_list2.add(bullet)
                         bullet.shot()
                     if event.key == pygame.K_SPACE:
-                        if self.player_jump == True:
-                            self.move_camera = 4
-                    if event.key == pygame.K_p:
-                        Controller.scene_selector(self, 4)
-                        pygame.mixer.music.stop()
-                        self.toggle = False
-                        c1 = Controller()
+                        player.jump_method()
                 elif event.type == pygame.KEYUP:
                     if event.key != pygame.K_SPACE:
                         player.stop()
-                        self.move_camera = 0
-                        self.direction = ""
-            if self.move_camera == 1:
-                Platformer.x_camera -= 5
-            elif self.move_camera == 2:
-                Platformer.x_camera += 5
-            elif self.move_camera == 3:
-                Platformer.y_camera += 10
-            elif self.move_camera == 4:
-                Platformer.y_camera -=100
-                if self.direction == "L":
-                    Platformer.x_camera -=50
-                if self.direction == "R":
-                    Platformer.x_camera +=50
-
-            elif self.move_camera == 5:
-                Platformer.x_camera -= 5
-                Platformer.y_camera = Platformer.y_camera
-            elif self.move_camera == 6:
-                Platformer.x_camera += 5
-                Platformer.y_camera = Platformer.y_camera
-
             self.window.blit(self.background, (0, 0))
             self.platforms()
-            for plat in range(0, len(self.platform_list)-1):
-                if self.platform_list[plat].colliderect(player):
-                    if self.direction == "L":
-                        self.move_camera = 5
-                    elif self.direction == "R":
-                        self.move_camera = 6
-                    else:
-                        self.move_camera = 0
-                    self.player_jump = True
-                else:
-                    self.move_camera =  3
-                    self.player_jump = False
             active_sprite_list2.update()
             active_sprite_list2.draw(self.window)
             if bullet.done == True:
@@ -108,10 +52,6 @@ class Platformer:
         #Floor
         self.platform1 = pygame.draw.rect(self.window, (255,255,255), pygame.Rect(0,500 - Platformer.y_camera,800,400))
         self.platform_list.append(self.platform1)
-        #platforms_list
-        self.platform2 = pygame.draw.rect(self.window, (255,255,255), pygame.Rect(0 - Platformer.x_camera,425 - Platformer.y_camera,100,40))
-        self.platform_list.append(self.platform2)
-
 
 
 class Player_Platform(pygame.sprite.Sprite):
@@ -189,6 +129,9 @@ class Player_Platform(pygame.sprite.Sprite):
         self.shot_frame_L = 2
         self.time = 0
         self.move = False
+        self.jump = 0
+        self.mass = 5
+        self.velocity = 3
 
     def update(self):
 
@@ -201,6 +144,7 @@ class Player_Platform(pygame.sprite.Sprite):
                     self.frame = 0
                     self.image = self.walking_frames_r[self.frame]
                 self.image = self.walking_frames_r[self.frame]
+            Platformer.x_camera += 5
         elif self.direction == "L":
             self.time += 1
             if self.time % 3 == 0:
@@ -209,6 +153,7 @@ class Player_Platform(pygame.sprite.Sprite):
                     self.frame_right = 0
                     self.image = self.walking_frames_l[self.frame_right]
                 self.image = self.walking_frames_l[self.frame_right]
+            Platformer.x_camera -= 5
         elif self.direction == "SR":
             self.time += 1
             if self.time % 3 == 0:
@@ -217,6 +162,20 @@ class Player_Platform(pygame.sprite.Sprite):
                     self.shot_frame = 0
                     self.image = self.shooting[self.shot_frame]
                 self.image = self.shooting[self.shot_frame]
+        elif self.direction == "J":
+            if Platformer.change == False:
+                F = (0.5 * self.mass * (self.velocity ** 2))
+            else:
+                F = -(0.5 * self.mass * (self.velocity ** 2))
+            Platformer.y_camera -= F
+            self.velocity -= 1
+            if Platformer.change == True:
+                self.velocity = 3
+                self.mass = 5
+
+
+
+
 
 
 
@@ -241,6 +200,8 @@ class Player_Platform(pygame.sprite.Sprite):
         self.frame = 0
     def shot(self):
         self.direction = "SR"
+    def jump_method(self):
+        self.direction = "J"
 class Bullet(pygame.sprite.Sprite):
     def __init__(self):
         super().__init__()

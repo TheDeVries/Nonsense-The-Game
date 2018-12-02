@@ -19,9 +19,7 @@ class Space(pygame.sprite.Sprite):
         while self.running:
             pygame.time.delay(100)
             for event in pygame.event.get():
-                if event.type == pygame.QUIT:
-                    pygame.quit()
-                    exit()
+                Controller.basic_command(self, event)
 
             keys = pygame.key.get_pressed()
 
@@ -29,17 +27,34 @@ class Space(pygame.sprite.Sprite):
                 pygame.quit()
                 exit()
 
+<<<<<<< HEAD
             if keys[pygame.K_LEFT]: #and self.x > self.speed:
                 hero.move_left()
 
             if keys[pygame.K_RIGHT]: #and self.x < 819 - self.width - self.speed:
                 hero.move_right()
 
+=======
+            if keys[pygame.K_LEFT] and self.x > self.speed:
+                self.x -= self.speed
+
+            if keys[pygame.K_RIGHT] and self.x < 819 - self.width - self.speed:
+                self.x += self.speed
+
+            '''
+            You can probably just get rid of all of this if you don't want the ship moving up and down
+            if keys[pygame.K_UP] and self.y < self.speed:   #y < speed and y < 800 - height - speed limits character to only left and right
+                self.y -= self.speed
+            if keys[pygame.K_DOWN] and self.y < 800 - self.height - self.speed:
+                self.y += self.speed
+            '''
+>>>>>>> c1752017361090d876806d4423af63c3b0f0365c
             if keys[pygame.K_SPACE]:
                 self.image.shot()
                 active_sprite_list2.add(bullet)
                 bullet.shot()
             self.win.blit(self.background, (0,0))
+<<<<<<< HEAD
             # self.win.blit(self.image, (self.x,self.y))
 
             if keys[pygame.K_p]:
@@ -48,6 +63,9 @@ class Space(pygame.sprite.Sprite):
                 self.toggle = False
                 c1 = Controller()
             hero.draw(self.win)
+=======
+            self.win.blit(self.image, (self.x,self.y))
+>>>>>>> c1752017361090d876806d4423af63c3b0f0365c
             enemy.draw(self.win)
             enemy.update()
             pygame.display.flip()
@@ -116,4 +134,4 @@ Space()
 #
 #     def shot(self):
 #
-#     def reset(self):
+#     def reset(self)
