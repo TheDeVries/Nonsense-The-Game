@@ -7,10 +7,14 @@ class Club:
     def __init__(self):
         self.start_tick = pygame.time.get_ticks()
         self.running = True
-        self.difficulty = Controller.done_counter[3]
+        self.completions = Controller.done_counter[3]
+        difficulty = {}
         num_seconds = 120
         #Sounds
-        self.club_music = pygame.mixer.music.load("Sounds//HOME - Above All.wav")
+        if Controller.insanity < 4:
+            self.club_music = pygame.mixer.music.load("Sounds//HOME - Above All.wav")
+        else:
+            self.club_music = pygame.mixer.music.load("Sounds//Flatline.wav")
         pygame.mixer.music.play(loops=-1, start=0.0)
 
         #Club Setting
@@ -33,16 +37,27 @@ class Club:
         self.mooded = False
         their_moods = ["normal", "high", "low"]
         our_background = self.club_background
+        tex = random.randint(1,3)
+        bad_background = pygame.image.load("Sprites//glitch_texture" + str(tex) + ".png").convert()
         self.chosens = self.Randomize()
 
         while self.running == True:
-
+            self.window.blit(bad_background, (0,0))
             self.window.blit(our_background, (0,0))
             Controller.score(self, self.window, (255,255,255))
             Controller.insanity_meter(self, self.window, (255,255,255))
-            Controller.clock(self, self.window, (93, 240, 93), num_seconds, self.start_tick)
 
             if self.setting == 1:
+                if Controller.insanity > 1:
+                    if (pygame.time.get_ticks() - self.start_tick)/1000 == 1:
+                        our_background.set_colorkey((0,0,64))
+                    if Controller.insanity > 2:
+                        our_background.set_colorkey((0,0,64))
+
+                if self.completions > 0:
+                    Controller.clock(self, self.window, (240, 93, 93), 10, self.start_tick)
+                else:
+                    pass
                 character_group = pygame.sprite.Group()
                 server_group = pygame.sprite.Group()
 
@@ -65,6 +80,7 @@ class Club:
                 self.mooded = True
 
             elif self.setting == 2:
+                Controller.clock(self, self.window, (93, 240, 93), num_seconds, self.start_tick)
 
                 image_string = self.clicked_character[:-4] + "_front.png"
                 image_surface = pygame.image.load(image_string).convert()
@@ -77,18 +93,9 @@ class Club:
 
 
             for event in pygame.event.get():
-                Controller.basic_command(event)
+                Controller.basic_command(self, event)
                 # Keybinds
                 if event.type == pygame.KEYDOWN:
-                    if event.key == pygame.K_SPACE:
-                        Club()
-                    if event.key == pygame.K_p:
-                        Controller.scene_selector(self, 3)
-                        pygame.mixer.music.stop()
-                        self.toggle = False
-                        c1 = Controller()
-                    if event.key == pygame.K_i:
-                        Controller.insanity += 1
                     if self.setting == 2:
                         if event.key == pygame.K_LEFT or event.key == pygame.K_a:
                             pass
@@ -119,6 +126,7 @@ class Club:
                         if g.mask.get_at(point) != 0:
                             return g
                     except:
+                        print("error. instead, we're assuming a rectangle was clicked")
                         return g
 
         return False
@@ -259,5 +267,5 @@ class Arrow(pygame.sprite.Sprite):
             self.end_position = ar_end[direction]
             self.rect.topleft = self.end_position
 
-    def update(self, position, window):
+    def update(self, window, position):
         pass

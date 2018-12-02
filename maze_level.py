@@ -91,7 +91,7 @@ class Maze:
         while self.running:
             for event in pygame.event.get():
                 # Quit button
-                Controller.basic_command(event)
+                Controller.basic_command(self, event)
                 if Controller.insanity <= 2:
                     if event.type == pygame.KEYDOWN:
                         if event.key == pygame.K_w:
@@ -118,10 +118,6 @@ class Maze:
                         if event.key == pygame.K_RIGHT:
                             player.go_right()
                             self.move_camera = 4
-                        if event.key == pygame.K_p:
-                            Controller.scene_selector(self, 2)
-                            pygame.mixer.music.stop()
-                            c1 = Controller()
                     elif event.type == pygame.KEYUP:
                         self.move_camera = 0
                         player.stop()
@@ -151,10 +147,6 @@ class Maze:
                         if event.key == pygame.K_LEFT:
                             player.go_right()
                             self.move_camera = 4
-                        if event.key == pygame.K_p:
-                            Controller.scene_selector(self, 2)
-                            pygame.mixer.music.stop()
-                            c1 = Controller()
                     elif event.type == pygame.KEYUP:
                         self.move_camera = 0
                         player.stop()
@@ -205,7 +197,7 @@ class Maze:
                 if y.colliderect(self.player_rec):
                     Maze.x_camera = 0
                     Maze.y_camera = 0
-                    Controller.scene_selector(self, 2)
+                    Controller.transition(self, 2, True)
                     pygame.mixer.music.stop()
                     c1 = Controller()
             if Controller.insanity >= 2:
