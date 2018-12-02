@@ -53,7 +53,11 @@ class Controller:
             else:
                 self.complete = pygame.mixer.Sound("Sounds//switch.wav")
         else:
-            self.complete = pygame.mixer.Sound("Sounds//Buzzer.wav")
+            Controller.insanity += 1
+            if Controller.insanity > 5:
+                Controller.go_insane(self, self.window)
+            self.complete = pygame.mixer.Sound("Sounds//insanity_up.wav")
+            self.complete.set_volume(1.5)
         self.complete.play(loops = 0)
         Controller.scenes_done.append(scene_finished)
         rand = random.randrange(0,101)
@@ -106,28 +110,26 @@ class Controller:
         '''
         pygame.mixer.music.stop()
         self.window = pygame.display.set_mode((800,600))
-        self.t_chance = random.randint(1,10)
-        transition_noises = ["Crowd"]
+        self.t_chance = random.randint(0,100)
+        transition_noises = ["crowd", "drone"]
         self.t_channel = pygame.mixer.Channel(3)
         self.noise = pygame.mixer.Sound("Sounds//" + transition_noises[random.randint(0, (len(transition_noises) -1))] + ".wav")
-        sheet_transitions = ["geo_tunnel"]
+        sheet_transitions = ["geo_tunnel", "low_polygon", "rainbow_tunnel.png", "ball_column.png"]
         #self.transition = SpriteSheet("Sprites//" + sheet_transitions[random.randint(0, (len(sheet_transitions) -1))] + ".png")
         if Controller.insanity == 1:
             pass
         elif Controller.insanity == 2:
-            if self.t_chance > 8:
+            if self.t_chance > 85:
                 self.t_channel.play(self.noise)
         elif Controller.insanity == 3:
-            if self.t_chance > 7:
+            if self.t_chance > 80:
                 self.t_channel.play(self.noise)
         elif Controller.insanity == 4:
-            if self.t_chance > 5:
+            if self.t_chance > 70:
                 self.t_channel.play(self.noise)
         elif Controller.insanity == 5:
-            if self.t_chance > 4:
+            if self.t_chance > 58:
                 self.t_channel.play(self.noise)
-        elif Controller.insanity > 5:
-            Controller.go_insane(self, self.window)
         #while self.t_channel.get_busy() == True:
             #self.transition.get_image(0, 0, 800, 600, (255,255,255))
         Controller.scene_selector(self, lev_id, success)
@@ -193,6 +195,8 @@ class Controller:
             window.blit(clocktimer, (322, 3))
         else:
             window.blit(clocktimer, (297, 3))
+        if self.time == -1 and color == (240, 93, 93):
+            Controller.transition(self, Controller.scene, False)
     def basic_command(self, event):
         '''
         Called underneath the event loop to check common events
@@ -212,12 +216,13 @@ class Controller:
                 if event.key == pygame.K_MINUS:
                     Controller.insanity -= 1
                 if event.key == pygame.K_LEFTBRACKET:
-                    Controller.insanity += 1
                     Controller.transition(self, Controller.scene, False)
                 if event.key == pygame.K_RIGHTBRACKET:
                     Controller.transition(self, Controller.scene, True)
     def go_insane(self, window):
-        self.gameover_tune = pygame.mixer.music.load("Sounds//Silent Corpse.wav")
+        endsong_list = ["Sounds//Silent Corpse.wav", "Sounds//Micro Soul 10.wav"]
+        i = random.randint(0, len(endsong_list) -1)
+        self.gameover_tune = pygame.mixer.music.load(endsong_list[i])
         pygame.mixer.music.play(loops=-1, start=0.0)
         while True:
             window.fill((0,0,0))
