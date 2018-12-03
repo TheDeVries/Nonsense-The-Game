@@ -210,11 +210,20 @@ class Club:
                 self.characters.remove(self.characters[i])
                 self.characters.append("Sprites//mantis.png")
 
-        elif Controller.insanity == 4:
-            pass
-
-        elif Controller.insanity == 5:
-            pass
+        elif Controller.insanity == 4 or Controller.insanity == 5:
+            i = random.randint(0,5)
+            self.characters.remove("Sprites//bar_man.png")
+            self.characters.append("Sprites//c_man.png")
+            self.characters.remove("Sprites//bar_man2.png")
+            self.characters.append("Sprites//c_man2.png")
+            self.characters.remove("Sprites//bar_woman.png")
+            self.characters.append("Sprites//c_woman.png")
+            self.characters.remove("Sprites//bar_woman2.png")
+            self.characters.append("Sprites/c_woman2.png")
+            if "Sprites//mantis.png" not in self.characters:
+                i = random.randint(0,3)
+                self.characters.remove(self.characters[i])
+                self.characters.append("Sprites//mantis.png")
 
         self.chosen_characters = []
         for i in range(len(self.positions)):
