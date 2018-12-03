@@ -4,11 +4,7 @@ import random
 from controller import *
 class Menu:
     start = False
-    res = (800,600)
     def __init__(self):
-        '''
-           inits the menu
-        '''
         init = pygame.init()
         init2 = pygame.mixer.init()
         self.window = pygame.display.set_mode((800,600))

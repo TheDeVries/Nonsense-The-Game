@@ -111,7 +111,7 @@ class Controller:
         pygame.mixer.music.stop()
         self.window = pygame.display.set_mode((800,600))
         self.t_chance = random.randint(0,100)
-        transition_noises = ["crowd", "drone"]
+        transition_noises = ["drone1", "drone2"]
         self.t_channel = pygame.mixer.Channel(3)
         self.noise = pygame.mixer.Sound("Sounds//" + transition_noises[random.randint(0, (len(transition_noises) -1))] + ".wav")
         sheet_transitions = ["geo_tunnel", "low_polygon", "rainbow_tunnel.png", "ball_column.png"]
@@ -199,7 +199,8 @@ class Controller:
             if color == (240, 93, 93):
                 Controller.transition(self, Controller.scene, False)
             else:
-                pass
+                if Controller.scene == 3:
+                    pass
     def basic_command(self, event):
         '''
         Called underneath the event loop to check common events
@@ -227,11 +228,8 @@ class Controller:
         i = random.randint(0, len(endsong_list) -1)
         self.gameover_tune = pygame.mixer.music.load(endsong_list[i])
         pygame.mixer.music.play(loops=-1, start=0.0)
-        while True:
-            window.fill((0,0,0))
-            for event in pygame.event.get():
-                Controller.basic_command(self, event)
-            pygame.display.flip()
+        game_over = End()
+
 class SpriteSheet(object):
 
     def __init__(self, file_name):
@@ -261,3 +259,4 @@ from main_menu import *
 from maze_level import *
 from platform_level import *
 from spaceshooter_level import *
+from end_menu import *
