@@ -12,20 +12,28 @@ class End:
         self.font = pygame.font.Font("Sprites//times.ttf", 45)
         a_string = "You have gone insane."
         self.position = (190, 225)
+        self.mode = 1
+        self.plural = "s"
         self.running = True
         while self.running == True:
             self.window.fill((0,0,0))
-            self.display_message = self.font.render(a_string, True, (240, 93, 93))
             self.sec = int((pygame.time.get_ticks()-self.start_tick)/1000)
-            if self.sec > 3 and self.sec < 5:
-                a_string = ""
-            elif self.sec > 5 and self.sec < 10:
-                a_string = "You cleared " + str(Controller.score_current) + " scenes."
-            self.window.blit(self.display_message, self.position)
-
-            #pygame.draw.ellipse(self.window, (255,255,255), (150, 50, 500, 250))
-
-            #self.window.blit(self.c_title, (200,100))
+            if self.mode == 1:
+                self.display_message = self.font.render(a_string, True, (240, 93, 93))
+                if self.sec > 3 and self.sec < 5:
+                    a_string = ""
+                elif self.sec > 5 and self.sec < 13:
+                    if Controller.score_current < 2 and Controller.score_current != 0:
+                        self.pural = ""
+                    a_string = "You cleared " + str(Controller.score_current) + " scene" + self.plural + "."
+                elif self.sec > 12:
+                    a_string = ""
+                    if self.sec > 14:
+                        self.mode = 2
+                self.window.blit(self.display_message, self.position)
+            elif self.mode == 2:
+                pygame.draw.ellipse(self.window, (255,255,255), (150, 50, 500, 250))
+                self.window.blit(self.c_title, (200,100))
 
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
