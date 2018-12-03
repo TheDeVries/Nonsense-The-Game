@@ -4,11 +4,14 @@ from controller import *
 pygame.init()
 
 class Club:
+    questions = 3
+    sayings = 5
+    determined = False
     def __init__(self):
+        print(Controller.done_counter[3])
         self.start_tick = pygame.time.get_ticks()
         self.running = True
         self.completions = Controller.done_counter[3]
-        difficulty = {}
         num_seconds = 25
         #Sounds
         if Controller.insanity < 4:
@@ -32,6 +35,8 @@ class Club:
         for i in self.directions:
             sprite = Arrow(2, i, 0)
             landing_arrows.add(sprite)
+        self.difficultify()
+        self.dialogue(self.window, False)
 
         #Last considerations
         self.setting = 1
@@ -49,16 +54,19 @@ class Club:
             Controller.insanity_meter(self, self.window, (255,255,255))
 
             if self.setting == 1:
-                if Controller.insanity > 1:
-                    if (pygame.time.get_ticks() - self.start_tick)/1000 == 1:
-                        our_background.set_colorkey((0,0,64))
-                    if Controller.insanity > 2:
-                        our_background.set_colorkey((0,0,64))
+                if Controller.insanity > 2:
+                    our_background.set_colorkey((0,0,64))
 
                 if self.completions > 0:
                     Controller.clock(self, self.window, (240, 93, 93), 10, self.start_tick)
                 else:
-                    pass
+                    self.font = pygame.font.Font("Sprites//times.ttf", 30)
+                    if int((pygame.time.get_ticks()-self.start_tick)/1000) % 2 == 0:
+                        self.txt_color = (255,255,255)
+                    else:
+                        self.txt_color = (240,93,93)
+                    self.display_font = self.font.render("Click on a character to start mingling", True, self.txt_color)
+                    self.window.blit(self.display_font, (160, 10))
                 character_group = pygame.sprite.Group()
                 server_group = pygame.sprite.Group()
 
@@ -94,10 +102,14 @@ class Club:
                 self.arrow_group.update(Arrow.position)
                 self.arrow_group.draw(self.window)
 
+                self.dialogue(self.window, True)
+
                 #if not self.arrow_group and Arrow.position[1] < 70:
                     #Controller.transition(self, Controller.scene, False)
 
             for event in pygame.event.get():
+                if event.type == pygame.USEREVENT:
+                    spawner(self, Arrow.rate)
                 Controller.basic_command(self, event)
                 # Keybinds
                 if event.type == pygame.KEYDOWN:
@@ -120,14 +132,33 @@ class Club:
                         self.play_mood = self.clicked_character.mood
                         self.clicked_character = self.clicked_character.file
                         our_background = self.club_background2
+                        pygame.init()
+                        self.start_tick = pygame.time.get_ticks()
                         self.setting = 2
 
             pygame.display.flip()
 
+    def difficultify(self):
+        dif = Controller.done_counter[3]
+        if dif % 2 == 0 and dif != 0:
+            Arrow.speed += 1
+        else:
+            Arrow.rate += 1
+        if dif % 3 == 0:
+            Club.questions += 1
+        if self.isPrime(dif) == True:
+            Arrow.speed += 1
+            Arrow.rate += 1
+        #print(Arrow.speed)
+        #print(Arrow.rate)
+
+    def isPrime(self, n):
+        for i in range(2,int(n**0.5)+1):
+            if n%i==0:
+                return False
+        return True
+
     def spawner(self, rate):
-        pass
-
-
         sprite = Arrow(1, 'left', 1)
         self.arrow_group.add(sprite)
 
@@ -135,11 +166,6 @@ class Club:
         for group in groups:
             for g in group:
                 if g.rect.collidepoint(point):
-                    try:
-                        if g.mask.get_at(point) != 0:
-                            return g
-                    except:
-                        print("error. instead, we're assuming a rectangle was clicked")
                         return g
 
         return False
@@ -248,6 +274,33 @@ class Club:
 
         return self.chosen_characters
 
+    def dialogue(self, window, determined):
+        if determined == False:
+            speech = list(range(Club.sayings))
+            self.font = pygame.font.Font("Sprites//times.ttf", 45)
+            p_file = open("Dialogue Files//people.txt", "r")
+            a_file = open("Dialogue Files//adjectives.txt", "r")
+            the_num = random.randint(1, 21)
+            the_num2 = random.randint(1, 21)
+            line1 = ""
+            line2 = ""
+            while line1 == "" or line2 == "":
+                for i in range(the_num):
+                    line1 = p_file.readline()
+                for i in range(the_num2):
+                    line2 = a_file.readline()
+                p_file.close()
+                a_file.close()
+            part_1 = "My " + line1
+            part_2 = "is " + line2
+            self.display_line1 = self.font.render(part_1, True, (0,0,0))
+            self.display_line2 = self.font.render(part_2, True, (0,0,0))
+        
+        else:
+            window.blit(self.display_line1, (465, 120))
+            window.blit(self.display_line2, (465, 170))
+
+
 # Club Models
 class Character(pygame.sprite.Sprite):
     def __init__(self, file, position):
@@ -266,10 +319,10 @@ class Dialogue:
 
 class Arrow(pygame.sprite.Sprite):
     position = 0
+    rate = 1
     speed = 1
     def __init__(self, type, direction, speed):
         pygame.sprite.Sprite.__init__(self)
-        Arrow.speed = speed
         #Where type 1 are flying arrows and 2 are the landing arrows
         if type == 1:
             self.image = pygame.image.load("Sprites//arrow.png").convert_alpha()

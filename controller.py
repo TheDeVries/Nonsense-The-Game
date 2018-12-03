@@ -215,6 +215,8 @@ class Controller:
                 pygame.quit()
                 exit()
             if Controller.debug_mode == True:
+                if event.key == pygame.K_BACKSLASH:
+                    controller = Controller()
                 if event.key == pygame.K_EQUALS:
                     Controller.insanity += 1
                 if event.key == pygame.K_MINUS:
@@ -223,6 +225,7 @@ class Controller:
                     Controller.transition(self, Controller.scene, False)
                 if event.key == pygame.K_RIGHTBRACKET:
                     Controller.transition(self, Controller.scene, True)
+
     def go_insane(self, window):
         endsong_list = ["Sounds//Silent Corpse.wav", "Sounds//Micro Soul 10.wav"]
         i = random.randint(0, len(endsong_list) -1)
