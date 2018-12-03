@@ -82,21 +82,27 @@ class Platformer:
             if pygame.sprite.groupcollide(self.player_group, self.enemies, False, False):
                 self.running = False
                 self.game_over = True
-            for laser_direction in range(0,2):
+            for laser_direction in range(0,len(self.laser_list)):
                 if self.enemy_list[laser_direction].rect.x < player.rect.x:
                     if self.laser_list[laser_direction].progress == 0:
                         self.laser_list[laser_direction].shot_right()
                 elif self.enemy_list[laser_direction].rect.x > player.rect.x:
                     if self.laser_list[laser_direction].progress == 0:
                         self.laser_list[laser_direction].shot_left()
-            for laser_done in range(0,1):
+            for laser_done in range(0,len(self.laser_list)):
                 if self.laser_list[laser_done].done == True:
                     self.laser_group.empty()
-            for laser_iter in range (0,2):
+            for laser_iter in range(0,len(self.laser_list)):
                 self.laser_group.add(self.laser_list[laser_iter])
             if pygame.sprite.groupcollide(self.player_group, self.laser_group, False, False):
                 self.running = False
                 self.game_over = True
+            for enemy_death in range(0, len(self.enemy_list)):
+                if pygame.sprite.collide_rect(self.enemy_list[enemy_death], bullet):
+                    self.enemies.remove(self.enemy_list[enemy_death])
+                    self.enemy_list.remove(self.enemy_list[enemy_death])
+                    self.laser_group.remove(self.laser_list[enemy_death])
+                    self.laser_list.remove(self.laser_list[enemy_death])
                     #laser_direction.done = False
             self.player_group.update()
             self.player_group.draw(self.window)
