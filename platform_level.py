@@ -6,7 +6,8 @@ class Platformer:
     y_camera = 0
     player_fall = True
     ground = False
-    direction = ""
+    direction = "F"
+    gravity = False
     def __init__(self):
         pygame.init()
         self.window = pygame.display.set_mode((800,600))
@@ -19,8 +20,10 @@ class Platformer:
         self.posy = 300-22
         player = Player_Platform()
         bullet = Fireball()
+        enemy = Enemy(0,160)
         self.active_sprite_list2 = pygame.sprite.Group()
         self.active_sprite_list2.add(player)
+        self.active_sprite_list2.add(enemy)
         while self.running:
             for event in pygame.event.get():
                 # Quit button
@@ -28,37 +31,46 @@ class Platformer:
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_a:
                         player.go_left()
+                        enemy.follow = "L"
+
                     if event.key == pygame.K_d:
                         player.go_right()
+                        enemy.follow = "R"
                     if event.key == pygame.K_LEFT:
                         player.go_left()
+                        enemy.follow = "L"
                     if event.key == pygame.K_RIGHT:
                         player.go_right()
+                        enemy.follow = "R"
                     if event.key == pygame.K_LSHIFT:
                         player.shot()
                         self.active_sprite_list2.add(bullet)
                         bullet.shot()
                     if event.key == pygame.K_SPACE:
                         player.jump_method()
+                        if Platformer.direction == "L":
+                            enemy.follow = "UL"
+                        if Platformer.direction == "R":
+                            enemy.follow = "UR"
+                        if Platformer.direction == "UF":
+                            enemy.follow = "UF"
                 elif event.type == pygame.KEYUP:
+                    Platformer.direction = "F"
                     if event.key != pygame.K_SPACE:
                         player.stop()
-            self.player_rec = pygame.Rect(400,300,48,48)
-
+                        enemy.follow = ""
             self.window.blit(self.background, (0, 0))
             player.gravity()
             Platforms = Platforms_Map(self.window)
-            Platforms.platforms(self.player_rec)
+            Platforms.platforms(player)
+            enemy.camera_follow()
             self.active_sprite_list2.update()
             self.active_sprite_list2.draw(self.window)
             if bullet.done == True:
                 self.active_sprite_list2.remove(bullet)
                 bullet.done = False
             pygame.display.flip()
-            print(Platforms.platformrect_list)
-            print(Platformer.y_camera)
-            print(Platformer.player_fall)
-            print(self.player_rec)
+            print(Platformer.direction)
 
 class Platforms_Map:
     def __init__(self,window):
@@ -90,11 +102,9 @@ class Platforms_Map:
             else:
                 Platformer.player_fall = True
                 self.platform_collide_list.remove(collide)
-
-
-            print(self.platformrect_list[platformrect].colliderect(player))
         if Platformer.y_camera >= 160:
             Platformer.player_fall = False
+
 
 
 
@@ -115,7 +125,6 @@ class Player_Platform(pygame.sprite.Sprite):
         self.shooting = []
 
         self.direction = "F"
-
         sprite_sheet = SpriteSheet("Sprites//stickman.png")
         sprite_sheet_shot = SpriteSheet("Sprites//Player_Shot.png")
         sprite_sheet_jump = SpriteSheet("Sprites//Platformer_jump.png")
@@ -226,10 +235,12 @@ class Player_Platform(pygame.sprite.Sprite):
                 Platformer.x_camera += 5
                 self.image = self.jumping_frames_r[0]
                 Platformer.ground = False
+                Platformer.gravity = False
             if self.jump_height >= 50:
                 self.jump_height += 1
                 Platformer.x_camera += 5
                 self.image = self.jumping_frames_r[1]
+                Platformer.gravity = True
             if Platformer.player_fall == False:
                 self.jump_height = 0
         elif self.direction == "JL":
@@ -239,10 +250,12 @@ class Player_Platform(pygame.sprite.Sprite):
                 Platformer.x_camera -= 5
                 self.image = self.jumping_frames_l[0]
                 Platformer.ground = False
+                Platformer.gravity = False
             if self.jump_height >= 50:
                 self.jump_height += 1
                 Platformer.x_camera -= 5
                 self.image = self.jumping_frames_l[1]
+                Platformer.gravity = True
             if Platformer.player_fall == False:
                 self.jump_height = 0
         elif self.direction == "JF":
@@ -250,10 +263,15 @@ class Player_Platform(pygame.sprite.Sprite):
                 self.jump_height += 1
                 Platformer.y_camera -= 10
                 Platformer.ground = False
+                Platformer.gravity = False
+                Platformer.direction = "UF"
             if self.jump_height >= 50:
                 self.jump_height += 1
+                Platformer.gravity = True
             if Platformer.player_fall == False:
                 self.jump_height = 0
+
+
 
 
 
@@ -292,7 +310,7 @@ class Player_Platform(pygame.sprite.Sprite):
             self.direction = "JL"
         elif self.direction == "R":
             self.direction = "JR"
-        elif self.direction == "F":
+        elif Platformer.direction == "F":
             self.direction = "JF"
 
 
@@ -300,6 +318,9 @@ class Player_Platform(pygame.sprite.Sprite):
     def gravity(self):
         if Platformer.player_fall == True:
             Platformer.y_camera += 5
+            Platformer.gravity = True
+        else:
+            Platformer.gravity = False
 class Fireball(pygame.sprite.Sprite):
     def __init__(self):
         super().__init__()
@@ -343,7 +364,7 @@ class Fireball(pygame.sprite.Sprite):
         self.frames_u.append(image)
         self.image = self.frames_u[-1]
         self.rect = self.image.get_rect()
-        self.rect = self.rect.move(430,300)
+        self.rect = self.rect.move(420,290)
         self.toggle = False
         self.frame = 0
         self.time = 0
@@ -364,6 +385,7 @@ class Fireball(pygame.sprite.Sprite):
                     self.done = True
                     self.reset_right()
                     self.x = 0
+                    self.y = 0
                     self.image = self.frames_u[-1]
         elif Platformer.direction == "L":
             if self.toggle == True:
@@ -380,13 +402,73 @@ class Fireball(pygame.sprite.Sprite):
                     self.done = True
                     self.reset_left()
                     self.x = 0
+                    self.y = 0
                     self.image = self.frames_u[-1]
 
     def shot(self):
         self.toggle = True
     def reset_right(self):
         self.toggle = False
-        self.rect = self.rect.move(-370,0)
+        self.rect = self.rect.move(-380,0)
     def reset_left(self):
         self.toggle = False
-        self.rect = self.rect.move(430, 0)
+        self.rect = self.rect.move(420, 0)
+class Enemy(pygame.sprite.Sprite):
+    def __init__(self, x, y):
+        super().__init__()
+        self.x_change = 0
+        self.y_change = 0
+        self.health = 50
+        self.damage = 100
+        self.x = x
+        self.y = y
+        self.frames = []
+        self.shot = False
+        self.follow = ""
+
+        sprite_sheet = SpriteSheet("Sprites//bad_guy.png")
+
+        color_key_player = (255,255,255,255)
+        for x1 in range(0,446,89):
+            image = sprite_sheet.get_image(x1, 0, 89, 119, color_key_player)
+            self.frames.append(image)
+        for x2 in range(0,446,89):
+            image = sprite_sheet.get_image(x2, 119, 89, 119, color_key_player)
+            self.frames.append(image)
+        for x3 in range(0,446,89):
+            image = sprite_sheet.get_image(x3, 238, 89, 119, color_key_player)
+            self.frames.append(image)
+        for x4 in range(0,358,89):
+            image = sprite_sheet.get_image(x4, 357, 89, 119, color_key_player)
+            self.frames.append(image)
+        self.image = self.frames[0]
+        self.rect = self.image.get_rect()
+        self.rect.move(0,0)
+        self.time = 0
+        self.frame = 0
+
+    def update(self):
+        self.time += 1
+        if self.time % 3 == 0:
+            self.frame += 1
+            if self.frame >= 19:
+                self.frame = 0
+                self.image = self.frames[self.frame]
+            if self.frame >= 8:
+                self.shot = True
+            self.image = self.frames[self.frame]
+    def camera_follow(self):
+        if self.follow == "L":
+            self.rect = self.rect.move(5, 0)
+        if self.follow == "R":
+            self.rect = self.rect.move(-5,0)
+        if Platformer.gravity == True:
+            self.rect = self.rect.move(0,-5)
+        if self.follow == "U":
+            self.rect = self.rect.move(0,5)
+        if self.follow == "UR":
+            self.rect = self.rect.move(-5, 5)
+        if self.follow == "UL":
+            self.rect = self.rect.move(5, 5)
+        if self.follow == "UF":
+            self.rect = self.rect.move(0,5)

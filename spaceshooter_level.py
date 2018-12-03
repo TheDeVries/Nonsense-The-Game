@@ -149,5 +149,3 @@ class Blast(pygame.sprite.Sprite):
 
 class Explosion:
     pass
-
-Space()
