@@ -195,8 +195,11 @@ class Controller:
             window.blit(clocktimer, (322, 3))
         else:
             window.blit(clocktimer, (297, 3))
-        if self.time == -1 and color == (240, 93, 93):
-            Controller.transition(self, Controller.scene, False)
+        if self.time == -1:
+            if color == (240, 93, 93):
+                Controller.transition(self, Controller.scene, False)
+            else:
+                pass
     def basic_command(self, event):
         '''
         Called underneath the event loop to check common events

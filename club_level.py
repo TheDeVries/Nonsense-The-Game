@@ -9,7 +9,7 @@ class Club:
         self.running = True
         self.completions = Controller.done_counter[3]
         difficulty = {}
-        num_seconds = 120
+        num_seconds = 25
         #Sounds
         if Controller.insanity < 4:
             self.club_music = pygame.mixer.music.load("Sounds//HOME - Above All.wav")
@@ -28,8 +28,9 @@ class Club:
         self.speech_bubble = pygame.image.load("Sprites//speech_bubble.png").convert()
         self.directions = ['left', 'up', 'down', 'right']
         landing_arrows = pygame.sprite.Group()
+        self.arrow_group = pygame.sprite.Group()
         for i in self.directions:
-            sprite = Arrow(2, i)
+            sprite = Arrow(2, i, 0)
             landing_arrows.add(sprite)
 
         #Last considerations
@@ -90,7 +91,11 @@ class Club:
                 self.window.blit(self.speech_bubble, (400, 65))
                 landing_arrows.draw(self.window)
 
+                self.arrow_group.update(Arrow.position)
+                self.arrow_group.draw(self.window)
 
+                #if not self.arrow_group and Arrow.position[1] < 70:
+                    #Controller.transition(self, Controller.scene, False)
 
             for event in pygame.event.get():
                 Controller.basic_command(self, event)
@@ -98,7 +103,8 @@ class Club:
                 if event.type == pygame.KEYDOWN:
                     if self.setting == 2:
                         if event.key == pygame.K_LEFT or event.key == pygame.K_a:
-                            pass
+                            if self.flying_arrow.position[1] in range(60, 170):
+                                self.flying_arrow.kill()
                         if event.key == pygame.K_UP or event.key == pygame.K_w:
                             pass
                         if event.key == pygame.K_DOWN or event.key == pygame.K_s:
@@ -117,6 +123,13 @@ class Club:
                         self.setting = 2
 
             pygame.display.flip()
+
+    def spawner(self, rate):
+        pass
+
+
+        sprite = Arrow(1, 'left', 1)
+        self.arrow_group.add(sprite)
 
     def check_collision(self, point, *groups):
         for group in groups:
@@ -243,17 +256,21 @@ class Dialogue:
         myfont = pygame.font.Font("Sprites//times.ttf", 45)
 
 class Arrow(pygame.sprite.Sprite):
-    def __init__(self, type, direction):
+    position = 0
+    speed = 1
+    def __init__(self, type, direction, speed):
         pygame.sprite.Sprite.__init__(self)
+        Arrow.speed = speed
         #Where type 1 are flying arrows and 2 are the landing arrows
         if type == 1:
-            self.image = pygame.image.load("Sprites//arrow.png").convert()
+            self.image = pygame.image.load("Sprites//arrow.png").convert_alpha()
             ar_direc = {'left': self.image, 'right': pygame.transform.rotate(self.image, 180), 'up': pygame.transform.rotate(self.image, 270), 'down': pygame.transform.rotate(self.image, 90)}
             self.image = ar_direc[direction]
             self.rect = self.image.get_rect()
             ar_start = {'left': (5, 600), 'up': (105, 600), 'down': (205, 600), 'right': (305, 600)}
             self.position = ar_start[direction]
-            self.rect.topleft = self.position
+            Arrow.position = self.position
+            self.rect.topleft = Arrow.position
         elif type == 2:
             if Controller.insanity != 5:
                 self.image = pygame.image.load("Sprites//arrow_orange.png").convert()
@@ -267,5 +284,8 @@ class Arrow(pygame.sprite.Sprite):
             self.end_position = ar_end[direction]
             self.rect.topleft = self.end_position
 
-    def update(self, window, position):
-        pass
+    def update(self, position):
+        self.x = self.position[0]
+        new_pos = float(Arrow.position[1]) - float(Arrow.speed)
+        Arrow.position = (self.x, new_pos)
+        self.rect.topleft = Arrow.position
