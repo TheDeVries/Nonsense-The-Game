@@ -22,7 +22,7 @@ class Space(pygame.sprite.Sprite):
         hero.rect.y = 530
         pygame.display.update()
 
-        for i in range(20):
+        for i in range(20): #level 2 difficult
             enemy = Enemy("Sprites//enemyship.png")
             enemies.add(enemy)
             enemy.rect.x = random.randrange(800)
@@ -50,7 +50,7 @@ class Space(pygame.sprite.Sprite):
                 hero.move_right()
 
             if keys[pygame.K_SPACE]:
-                blast = Blast("Sprites//Stevenmoore.png")
+                blast = Blast("Sprites//spacebullet.png")
                 blast.rect.x = hero.rect.x
                 blast.rect.y = hero.rect.y
                 all_sprites_list.add(blast)
@@ -69,10 +69,10 @@ class Space(pygame.sprite.Sprite):
             # enemy.draw(self.win)
             # enemy.update()
             for blast in blasts:
-                enemy_hit_list = pygame.sprite.spritecollide(blast,enemies, True)
+                enemy_hit_list = pygame.sprite.spritecollide(blast,enemies, True, pygame.sprite.collide_circle)
                 for enemy in enemy_hit_list:
-                    explosion.get_image(blast.rect.x,blast.rect.y)
-                    all_sprites_list.add(explosion)
+                    # explosion.get_image(blast.rect.x,blast.rect.y)
+                    # all_sprites_list.add(explosion)
                     blasts.remove(blast)
                     all_sprites_list.remove(blast)
 
@@ -89,6 +89,9 @@ class Hero(pygame.sprite.Sprite):  #spaceship model
         self.image = pygame.image.load(filename)#.convert()
         self.image = pygame.transform.scale(self.image, (50,50))
         self.rect = self.image.get_rect()
+        self.radius = 20
+        BLUE = (0,0,255)
+        # pygame.draw.circle(self.image,BLUE, self.rect.center,self.radius)
         self.width = 64
         self.height = 64
         self.speed = 44
@@ -117,6 +120,9 @@ class Enemy(pygame.sprite.Sprite):
         self.image = pygame.image.load(filename)#.convert()
         self.image = pygame.transform.scale(self.image, (50,50))
         self.rect = self.image.get_rect()
+        self.radius = 20
+        BLUE = (0,0,255)
+        # pygame.draw.circle(self.image,BLUE, self.rect.center,self.radius)
         self.speed = 10
 
     def update(self):
@@ -132,10 +138,13 @@ class Enemy(pygame.sprite.Sprite):
 
 class Blast(pygame.sprite.Sprite):
     def __init__(self,filename):
-        super().__init__()
+        pygame.sprite.Sprite.__init__(self)
         self.image = pygame.image.load(filename)#.convert()
-        self.rect = self.image.get_rect()
         self.image = pygame.transform.scale(self.image, (50,50))
+        self.rect = self.image.get_rect()
+        self.radius = 10
+        BLUE = (0,0,255)
+        # pygame.draw.circle(self.image,BLUE, self.rect.center,self.radius)
         self.speed = 20
         self.damage = 1
         self.frames_bullet = []
@@ -143,14 +152,14 @@ class Blast(pygame.sprite.Sprite):
 
     def update(self):
         self.rect.y -= self.speed
-        print(self.rect.y)
+        #print(self.rect.y)
 
 
 class Explosion(pygame.sprite.Sprite):
-    def __init__(self,filename):
-        super().__init__()
+    def __init__(self,filename,cols,rows):
+        pygame.sprite.Sprite.__init__(self)
         sprite_sheet = SpriteSheet(filename)
 
 
 
-#
+Space()
