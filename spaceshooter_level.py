@@ -9,14 +9,16 @@ class Space(pygame.sprite.Sprite):
         self.running = running
         self.win = pygame.display.set_mode((800,600))
         self.background = pygame.image.load("Sprites//space background.png")
-        # pygame.mixer.music.load("Sounds//space music.wav")
-        # pygame.mixer.music.play(-1,0.0)
+        pygame.mixer.music.load("Sounds//space music.wav")
+        pygame.mixer.music.play(-1,0.0)
         self.music = True
         all_sprites_list = pygame.sprite.Group()
         blasts = pygame.sprite.Group()
         enemies = pygame.sprite.Group()
+        explosion = pygame.sprite.Group()
         hero = Hero("Sprites//THEspaceship.png")
         all_sprites_list.add(hero)
+        explosion = Explosion("Sprites//explosion.png")
         hero.rect.y = 530
         pygame.display.update()
 
@@ -31,9 +33,15 @@ class Space(pygame.sprite.Sprite):
         while self.running:
             pygame.time.delay(100)
             for event in pygame.event.get():
-                Controller.basic_command(self, event)
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+                    exit()
             self.win.blit(self.background, (0,0))
             keys = pygame.key.get_pressed()
+
+            if keys[pygame.K_ESCAPE]:
+                pygame.quit()
+                exit()
 
             if keys[pygame.K_LEFT]: #and self.x > self.speed:
                 hero.move_left()
@@ -50,6 +58,12 @@ class Space(pygame.sprite.Sprite):
 
             # self.win.blit(self.image, (self.x,self.y))
 
+            if keys[pygame.K_p]:
+                Controller.scene_selector(self, 1)
+                pygame.mixer.music.stop()
+                self.toggle = False
+                c1 = Controller()
+
             all_sprites_list.update()
             # hero.draw(self.win)
             # enemy.draw(self.win)
@@ -57,7 +71,10 @@ class Space(pygame.sprite.Sprite):
             for blast in blasts:
                 enemy_hit_list = pygame.sprite.spritecollide(blast,enemies, True)
                 for enemy in enemy_hit_list:
-                    print("collision")
+                    explosion.get_image(blast.rect.x,blast.rect.y)
+                    all_sprites_list.add(explosion)
+                    blasts.remove(blast)
+                    all_sprites_list.remove(blast)
 
                 if blast.rect.y < -10:
                     blasts.remove(blast)
@@ -129,11 +146,11 @@ class Blast(pygame.sprite.Sprite):
         print(self.rect.y)
 
 
-    # def shot(self, win):
-    #     self.toggle = True
-    #     win.blit(self.image,self.rect)
+class Explosion(pygame.sprite.Sprite):
+    def __init__(self,filename):
+        super().__init__()
+        sprite_sheet = SpriteSheet(filename)
 
-    # def reset(self):
 
-class Explosion:
-    pass
+
+Space()
