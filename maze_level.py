@@ -185,7 +185,6 @@ class Maze:
                 if x.colliderect(self.player_rec):
                     self.move_camera = 0
                 if x.contains(self.player_rec):
-                    print("Boo! insanity level 5, score reduction!")
                     Controller.score_current -= 1
                     self.boo.play(loops=1)
                     Controller.insanity += 1

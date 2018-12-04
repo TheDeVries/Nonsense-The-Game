@@ -24,6 +24,7 @@ class Platformer:
         player = Player_Platform()
         bullet = Fireball()
         death = Player_Death()
+        self.dragon_group = pygame.sprite.Group()
         self.player_death_group = pygame.sprite.Group()
         self.player_death_group.add(death)
         self.player_group = pygame.sprite.Group()
@@ -35,30 +36,46 @@ class Platformer:
         self.enemy_coords = [10,10,
                              120,125,
                              700,10,
-                             600,120]
+                             600,120,
+                             190,-79,
+                             650,-279,
+                             -50,-429]
         self.explosion_coords = [0,0,
                                 100,100,
                                 700,10,
-                                600,120]
+                                600,120,
+                                190,-79,
+                                650,-279,
+                                -50,-429]
         self.laser_coord = [55,60,20,
                             165,175,10,
                             745, 60, 2,
-                            645, 170, 2]
+                            645, 170, 2,
+                            235, -29, 15,
+                            695, -229, 18,
+                            -5, -379, 15]
+        self.dragon_coords = [0, -600, 10, "R"
+                                ]
         self.enemy = ""
         self.enemy_list = []
         self.laser_list = []
         self.explosion_list = []
-        for enemies in range(0, 8, 2):
+        self.dragon_list = []
+        for enemies in range(0, 14, 2):
             enemy = Enemy(self.enemy_coords[enemies], self.enemy_coords[enemies+1])
             self.enemy_list.append(enemy)
             self.enemies.add(enemy)
-        for laser_iter in range (0,12,3):
+        for laser_iter in range (0,21,3):
             laser = Laser(self.laser_coord[laser_iter], self.laser_coord[laser_iter+1], self.laser_coord[laser_iter+2])
             self.laser_list.append(laser)
             self.laser_group.add(laser)
-        for explosion_iter in range (0,8,2):
+        for explosion_iter in range (0,14,2):
             explosion = Explosion(self.explosion_coords[explosion_iter], self.explosion_coords[explosion_iter+1])
             self.explosion_list.append(explosion)
+        for dragon_iter in range(0,4,4):
+            dragon = Dragon(self.dragon_coords[dragon_iter],self.dragon_coords[dragon_iter+1],self.dragon_coords[dragon_iter+2],self.dragon_coords[dragon_iter+3])
+            self.dragon_list.append(dragon)
+            self.dragon_group.add(dragon)
         while self.running:
             for event in pygame.event.get():
                 # Quit button
@@ -121,14 +138,24 @@ class Platformer:
                         self.enemy_list.remove(self.enemy_list[enemy_death])
                         self.explosion_group.add(self.explosion_list[enemy_death])
                         break
+            for dragon_death in range(0, len(self.dragon_list)):
+                if pygame.sprite.collide_mask(self.dragon_list[dragon_death], bullet) != None and bullet.shot == True:
+                    self.dragon_list[dragon_death].health -= bullet.damage
+                    if self.dragon_list[dragon_death].health <= 0:
+                        self.dragon_group.remove(self.dragon_list[dragon_death])
+                        self.dragon_list.remove(self.dragon_list[dragon_death])
+                        break
                     #laser_direction.done = False
             for explosion_done in range(0, len(self.explosion_list)):
                 if self.explosion_list[explosion_done].done == True:
                     self.explosion_group.remove(self.explosion_list[explosion_done])
                     self.explosion_list.remove(self.explosion_list[explosion_done])
                     break
-
-
+            for dragon_kill in range(0, len(self.dragon_list)):
+                if pygame.sprite.collide_mask(self.dragon_list[dragon_kill], player) != None:
+                    self.running = False
+                    self.game_over = True
+                    break
             self.player_group.update()
             self.player_group.draw(self.window)
             self.enemies.update()
@@ -139,6 +166,8 @@ class Platformer:
             self.laser_group.draw(self.window)
             self.player_fireball.update()
             self.player_fireball.draw(self.window)
+            self.dragon_group.update()
+            self.dragon_group.draw(self.window)
             if bullet.done == True:
                 self.player_fireball.remove(bullet)
                 bullet.done = False
@@ -182,8 +211,14 @@ class Platforms_Map:
                             (350 - Platformer.x_camera, 100 - Platformer.y_camera ,200,20),
                             (300 - Platformer.x_camera, 0 - Platformer.y_camera ,200,20),
                             (500 - Platformer.x_camera, -200 - Platformer.y_camera, 250,20),
-                            (400 - Platformer.x_camera, -350 - Platformer.y_camera, 250,20),
-                            (300 - Platformer.x_camera, -500 - Platformer.y_camera, 250,20)]
+                            (100 - Platformer.x_camera, -350 - Platformer.y_camera, 250,20),
+                            (400 - Platformer.x_camera, -500 - Platformer.y_camera, 250,20),
+                            (600 - Platformer.x_camera, -650 - Platformer.y_camera, 250,20),
+                            (100 - Platformer.x_camera, -700 - Platformer.y_camera, 250,20),
+                            (500 - Platformer.x_camera, -850 - Platformer.y_camera, 250,20),
+                            (300 - Platformer.x_camera, -1000 - Platformer.y_camera, 250,20),
+                            (0 - Platformer.x_camera, -1150 - Platformer.y_camera, 250,20),
+                            (400 - Platformer.x_camera, -120 - Platformer.y_camera, 250,20)]
         for platform in self.platform_list:
             rect = pygame.draw.rect(self.window, (255,255,255), pygame.Rect(platform))
             self.platformrect_list.append(rect)
@@ -689,34 +724,59 @@ class Explosion(pygame.sprite.Sprite):
         self.rect = self.image.get_rect()
         self.rect = self.rect.move(self.x - Platformer.x_camera, self.y - Platformer.y_camera)
 class Dragon(pygame.sprite.Sprite):
-    def __init__(self,x,y,speed):
+    def __init__(self,x,y,speed,direction):
         super().__init__()
+        self.health = 500
         self.x = x
         self.y = y
         self.frames = []
         self.speed = speed
         self.changex = 0
+        self.direction = direction
         sprite_sheet = SpriteSheet("Sprites//Dragon.png")
 
         color_key_player = (255,255,255)
-        for x1 in range(0,801,200):
+        for x1 in range(0,601,200):
             image = sprite_sheet.get_image(x1, 0, 200, 64, color_key_player)
             image = pygame.transform.scale(image, (400,128))
             self.frames.append(image)
-        for x2 in range(0,801,200):
+        for x2 in range(0,601,200):
             image = sprite_sheet.get_image(x2, 64, 200, 64, color_key_player)
             image = pygame.transform.scale(image, (400,128))
             self.frames.append(image)
+        self.image = self.frames[0]
+        self.rect = self.image.get_rect()
         self.frame = 0
+        self.time = 0
         self.done = False
     def update(self):
-        self.time += 1
-        if self.time % 3 == 0:
-            self.frame += 1
-            if self.frame >= 8:
-                self.done = True
-                self.frame = 0
+        if self.direction == "L":
+            self.time += 1
+            if self.time % 3 == 0:
+                self.frame += 1
+                if self.frame >= 8:
+                    self.done = True
+                    self.frame = 0
                 self.changex -= self.speed
-            self.image = self.frames[self.frame]
-        self.rect = self.image.get_rect()
-        self.rect = self.rect.move(self.x - self.speed - Platformer.x_camera, self.y - Platformer.y_camera)
+                self.image = self.frames[self.frame]
+            if self.changex <= -800:
+                self.changex = 0
+                self.rect = self.image.get_rect()
+                self.rect = self.rect.move(self.x + 800 - Platformer.x_camera, self.y - Platformer.y_camera)
+            self.rect = self.image.get_rect()
+            self.rect = self.rect.move(self.x + self.change - Platformer.x_camera, self.y - Platformer.y_camera)
+        elif self.direction == "R":
+            self.time += 1
+            if self.time % 3 == 0:
+                self.frame += 1
+                if self.frame >= 8:
+                    self.done = True
+                    self.frame = 0
+                self.changex += self.speed
+                self.image = self.frames[self.frame]
+            if self.changex >= 800:
+                self.changex = 0
+                self.rect = self.image.get_rect()
+                self.rect = self.rect.move(self.x - 800 - Platformer.x_camera, self.y - Platformer.y_camera)
+            self.rect = self.image.get_rect()
+            self.rect = self.rect.move(self.x + self.changex - Platformer.x_camera, self.y - Platformer.y_camera)
