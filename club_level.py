@@ -280,17 +280,18 @@ class Club:
             self.font = pygame.font.Font("Sprites//times.ttf", 45)
             p_file = open("Dialogue Files//people.txt", "r")
             a_file = open("Dialogue Files//adjectives.txt", "r")
-            the_num = random.randint(1, 21)
-            the_num2 = random.randint(1, 21)
+            the_num = random.randint(1, 20)
+            the_num2 = random.randint(1, 20)
             line1 = ""
             line2 = ""
-            while line1 == "" or line2 == "":
-                for i in range(the_num):
-                    line1 = p_file.readline()
-                for i in range(the_num2):
-                    line2 = a_file.readline()
-                p_file.close()
-                a_file.close()
+            for i in range(the_num):
+                line1 = p_file.readline()
+            for i in range(the_num2):
+                line2 = a_file.readline()
+            p_file.close()
+            a_file.close()
+            if line1 == "" or line2 == "":
+                self.dialogue(self.window, determined)
             part_1 = "My " + line1
             part_2 = "is " + line2
             self.display_line1 = self.font.render(part_1, True, (0,0,0))
