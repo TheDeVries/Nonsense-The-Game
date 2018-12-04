@@ -29,6 +29,7 @@ class Space(pygame.sprite.Sprite):
         # explosion = Explosion("Sprites//explosion.png", 9, 8)
         hero.rect.y = 530
         pygame.display.update()
+        self.done_explosion = []
 
         for i in range(20):
             enemy = Enemy("Sprites//enemyship.png")
@@ -38,16 +39,17 @@ class Space(pygame.sprite.Sprite):
             enemy.rect.y = random.randrange(350)
             # enemyblast.rect.x = enemy.rect.x
             # enemyblast.rect.y = enemy.rect.y
+
             all_sprites_list.add(enemy)
             # random.choice([all_sprites_list.add(enemyblast),enemyblasts.add(enemyblast)])
 
 
 
         while self.running:
-            pygame.time.delay(100)
+            pygame.time.delay(50)
             for event in pygame.event.get():
                 Controller.basic_command(self, event)
-    
+
             self.win.blit(self.background, (0,0))
             keys = pygame.key.get_pressed()
 
@@ -63,7 +65,7 @@ class Space(pygame.sprite.Sprite):
                 heroblast.rect.y = hero.rect.y
                 all_sprites_list.add(heroblast)
                 heroblasts.add(heroblast)
-                
+
             # self.win.blit(self.image, (self.x,self.y))
 
             all_sprites_list.update()
@@ -72,16 +74,35 @@ class Space(pygame.sprite.Sprite):
             # enemy.update()
             for heroblast in heroblasts:
                 enemy_hit_list = pygame.sprite.spritecollide(heroblast,enemies, True, pygame.sprite.collide_circle)
-                for enemy in enemy_hit_list:
-                    all_sprites_list.add(explosion)
+                print(enemy_hit_list)
+                for enemy_coord in enemy_hit_list:
+                    #all_sprites_list.add(explosion)
                     self.score += 1
                     heroblasts.remove(heroblast)
                     all_sprites_list.remove(heroblast)
+                    x = enemy_coord.rect.x
+                    y = enemy_coord.rect.y
+                    explode = Explosion(x,y)
+                    explosion.add(explode)
+                    self.done_explosion.append(explode)
                     print(self.score)
 
                 if heroblast.rect.y < -10:
                     heroblasts.remove(heroblast)
                     all_sprites_list.remove(heroblast)
+
+            #for explosion_done in range(0,20):
+            for done in range(len(self.done_explosion)):
+                if self.done_explosion[done].done == True:
+                    explosion.remove(self.done_explosion[done])
+                    self.done_explosion.remove(self.done_explosion[done])
+                    break
+
+
+
+
+            explosion.draw(self.win)
+            explosion.update()
             all_sprites_list.draw(self.win)
             Controller.score(self, self.win, (255,255,255))
             Controller.insanity_meter(self, self.win, (255,255,255))
@@ -182,7 +203,52 @@ class HeroBlast(pygame.sprite.Sprite):
 #         self.rect.y += self.speed
 #         #print(self.rect.y)
 #
-# class Explosion(pygame.sprite.Sprite):
-#     def __init__(self,filename):
-#         pygame.sprite.Sprite.__init__(self)
-#         sprite_sheet = SpriteSheet(filename)
+class Explosion(pygame.sprite.Sprite):
+    def __init__(self,x,y):
+        pygame.sprite.Sprite.__init__(self)
+        sprite_sheet = SpriteSheet("Sprites//explosion.png")
+        self.frames = []
+        self.x = x
+        self.y = y
+        color_key_player = (0,0,0)
+        for x1 in range(0,801,100):
+            image = sprite_sheet.get_image(x1, 0, 100, 100, color_key_player)
+            self.frames.append(image)
+        for x2 in range(0,801,100):
+            image = sprite_sheet.get_image(x2, 100, 100, 100, color_key_player)
+            self.frames.append(image)
+        for x3 in range(0,801,100):
+            image = sprite_sheet.get_image(x3, 200, 100, 100, color_key_player)
+            self.frames.append(image)
+        for x4 in range(0,801,100):
+            image = sprite_sheet.get_image(x4, 300, 100, 100, color_key_player)
+            self.frames.append(image)
+        for x5 in range(0,801,100):
+            image = sprite_sheet.get_image(x5, 400, 100, 100, color_key_player)
+            self.frames.append(image)
+        for x6 in range(0,801,100):
+            image = sprite_sheet.get_image(x6, 500, 100, 100, color_key_player)
+            self.frames.append(image)
+        for x7 in range(0,801,100):
+            image = sprite_sheet.get_image(x7, 600, 100, 100, color_key_player)
+            self.frames.append(image)
+        for x8 in range(0,801,100):
+            image = sprite_sheet.get_image(x8, 700, 100, 100, color_key_player)
+            self.frames.append(image)
+        for x9 in range(0,801,100):
+            image = sprite_sheet.get_image(x9, 800, 100, 100, color_key_player)
+            self.frames.append(image)
+        self.image = self.frames[0]
+        self.rect = self.image.get_rect()
+        self.rect = self.rect.move(self.x,self.y)
+        self.frame = 0
+        self.done = False
+    def update(self):
+        self.frame += 4
+        if self.frame >= 81:
+            self.frame = 0
+            self.done = True
+        self.image = self.frames[self.frame]
+
+    def reset(self):
+        self.done = False
