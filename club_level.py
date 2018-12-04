@@ -6,12 +6,12 @@ pygame.init()
 class Club:
     questions = 3
     sayings = 5
-    determined = False
     def __init__(self):
         self.start_tick = pygame.time.get_ticks()
         self.running = True
         self.completions = Controller.done_counter[3]
-        num_seconds = 25
+        num_seconds = 25 + 5 * self.completions
+        
         #Sounds
         if Controller.insanity < 4:
             self.club_music = pygame.mixer.music.load("Sounds//HOME - Above All.wav")
@@ -35,6 +35,10 @@ class Club:
             sprite = Arrow(2, i, 0)
             landing_arrows.add(sprite)
         self.difficultify()
+        tell_at = num_seconds//Club.sayings
+        t_list = list(range(Club.sayings))
+        for i in range(Club.sayings):
+            t_list[i] = i * tell_at
         d = Dialogue()
 
         #Last considerations
@@ -45,8 +49,11 @@ class Club:
         tex = random.randint(1,3)
         bad_background = pygame.image.load("Sprites//glitch_texture" + str(tex) + ".png").convert()
         self.chosens = self.Randomize()
+        self.phase = 1
 
         while self.running == True:
+            seconds_left = (num_seconds - (pygame.time.get_ticks() - self.start_tick)/1000)
+            print(seconds_left)
             self.window.blit(bad_background, (0,0))
             self.window.blit(our_background, (0,0))
             Controller.score(self, self.window, (255,255,255))
@@ -88,40 +95,55 @@ class Club:
                 self.mooded = True
 
             elif self.setting == 2:
-                Controller.clock(self, self.window, (93, 240, 93), num_seconds, self.start_tick)
-
                 image_string = self.clicked_character[:-4] + "_front.png"
                 image_surface = pygame.image.load(image_string).convert()
                 image_surface.set_colorkey((255,255,255))
                 self.window.blit(image_surface, (400, 300))
                 self.speech_bubble.set_colorkey((255,255,255))
                 self.window.blit(self.speech_bubble, (400, 65))
-                landing_arrows.draw(self.window)
-                
-                self.arrow_group.update(Arrow.position)
-                self.arrow_group.draw(self.window)
-                
-                d.draw(self.window)
-
-                #if not self.arrow_group and Arrow.position[1] < 70:
-                    #Dialogue.used_list = []
-                    #Controller.transition(self, Controller.scene, False)
-
+                self.font = pygame.font.Font("Sprites//times.ttf", 45)
+                if (num_seconds - (pygame.time.get_ticks() - self.start_tick)/1000) < 0 and self.phase == 1:
+                    pygame.init()
+                    self.start_tick = pygame.time.get_ticks()
+                    self.phase = 2
+                if self.phase == 1:
+                    Controller.clock(self, self.window, (93, 240, 93), num_seconds, self.start_tick)
+                    d.draw(self.window, self.font)
+                    landing_arrows.draw(self.window)
+                    self.arrow_group.update(Arrow.position)
+                    self.arrow_group.draw(self.window)
+                    for i in range(Club.sayings):
+                        if t_list[i] == int(seconds_left) and seconds_left != 0:
+                            d = Dialogue()
+                    #if not self.arrow_group and Arrow.position[1] < 70:
+                        #Dialogue.used_list = []
+                        #Controller.transition(self, Controller.scene, False)
+                else:
+                    self.attention1 = self.font.render("Hey! Are you", True, (0,0,0))
+                    self.attention2 = self.font.render("even listening?", True, (0,0,0))
+                    Controller.clock(self, self.window, (240, 93, 93), 6 * Club.questions, self.start_tick)
+                    self.window.blit(self.attention1, (465,120))
+                    self.window.blit(self.attention2, (465, 170))
+                    pygame.draw.rect(self.window, (0,0,64), (5, 64, 400, 504))
+            
             for event in pygame.event.get():
+                Controller.basic_command(self, event)
                 if event.type == pygame.USEREVENT:
                     spawner(self, Arrow.rate)
-                Controller.basic_command(self, event)
                 # Keybinds
                 if event.type == pygame.KEYDOWN:
                     if self.setting == 2:
-                        if event.key == pygame.K_LEFT or event.key == pygame.K_a:
-                            if self.flying_arrow.position[1] in range(60, 170):
-                                self.flying_arrow.kill()
-                        if event.key == pygame.K_UP or event.key == pygame.K_w:
-                            pass
-                        if event.key == pygame.K_DOWN or event.key == pygame.K_s:
-                            pass
-                        if event.key == pygame.K_RIGHT or event.key == pygame.K_d:
+                        if self.phase == 1:
+                            if event.key == pygame.K_LEFT or event.key == pygame.K_a:
+                                if self.flying_arrow.position[1] in range(60, 170):
+                                    self.flying_arrow.kill()
+                            if event.key == pygame.K_UP or event.key == pygame.K_w:
+                                pass
+                            if event.key == pygame.K_DOWN or event.key == pygame.K_s:
+                                pass
+                            if event.key == pygame.K_RIGHT or event.key == pygame.K_d:
+                                pass
+                        elif self.phase == 2:
                             pass
 
                 # Mouseclick
@@ -139,28 +161,45 @@ class Club:
             pygame.display.flip()
 
     def difficultify(self):
+        '''
+        Adjusts dialogue appearances and arrow speed/rates according to a difficulty level found in the controller
+        Called once every time the Club level is loaded
+        '''
         dif = Controller.done_counter[3]
         if dif % 2 == 0 and dif != 0:
             Arrow.speed += 1
         elif dif != 0:
             Arrow.rate += 1
-        if dif % 3 == 0:
-            Club.questions += 1
+        if dif % 3 == 0 and dif != 0:
+            if Club.sayings + 2 <= 20:
+                Club.questions += 1
+                Club.sayings += 2
         if self.isPrime(dif) == True and dif != 0:
             Arrow.speed += .5
             Arrow.rate += 1
 
     def isPrime(self, n):
+        '''
+        Accepts a number
+        Returns a boolean that's true if the number was prime, false otherwise
+        '''
         for i in range(2,int(n**0.5)+1):
             if n%i==0:
                 return False
         return True
 
     def spawner(self, rate):
+        '''
+        Given a rate, randomly spawn arrows across four arrow columns
+        '''
         sprite = Arrow(1, 'left', 1)
         self.arrow_group.add(sprite)
 
     def check_collision(self, point, *groups):
+        '''
+        Given a clicked point and two sprite groups (characters and server)
+        return which item in the group was clicked if anything was clicked
+        '''
         for group in groups:
             for g in group:
                 if g.rect.collidepoint(point):
@@ -285,9 +324,10 @@ class Character(pygame.sprite.Sprite):
         self.mood = "normal"
 # Setting 2 Exclusive
 class Dialogue:
-    used_list = [""]
+    used_list = []
     part_1 = ""
     part_2 = ""
+    answers = {}
     def __init__(self):
         p_file = open("Dialogue Files//people.txt", "r")
         a_file = open("Dialogue Files//adjectives.txt", "r")
@@ -296,24 +336,23 @@ class Dialogue:
         line1 = ""
         line2 = ""
         for i in range(the_num):
-            line1 = p_file.readline()
+            line1 = p_file.readline()[:-1]
         for i in range(the_num2):
-            line2 = a_file.readline()
+            line2 = a_file.readline()[:-1]
         p_file.close()
         a_file.close()
         if line1 in Dialogue.used_list or line2 in Dialogue.used_list:
             d = Dialogue()
         Dialogue.part_1 = "My " + line1
         Dialogue.part_2 = "is " + line2
+        Dialogue.answers[line1] = line2
 
-    def draw(self, window):
-    
-        self.font = pygame.font.Font("Sprites//times.ttf", 45)    
-        self.display_line1 = self.font.render(Dialogue.part_1, True, (0,0,0))
-        self.display_line2 = self.font.render(Dialogue.part_2, True, (0,0,0))    
+    def draw(self, window, font):
+        
+        self.display_line1 = font.render(Dialogue.part_1, True, (0,0,0))
+        self.display_line2 = font.render(Dialogue.part_2, True, (0,0,0))    
         window.blit(self.display_line1, (465, 120))
         window.blit(self.display_line2, (465, 170))
-
 
 class Arrow(pygame.sprite.Sprite):
     position = 0

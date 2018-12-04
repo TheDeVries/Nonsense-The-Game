@@ -198,9 +198,7 @@ class Controller:
         if self.time == -1:
             if color == (240, 93, 93):
                 Controller.transition(self, Controller.scene, False)
-            else:
-                if Controller.scene == 3:
-                    pass
+                    
     def basic_command(self, event):
         '''
         Called underneath the event loop to check common events
