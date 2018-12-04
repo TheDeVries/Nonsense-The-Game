@@ -50,7 +50,7 @@ class Space(pygame.sprite.Sprite):
                 hero.move_right()
 
             if keys[pygame.K_SPACE]:
-                blast = Blast("Sprites//spacebullet.png")
+                blast = Blast("Sprites//Stevenmoore.png")
                 blast.rect.x = hero.rect.x
                 blast.rect.y = hero.rect.y
                 all_sprites_list.add(blast)
@@ -153,4 +153,4 @@ class Explosion(pygame.sprite.Sprite):
 
 
 
-Space()
+#
