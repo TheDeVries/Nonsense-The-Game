@@ -177,7 +177,7 @@ class HeroBlast(pygame.sprite.Sprite):
         self.rect.y -= self.speed
         #print(self.rect.y)
 
-Space()
+#Space()
 
 # class EnemyBlast(pygame.sprite.Sprite):
 #     def __init__(self,filename):
