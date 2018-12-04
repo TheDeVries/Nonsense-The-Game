@@ -17,8 +17,6 @@ class Platformer:
         self.rect.move_ip((0,0))
         self.window.fill((255,255,255))
         self.running = True
-        self.posx = 400-18
-        self.posy = 300-22
         self.game_over = False
         player = Player_Platform()
         bullet = Fireball()
@@ -99,10 +97,11 @@ class Platformer:
                 self.game_over = True
             for enemy_death in range(0, len(self.enemy_list)):
                 if pygame.sprite.collide_rect(self.enemy_list[enemy_death], bullet):
-                    self.enemies.remove(self.enemy_list[enemy_death])
-                    self.enemy_list.remove(self.enemy_list[enemy_death])
                     self.laser_group.remove(self.laser_list[enemy_death])
                     self.laser_list.remove(self.laser_list[enemy_death])
+                    self.enemies.remove(self.enemy_list[enemy_death])
+                    self.enemy_list.remove(self.enemy_list[enemy_death])
+                    break
                     #laser_direction.done = False
             self.player_group.update()
             self.player_group.draw(self.window)
@@ -371,7 +370,7 @@ class Player_Platform(pygame.sprite.Sprite):
             self.direction = "JL"
         elif self.direction == "R":
             self.direction = "JR"
-        elif Platformer.direction == "F":
+        elif self.direction == "F":
             self.direction = "JF"
 
 
