@@ -16,8 +16,11 @@ class Platformer:
         self.rect = self.background.get_rect()
         self.rect.move_ip((0,0))
         self.window.fill((255,255,255))
+        self.start_tick = pygame.time.get_ticks()
         self.running = True
         self.game_over = False
+        self.myfont_game_over = pygame.font.Font("Sprites//times.ttf", 60)
+        self.textsurface_game_over = self.myfont_game_over.render("Press Space to continue...", True, (255,255,255))
         player = Player_Platform()
         bullet = Fireball()
         death = Player_Death()
@@ -28,13 +31,17 @@ class Platformer:
         self.enemies = pygame.sprite.Group()
         self.laser_group = pygame.sprite.Group()
         self.player_fireball = pygame.sprite.Group()
+        self.explosion_group = pygame.sprite.Group()
         self.enemy_coords = [0,0,
                              100,100]
+        self.explosion_coords = [0,0,
+                                100,100]
         self.laser_coord = [45,50,
                             145,150]
         self.enemy = ""
         self.enemy_list = []
         self.laser_list = []
+        self.explosion_list = []
         for enemies in range(0, 4, 2):
             enemy = Enemy(self.enemy_coords[enemies], self.enemy_coords[enemies+1])
             self.enemy_list.append(enemy)
@@ -43,6 +50,9 @@ class Platformer:
             laser = Laser(self.laser_coord[laser_iter], self.laser_coord[laser_iter+1])
             self.laser_list.append(laser)
             self.laser_group.add(laser)
+        for explosion_iter in range (0,4,2):
+            explosion = Explosion(self.explosion_coords[explosion_iter], self.explosion_coords[explosion_iter+1])
+            self.explosion_list.append(explosion)
         while self.running:
             for event in pygame.event.get():
                 # Quit button
@@ -96,17 +106,29 @@ class Platformer:
                 self.running = False
                 self.game_over = True
             for enemy_death in range(0, len(self.enemy_list)):
-                if pygame.sprite.collide_rect(self.enemy_list[enemy_death], bullet):
-                    self.laser_group.remove(self.laser_list[enemy_death])
-                    self.laser_list.remove(self.laser_list[enemy_death])
-                    self.enemies.remove(self.enemy_list[enemy_death])
-                    self.enemy_list.remove(self.enemy_list[enemy_death])
-                    break
+                if pygame.sprite.collide_rect(self.enemy_list[enemy_death], bullet) and bullet.shot == True:
+                    self.enemy_list[enemy_death].health -= bullet.damage
+                    if self.enemy_list[enemy_death].health <= 0:
+                        self.laser_group.remove(self.laser_list[enemy_death])
+                        self.laser_list.remove(self.laser_list[enemy_death])
+                        self.enemies.remove(self.enemy_list[enemy_death])
+                        self.enemy_list.remove(self.enemy_list[enemy_death])
+                        self.explosion_group.add(self.explosion_list[enemy_death])
+                        break
                     #laser_direction.done = False
+            for explosion_done in range(0, len(self.explosion_list)):
+                if self.explosion_list[explosion_done].done == True:
+                    self.explosion_group.remove(self.explosion_list[explosion_done])
+                    self.explosion_list.remove(self.explosion_list[explosion_done])
+                    break
+
+
             self.player_group.update()
             self.player_group.draw(self.window)
             self.enemies.update()
             self.enemies.draw(self.window)
+            self.explosion_group.update()
+            self.explosion_group.draw(self.window)
             self.laser_group.update()
             self.laser_group.draw(self.window)
             self.player_fireball.update()
@@ -114,9 +136,11 @@ class Platformer:
             if bullet.done == True:
                 self.player_fireball.remove(bullet)
                 bullet.done = False
+                bullet.shot = False
+            Controller.score(self, self.window, (255,255,255))
+            Controller.insanity_meter(self, self.window, (255,255,255))
+            Controller.clock(self, self.window, (240, 93, 93),  120, self.start_tick)
             pygame.display.flip()
-            print(self.laser_list)
-            print(self.laser_group)
         while self.game_over:
             for event in pygame.event.get():
                 # Quit button
@@ -125,6 +149,7 @@ class Platformer:
                     if event.key == pygame.K_SPACE:
                         Controller.scene_selector(self,4,False)
             self.window.blit(self.background, (0, 0))
+            self.window.blit(self.textsurface_game_over, (0,0))
             self.player_death_group.update()
             self.player_death_group.draw(self.window)
             pygame.display.flip()
@@ -427,6 +452,7 @@ class Fireball(pygame.sprite.Sprite):
         self.frame = 0
         self.time = 0
         self.done = False
+        self.shot = False
     def update(self):
         if self.direction == "R":
             if self.toggle == True:
@@ -464,15 +490,19 @@ class Fireball(pygame.sprite.Sprite):
                     self.image = self.frames_u[-1]
 
     def shot_left(self):
+        self.shot = True
         self.toggle = True
         self.direction = "L"
     def shot_right(self):
+        self.shot = True
         self.toggle = True
         self.direction = "R"
     def reset_right(self):
+        self.shot = False
         self.toggle = False
         self.rect = self.rect.move(-380,0)
     def reset_left(self):
+        self.shot = False
         self.toggle = False
         self.rect = self.rect.move(420, 0)
 class Enemy(pygame.sprite.Sprite):
@@ -605,3 +635,39 @@ class Laser(pygame.sprite.Sprite):
     def reset(self):
         self.progress = 0
         self.changex = 0
+class Explosion(pygame.sprite.Sprite):
+    def __init__(self,x,y):
+        super().__init__()
+        self.x = x
+        self.y = y
+        self.frames = []
+        sprite_sheet = SpriteSheet("Sprites//Explosion_Platformer.png")
+
+        color_key_player = (0,0,0)
+        for x1 in range(0,129,64):
+            image = sprite_sheet.get_image(x1, 0, 64, 64, color_key_player)
+            image = pygame.transform.scale(image, (128,128))
+            self.frames.append(image)
+        for x2 in range(0,129,64):
+            image = sprite_sheet.get_image(x2, 64, 64, 64, color_key_player)
+            image = pygame.transform.scale(image, (128,128))
+            self.frames.append(image)
+        for x3 in range(0,129,64):
+            image = sprite_sheet.get_image(x3, 64, 64, 64, color_key_player)
+            image = pygame.transform.scale(image, (128,128))
+            self.frames.append(image)
+        self.image = self.frames[0]
+        self.rect = self.image.get_rect()
+        self.frame = -1
+        self.time = 0
+        self.done = False
+    def update(self):
+        self.time += 1
+        if self.time % 3 == 0:
+            self.frame += 1
+            if self.frame >= 8:
+                self.done = True
+                self.frame = 0
+            self.image = self.frames[self.frame]
+        self.rect = self.image.get_rect()
+        self.rect = self.rect.move(self.x - Platformer.x_camera, self.y - Platformer.y_camera)
