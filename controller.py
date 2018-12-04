@@ -195,7 +195,7 @@ class Controller:
             window.blit(clocktimer, (322, 3))
         else:
             window.blit(clocktimer, (297, 3))
-        if self.time == -1:
+        if self.time < 0:
             if color == (240, 93, 93):
                 Controller.transition(self, Controller.scene, False)
                     

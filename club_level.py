@@ -1,16 +1,17 @@
 import pygame
 import random
+import time
 from controller import *
 pygame.init()
 
 class Club:
-    questions = 3
-    sayings = 5
+    questions = 2
+    sayings = 4
     def __init__(self):
         self.start_tick = pygame.time.get_ticks()
         self.running = True
         self.completions = Controller.done_counter[3]
-        num_seconds = 25 + 5 * self.completions
+        num_seconds = 20 + 5 * self.completions
         
         #Sounds
         if Controller.insanity < 4:
@@ -31,9 +32,11 @@ class Club:
         self.directions = ['left', 'up', 'down', 'right']
         landing_arrows = pygame.sprite.Group()
         self.arrow_group = pygame.sprite.Group()
+        
         for i in self.directions:
             sprite = Arrow(2, i, 0)
             landing_arrows.add(sprite)
+        
         self.difficultify()
         tell_at = num_seconds//Club.sayings
         t_list = list(range(Club.sayings))
@@ -50,10 +53,13 @@ class Club:
         bad_background = pygame.image.load("Sprites//glitch_texture" + str(tex) + ".png").convert()
         self.chosens = self.Randomize()
         self.phase = 1
+        arrow_time = 0
+        threshold = random.randrange(int((1/Arrow.rate)*1000), 5000)
+        self.arrow_tick = pygame.time.get_ticks()
+        
 
         while self.running == True:
             seconds_left = (num_seconds - (pygame.time.get_ticks() - self.start_tick)/1000)
-            print(seconds_left)
             self.window.blit(bad_background, (0,0))
             self.window.blit(our_background, (0,0))
             Controller.score(self, self.window, (255,255,255))
@@ -75,7 +81,8 @@ class Club:
                     self.window.blit(self.display_font, (160, 10))
                 character_group = pygame.sprite.Group()
                 server_group = pygame.sprite.Group()
-
+                
+                
                 for i in range(-1, -len(self.chosens)+2, -1):
                     if self.chosens[i] != "Sprites//bar_server.png" and self.chosens[i] != "Sprites//c_server.png":
                         sprite = Character(self.chosens[i], self.chosens[i-3])
@@ -106,30 +113,43 @@ class Club:
                     pygame.init()
                     self.start_tick = pygame.time.get_ticks()
                     self.phase = 2
+                    if Club.questions > len(Dialogue.answers):
+                        Club.questions = len(Dialogue.answers)
                 if self.phase == 1:
+                    arrow_time += (pygame.time.get_ticks() - self.arrow_tick)
+                    if arrow_time > threshold:
+                        self.spawn()
+                        arrow_time = 0
+                        threshold = random.randrange(int((1/Arrow.rate)*1000), 5000)
+                        self.arrow_tick = pygame.time.get_ticks()
                     Controller.clock(self, self.window, (93, 240, 93), num_seconds, self.start_tick)
                     d.draw(self.window, self.font)
                     landing_arrows.draw(self.window)
                     self.arrow_group.update(Arrow.position)
                     self.arrow_group.draw(self.window)
-                    for i in range(Club.sayings):
-                        if t_list[i] == int(seconds_left) and seconds_left != 0:
-                            d = Dialogue()
-                    #if not self.arrow_group and Arrow.position[1] < 70:
-                        #Dialogue.used_list = []
-                        #Controller.transition(self, Controller.scene, False)
+                    our_word = "|"
+                    
+                    if time.time() > end_time:
+                        for i in range(Club.sayings):
+                            if t_list[i] == int(seconds_left) and int(seconds_left) > 0:
+                                d = Dialogue()
+                        end_time = time.time() + 1
                 else:
                     self.attention1 = self.font.render("Hey! Are you", True, (0,0,0))
                     self.attention2 = self.font.render("even listening?", True, (0,0,0))
                     Controller.clock(self, self.window, (240, 93, 93), 6 * Club.questions, self.start_tick)
+                    l = len(our_word)
                     self.window.blit(self.attention1, (465,120))
                     self.window.blit(self.attention2, (465, 170))
                     pygame.draw.rect(self.window, (0,0,64), (5, 64, 400, 504))
+                    display_ours = self.font.render(our_word, True, (255,255,255))
+                    display_line = self.font.render(">", True, (255,255,255))
+                    self.window.blit(display_line, (20, 495))
+                    self.window.blit(display_ours, (50, 495))
+                    Dialogue.question(self, self.window, 1, self.font)
             
             for event in pygame.event.get():
                 Controller.basic_command(self, event)
-                if event.type == pygame.USEREVENT:
-                    spawner(self, Arrow.rate)
                 # Keybinds
                 if event.type == pygame.KEYDOWN:
                     if self.setting == 2:
@@ -144,7 +164,21 @@ class Club:
                             if event.key == pygame.K_RIGHT or event.key == pygame.K_d:
                                 pass
                         elif self.phase == 2:
-                            pass
+                            if event.key == pygame.K_RETURN:
+                                if our_word[0:l-1] == self.word:
+                                    pass
+                                else:
+                                    Controller.transition(self, 3, False)
+                            elif event.key == pygame.K_BACKSPACE:
+                                our_word = our_word[0:(l-2)]
+                                our_word += "|"
+                            else:
+                                our_key = self.font.render(chr(event.key), True, (255,255,255))
+                                our_word = our_word[0:(l-1)]
+                                our_word += chr(event.key)
+                                our_word += "|"
+                            display_ours = self.font.render(our_word, True, (255,255,255))
+                            self.window.blit(display_ours, (50, 495))        
 
                 # Mouseclick
                 if event.type == pygame.MOUSEBUTTONDOWN and self.setting == 1:
@@ -156,8 +190,9 @@ class Club:
                         our_background = self.club_background2
                         pygame.init()
                         self.start_tick = pygame.time.get_ticks()
+                        end_time = time.time() + 1
                         self.setting = 2
-
+            
             pygame.display.flip()
 
     def difficultify(self):
@@ -188,11 +223,11 @@ class Club:
                 return False
         return True
 
-    def spawner(self, rate):
+    def spawn(self):
         '''
         Given a rate, randomly spawn arrows across four arrow columns
         '''
-        sprite = Arrow(1, 'left', 1)
+        sprite = Arrow(1, 0, Arrow.speed)
         self.arrow_group.add(sprite)
 
     def check_collision(self, point, *groups):
@@ -348,25 +383,40 @@ class Dialogue:
         Dialogue.answers[line1] = line2
 
     def draw(self, window, font):
-        
+        '''
+        Accepts the window and font as parameters
+        Places both lines generated in the init at specific positions
+        Designed to look well in setting 2 of the club level.
+        '''
         self.display_line1 = font.render(Dialogue.part_1, True, (0,0,0))
         self.display_line2 = font.render(Dialogue.part_2, True, (0,0,0))    
         window.blit(self.display_line1, (465, 120))
         window.blit(self.display_line2, (465, 170))
-
+    
+    def question(self, window, type, font):
+        self.heading = font.render("Question 1/" + str(Club.questions), True, (255,255,255))
+        window.blit(self.heading, (20, 74))
+        if type == 1:
+            pass
+        else:
+            pass
+        
 class Arrow(pygame.sprite.Sprite):
-    position = 0
+    position = (0,0)
     rate = 1
     speed = 1
-    def __init__(self, type, direction, speed):
+    def __init__(self, type, h, speed):
         pygame.sprite.Sprite.__init__(self)
         #Where type 1 are flying arrows and 2 are the landing arrows
         if type == 1:
             self.image = pygame.image.load("Sprites//arrow.png").convert_alpha()
             ar_direc = {'left': self.image, 'right': pygame.transform.rotate(self.image, 180), 'up': pygame.transform.rotate(self.image, 270), 'down': pygame.transform.rotate(self.image, 90)}
-            self.image = ar_direc[direction]
             self.rect = self.image.get_rect()
             ar_start = {'left': (5, 600), 'up': (105, 600), 'down': (205, 600), 'right': (305, 600)}
+            direction = [i for i in ar_start]
+            random.shuffle(direction)
+            direction=direction[0]
+            self.image = ar_direc[direction]
             self.position = ar_start[direction]
             Arrow.position = self.position
             self.rect.topleft = Arrow.position
@@ -379,12 +429,15 @@ class Arrow(pygame.sprite.Sprite):
             ar_direc = {'left': self.image, 'right': pygame.transform.rotate(self.image, 180), 'up': pygame.transform.rotate(self.image, 270), 'down': pygame.transform.rotate(self.image, 90)}
             self.rect = self.image.get_rect()
             ar_end = {'left': (5, 64), 'up': (105, 64), 'down': (205, 64), 'right': (305, 64)}
-            self.image = ar_direc[direction]
-            self.end_position = ar_end[direction]
+            self.image = ar_direc[h]
+            self.end_position = ar_end[h]
             self.rect.topleft = self.end_position
 
     def update(self, position):
         self.x = self.position[0]
-        new_pos = float(Arrow.position[1]) - float(Arrow.speed)
-        Arrow.position = (self.x, new_pos)
-        self.rect.topleft = Arrow.position
+        new_pos = float(self.position[1]) - float(Arrow.speed)
+        self.position = (self.x, new_pos)
+        self.rect.topleft = self.position
+        if self.position[1] < 70:
+            Dialogue.used_list = []
+            Controller.transition(self, Controller.scene, False)
