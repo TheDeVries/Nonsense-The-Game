@@ -8,7 +8,6 @@ class Club:
     sayings = 5
     determined = False
     def __init__(self):
-        print(Controller.done_counter[3])
         self.start_tick = pygame.time.get_ticks()
         self.running = True
         self.completions = Controller.done_counter[3]
@@ -36,7 +35,7 @@ class Club:
             sprite = Arrow(2, i, 0)
             landing_arrows.add(sprite)
         self.difficultify()
-        self.dialogue(self.window, False)
+        d = Dialogue()
 
         #Last considerations
         self.setting = 1
@@ -98,13 +97,14 @@ class Club:
                 self.speech_bubble.set_colorkey((255,255,255))
                 self.window.blit(self.speech_bubble, (400, 65))
                 landing_arrows.draw(self.window)
-
+                
                 self.arrow_group.update(Arrow.position)
                 self.arrow_group.draw(self.window)
-
-                self.dialogue(self.window, True)
+                
+                d.draw(self.window)
 
                 #if not self.arrow_group and Arrow.position[1] < 70:
+                    #Dialogue.used_list = []
                     #Controller.transition(self, Controller.scene, False)
 
             for event in pygame.event.get():
@@ -142,15 +142,13 @@ class Club:
         dif = Controller.done_counter[3]
         if dif % 2 == 0 and dif != 0:
             Arrow.speed += 1
-        else:
+        elif dif != 0:
             Arrow.rate += 1
         if dif % 3 == 0:
             Club.questions += 1
-        if self.isPrime(dif) == True:
-            Arrow.speed += 1
+        if self.isPrime(dif) == True and dif != 0:
+            Arrow.speed += .5
             Arrow.rate += 1
-        #print(Arrow.speed)
-        #print(Arrow.rate)
 
     def isPrime(self, n):
         for i in range(2,int(n**0.5)+1):
@@ -274,34 +272,6 @@ class Club:
 
         return self.chosen_characters
 
-    def dialogue(self, window, determined):
-        if determined == False:
-            speech = list(range(Club.sayings))
-            self.font = pygame.font.Font("Sprites//times.ttf", 45)
-            p_file = open("Dialogue Files//people.txt", "r")
-            a_file = open("Dialogue Files//adjectives.txt", "r")
-            the_num = random.randint(1, 20)
-            the_num2 = random.randint(1, 20)
-            line1 = ""
-            line2 = ""
-            for i in range(the_num):
-                line1 = p_file.readline()
-            for i in range(the_num2):
-                line2 = a_file.readline()
-            p_file.close()
-            a_file.close()
-            if line1 == "" or line2 == "":
-                self.dialogue(self.window, determined)
-            part_1 = "My " + line1
-            part_2 = "is " + line2
-            self.display_line1 = self.font.render(part_1, True, (0,0,0))
-            self.display_line2 = self.font.render(part_2, True, (0,0,0))
-        
-        else:
-            window.blit(self.display_line1, (465, 120))
-            window.blit(self.display_line2, (465, 170))
-
-
 # Club Models
 class Character(pygame.sprite.Sprite):
     def __init__(self, file, position):
@@ -315,8 +285,35 @@ class Character(pygame.sprite.Sprite):
         self.mood = "normal"
 # Setting 2 Exclusive
 class Dialogue:
-    def __init__(self, position, mood):
-        myfont = pygame.font.Font("Sprites//times.ttf", 45)
+    used_list = [""]
+    part_1 = ""
+    part_2 = ""
+    def __init__(self):
+        p_file = open("Dialogue Files//people.txt", "r")
+        a_file = open("Dialogue Files//adjectives.txt", "r")
+        the_num = random.randint(1, 20)
+        the_num2 = random.randint(1, 20)
+        line1 = ""
+        line2 = ""
+        for i in range(the_num):
+            line1 = p_file.readline()
+        for i in range(the_num2):
+            line2 = a_file.readline()
+        p_file.close()
+        a_file.close()
+        if line1 in Dialogue.used_list or line2 in Dialogue.used_list:
+            d = Dialogue()
+        Dialogue.part_1 = "My " + line1
+        Dialogue.part_2 = "is " + line2
+
+    def draw(self, window):
+    
+        self.font = pygame.font.Font("Sprites//times.ttf", 45)    
+        self.display_line1 = self.font.render(Dialogue.part_1, True, (0,0,0))
+        self.display_line2 = self.font.render(Dialogue.part_2, True, (0,0,0))    
+        window.blit(self.display_line1, (465, 120))
+        window.blit(self.display_line2, (465, 170))
+
 
 class Arrow(pygame.sprite.Sprite):
     position = 0

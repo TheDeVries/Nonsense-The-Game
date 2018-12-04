@@ -46,15 +46,10 @@ class Space(pygame.sprite.Sprite):
         while self.running:
             pygame.time.delay(100)
             for event in pygame.event.get():
-                if event.type == pygame.QUIT:
-                    pygame.quit()
-                    exit()
+                Controller.basic_command(self, event)
+    
             self.win.blit(self.background, (0,0))
             keys = pygame.key.get_pressed()
-
-            if keys[pygame.K_ESCAPE]:
-                pygame.quit()
-                exit()
 
             if keys[pygame.K_LEFT]: #and self.x > self.speed:
                 hero.move_left()
@@ -68,18 +63,8 @@ class Space(pygame.sprite.Sprite):
                 heroblast.rect.y = hero.rect.y
                 all_sprites_list.add(heroblast)
                 heroblasts.add(heroblast)
-
-
-
-
-
+                
             # self.win.blit(self.image, (self.x,self.y))
-
-            if keys[pygame.K_p]:
-                Controller.scene_selector(self, 1)
-                pygame.mixer.music.stop()
-                self.toggle = False
-                c1 = Controller()
 
             all_sprites_list.update()
             # hero.draw(self.win)
