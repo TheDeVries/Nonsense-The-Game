@@ -21,6 +21,7 @@ class Controller:
     scenes_done = []
     return_to_root = False
     up_insanity = False
+    timeout = False
 
     def __init__(self):
         pygame.init()
@@ -34,9 +35,11 @@ class Controller:
         
     def run(self):    
         while True:
+            Controller.timeout = False
             if Controller.scene == 0:
                 men = Menu()
-                self.won = False
+                self.won = True
+                Controller.score_current -= 1
             elif Controller.scene == 1:
                 self.space.run()
                 self.won = Space.won
@@ -61,22 +64,21 @@ class Controller:
         This then plays corresponding sounds, adjusts score if needed, and randomly selects a new id
         which means it chooses the next level in the mix.
         '''
-        if Controller.scene != 0:
-            if success == True:
-                Controller.done_counter[scene_finished] += 1
-                Controller.score_current += 1
-                if Controller.insanity == 1:
-                    self.complete = pygame.mixer.Sound("Sounds//Electronic_Chime.wav")
-                    self.complete.set_volume(0.3)
-                else:
-                    self.complete = pygame.mixer.Sound("Sounds//switch.wav")
+        if success == True:
+            Controller.done_counter[scene_finished] += 1
+            Controller.score_current += 1
+            if Controller.insanity == 1:
+                self.complete = pygame.mixer.Sound("Sounds//Electronic_Chime.wav")
+                self.complete.set_volume(0.3)
             else:
-                Controller.insanity += 1
-                if Controller.insanity > 5:
-                    Controller.go_insane(self, self.window)
-                self.complete = pygame.mixer.Sound("Sounds//insanity_up.wav")
-                self.complete.set_volume(1.5)
-            self.complete.play(loops = 0)
+                self.complete = pygame.mixer.Sound("Sounds//switch.wav")
+        else:
+            Controller.insanity += 1
+            if Controller.insanity > 5:
+                Controller.go_insane(self, self.window)
+            self.complete = pygame.mixer.Sound("Sounds//insanity_up.wav")
+            self.complete.set_volume(1.5)
+        self.complete.play(loops = 0)
         Controller.scenes_done.append(scene_finished)
         rand = random.randrange(0,101)
         if rand < 20:
@@ -211,7 +213,7 @@ class Controller:
             window.blit(clocktimer, (297, 3))
         if self.time < 0:
             if color == (240, 93, 93):
-                Controller.transition(self, Controller.scene, False)
+                Controller.timeout = True
 
     def basic_command(self, event):
         '''

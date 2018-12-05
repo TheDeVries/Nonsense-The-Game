@@ -64,6 +64,9 @@ class Space:
 
         while self.running:
             pygame.time.delay(50)
+            if Controller.timeout == True:
+                Space.won = False
+                self.running = False
             for event in pygame.event.get():
                 Controller.basic_command(self, event)
                 if Controller.return_to_root == True:
@@ -176,7 +179,7 @@ class Space:
             self.all_sprites_list.draw(self.win)
             Controller.score(self, self.win, (255,255,255))
             Controller.insanity_meter(self, self.win, (255,255,255))
-            Controller.clock(self, self.win, (240, 93, 93), time_limit, self.start_tick)
+            c = Controller.clock(self, self.win, (240, 93, 93), time_limit, self.start_tick)
             # self.all_sprites_list.update()
             pygame.display.flip()
             #for i in self.all_sprites_list:

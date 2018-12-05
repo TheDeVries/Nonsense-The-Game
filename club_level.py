@@ -76,7 +76,10 @@ class Club:
                     our_background.set_colorkey((0,0,64))
 
                 if self.completions > 0:
-                    Controller.clock(self, self.window, (240, 93, 93), 10, self.start_tick)
+                    c = Controller.clock(self, self.window, (240, 93, 93), 10, self.start_tick)
+                    if Controller.timeout == True:
+                        Club.won = False
+                        self.running = False
                 else:
                     self.font = pygame.font.Font("Sprites//times.ttf", 30)
                     if int((pygame.time.get_ticks()-self.start_tick)/1000) % 2 == 0:
@@ -130,7 +133,7 @@ class Club:
                         arrow_time = 0
                         threshold = random.randrange(int((1/Arrow.rate)*1000), 50*1000)
                         self.arrow_tick = pygame.time.get_ticks()
-                    Controller.clock(self, self.window, (93, 240, 93), self.num_seconds, self.start_tick)
+                    c = Controller.clock(self, self.window, (93, 240, 93), self.num_seconds, self.start_tick)
                     self.d.draw(self.window, self.font)
                     self.landing_arrows.draw(self.window)
                     self.arrow_group.update()
@@ -145,7 +148,10 @@ class Club:
                 else:
                     self.attention1 = self.font.render("Hey! Are you", True, (0,0,0))
                     self.attention2 = self.font.render("even listening?", True, (0,0,0))
-                    Controller.clock(self, self.window, (240, 93, 93), 6 * Club.questions, self.start_tick)
+                    c = Controller.clock(self, self.window, (240, 93, 93), 6 * Club.questions, self.start_tick)
+                    if Controller.timeout == True:
+                        Club.won = False
+                        self.running = False
                     l = len(our_word)
                     self.window.blit(self.attention1, (465,120))
                     self.window.blit(self.attention2, (465, 170))

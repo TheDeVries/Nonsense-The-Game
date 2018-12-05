@@ -124,7 +124,7 @@ class Typing:
                 self.window.blit(self.garfielf, (320,170))
             Controller.score(self, self.window, (255,255,255))
             Controller.insanity_meter(self, self.window, (255,255,255))
-            Controller.clock(self, self.window, (240, 93, 93), self.time_limit, self.start_tick)
+            c = Controller.clock(self, self.window, (240, 93, 93), self.time_limit, self.start_tick)
             display_word = self.myfont.render(self.word, True, (0, 0, 0))
             display_line = self.myfont.render(">", True, (0,0,0))
             display_cursor = self.myfont.render("|", True, (0,0,0))
@@ -145,7 +145,9 @@ class Typing:
             if self.left_count == 0:
                 Typing.won = True
                 self.running = False
-
+            elif Controller.timeout == True:
+                Typing.won = False
+                self.running = False
             for event in pygame.event.get():
                 Controller.basic_command(self, event)
                 if Controller.return_to_root == True:

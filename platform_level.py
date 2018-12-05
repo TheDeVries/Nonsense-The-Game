@@ -87,6 +87,12 @@ class Platformer:
         self.start_tick = pygame.time.get_ticks()
         self.running = True
         while self.running:
+            Controller.score(self, self.window, (255,255,255))
+            Controller.insanity_meter(self, self.window, (255,255,255))
+            c = Controller.clock(self, self.window, (240, 93, 93), 120, self.start_tick)
+            if Controller.timeout == True:
+                Platformer.won = False
+                self.running = False    
             for event in pygame.event.get():
                 Controller.basic_command(self, event)
                 if Controller.return_to_root == True:
@@ -214,9 +220,6 @@ class Platformer:
                 self.player_fireball.remove(self.bullet)
                 self.bullet.done = False
                 self.bullet.shot = False
-            Controller.score(self, self.window, (255,255,255))
-            Controller.insanity_meter(self, self.window, (255,255,255))
-            Controller.clock(self, self.window, (240, 93, 93), 120, self.start_tick)
             pygame.display.flip()
         # Game over loop
         while self.game_over:
@@ -244,7 +247,7 @@ class Platformer:
             self.window.blit(self.textsurface_game_over, (0,0))
             self.player_death_group.update()
             self.player_death_group.draw(self.window)
-            Controller.clock(self, self.window, (240, 93, 93),  5, self.end_tick)
+            c = Controller.clock(self, self.window, (240, 93, 93),  5, self.end_tick)
             pygame.display.flip()
 
 
