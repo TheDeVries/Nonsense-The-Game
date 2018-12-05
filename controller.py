@@ -9,14 +9,10 @@ class Controller:
     insanity3 = pygame.image.load("Sprites//insanity3.png")
     insanity4 = pygame.image.load("Sprites//insanity4.png")
     insanity5 = pygame.image.load("Sprites//insanity5.png")
-    if scene == 0:
-        spa = 0
-        maz = 0
-        clu = 0
-        pla = 0
-        typ = 0
     debug_mode = True
-    done_counter = {1: spa,  2: maz, 3: clu, 4: pla, 5: typ}
+    done_counter = {1: 0,  2: 0, 3: 0, 4: 0, 5: 0}
+    appear_counter = {1: 0, 2: 0, 3: 0, 4: 0, 5: 0}
+    appear_counter = []
     score_current = 0
     scenes_done = []
     return_to_root = False
@@ -55,6 +51,7 @@ class Controller:
             elif Controller.scene == 5:
                 self.typing.run()
                 self.won = Typing.won
+            Controller.appear_counter[Controller.scene] += 1 
             Controller.transition(self, Controller.scene, self.won)
             
     def scene_selector(self, scene_finished, success):
@@ -80,7 +77,24 @@ class Controller:
             self.complete.set_volume(1.5)
         self.complete.play(loops = 0)
         Controller.scenes_done.append(scene_finished)
-        rand = random.randrange(0,101)
+        
+        rand = random.randrange(0,1)
+        appear_total = 0
+        prob_list = []
+        for i in range(5):
+            appear_total+=appear_counter[i+1]
+            prob_list.append[appear_counter[i]]
+        for i in range(5):
+            prob_list[i]=appear_total-prob_list[i]
+            prob_list[i]/=(appear_total*4)
+        temp = sorted(prob_list,reverse=True)
+        accum = 0
+        for i in temp:
+            accum+=i
+            if rand < accum:
+                Controller.scene = prob_list.index(i)+1
+                
+        '''
         if rand < 20:
             if Controller.scene != 1:
                 Controller.scene = 1
@@ -116,6 +130,7 @@ class Controller:
                 rand = random.randrange(0,101)
                 if rand < 15:
                     Controller.scene = 5
+            '''
         return
     def transition(self, lev_id, success):
         '''

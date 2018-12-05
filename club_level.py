@@ -195,8 +195,10 @@ class Club:
                                     our_word = "|"
                                     if self.on_question > Club.questions:
                                         Club.won = True
+                                        self.running = False
                                 else:
                                     Club.won = False
+                                    self.running = False
                             elif event.key == pygame.K_BACKSPACE:
                                 our_word = our_word[0:(l-2)]
                                 our_word += "|"
