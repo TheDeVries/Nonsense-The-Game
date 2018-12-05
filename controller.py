@@ -20,7 +20,8 @@ class Controller:
     score_current = 0
     scenes_done = []
     return_to_root = False
-    
+    up_insanity = False
+
     def __init__(self):
         pygame.init()
         self.window = pygame.display.set_mode((800,600))
