@@ -697,9 +697,9 @@ class Laser(pygame.sprite.Sprite):
         self.direction = ""
         if Controller.insanity <= 2:
             self.image = pygame.image.load("Sprites//Bad_guy_shot.png")
-        #elif Controller.insanity > 2:
-        #    self.image = pygame.image.load("Sprites//Stevenmoore.png")
-        #    self.image = pygame.transform.scale(image, (,128))
+        elif Controller.insanity > 2:
+            self.image = pygame.image.load("Sprites//Stevenmoore.png")
+            self.image = pygame.transform.scale(image, (,128))
         self.toggle = False
         self.rect = self.image.get_rect()
         self.frame = 0
