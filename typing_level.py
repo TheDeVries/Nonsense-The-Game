@@ -4,6 +4,7 @@ from controller import *
 pygame.init()
 
 class Typing:
+    won = False
     total_words = 5
     time_limit = 35
     I1_L1 = ["cat", "tractor", "monkey", "boat", "house", "man", "hat", "run",
@@ -58,10 +59,25 @@ class Typing:
     "potency", "wweeiirrdd", "gamethisis", "whyareyoustillplaying", "puppet", "werewolf", "vampire", "professorstevenallenmoore", "eeegfgfgfgfggfgfgfgf",
     "locket", "verilyisaytoyou", "m", "a", "d", "n", "e", "s", "copingmechanism", "plaque", "wound", "atlantiansarestupid", "suckitourprojectisthebest"]
     def __init__(self):
-        self.start_tick = pygame.time.get_ticks()
+        pygame.init()
         self.completions = Controller.done_counter[5]
-        #Sounds
         self.window = pygame.display.set_mode((800,600))
+        self.myfont = pygame.font.Font("Sprites//times.ttf", 40)
+        self.strike = pygame.image.load("Sprites//strike.png").convert_alpha()
+        self.strike = pygame.transform.scale(self.strike, (40, 40))
+        self.start_tick = pygame.time.get_ticks()
+        
+        #Untouched Sprites
+        self.check = pygame.mixer.Sound("Sounds//check.wav")
+        self.check2 = pygame.mixer.Sound("Sounds//check2.wav")
+        self.striked = pygame.mixer.Sound("Sounds//Buzzer.wav")
+        self.background = pygame.image.load("Sprites//Pro Typing.png").convert()
+        self.walmart = pygame.image.load("Sprites//walmart.png").convert()
+        self.feedback_pic = pygame.image.load("Sprites//thumbs_up.png").convert()
+        
+    def run(self):
+        self.start_tick = pygame.time.get_ticks()
+        #Sound Insanity Check
         if Controller.insanity < 3:
             if Controller.insanity == 1:
                 self.welcome_jingle = pygame.mixer.Sound("Sounds//computer_magic.wav")
@@ -80,39 +96,32 @@ class Typing:
                     self.welcome_jingle = pygame.mixer.Sound("Sounds//distortion1.wav")
             else:
                 self.welcome_jingle = pygame.mixer.Sound("Sounds//distortion1.wav")
-        self.check = pygame.mixer.Sound("Sounds//check.wav")
-        self.check2 = pygame.mixer.Sound("Sounds//check2.wav")
-        self.striked = pygame.mixer.Sound("Sounds//Buzzer.wav")
-
-        #Sprites
-        self.background = pygame.image.load("Sprites//Pro Typing.png").convert()
-        self.walmart = pygame.image.load("Sprites//walmart.png").convert()
 
         #Initialize display and controller variables
         self.words = []
         self.difficultify(self.words)
-        #Below, the first int in the string is the number of words and the second is the time in seconds
-        #difficulty = {0: '005 030', 1: '010 035', 2: '015 060', 3: '020 060', 4: '025 060', 5: '010 30', 6: '015 35', 7: '010 025', 8: '020 050', 9: '025 050', 10: '030 050'}
-        #self.handler = 0
+        self.OK = True
 
         our_word = "|"
         self.word = random.choice(self.words)
         self.strike_count = 0
 
         self.welcome_jingle.play(loops=0)
-        self.myfont = pygame.font.Font("Sprites//times.ttf", 40)
-        self.strike = pygame.image.load("Sprites//strike.png").convert_alpha()
-        self.strike = pygame.transform.scale(self.strike, (40, 40))
 
         self.left_count = Typing.total_words
         self.time_limit = Typing.time_limit
 
-        running = True
-        while running:
+        self.running = True
+        while self.running:
             self.window.blit(self.walmart, (0,0))
             self.window.blit(self.background, (0,0))
             if Controller.insanity == 5:
                 self.background.set_colorkey((19, 108, 78))
+            #if self.left_count <= 
+            if self.left_count <= Typing.total_words - 1 and self.OK == True:
+                    self.window.blit(self.feedback_pic, (320, 170))
+            elif self.OK == False and Controller.insanity > 3:
+                self.window.blit(self.garfielf, (320,170))
             Controller.score(self, self.window, (255,255,255))
             Controller.insanity_meter(self, self.window, (255,255,255))
             Controller.clock(self, self.window, (240, 93, 93), self.time_limit, self.start_tick)
@@ -129,25 +138,38 @@ class Typing:
                 self.window.blit(self.strike, (574, 335))
                 self.window.blit(self.strike, (624, 335))
             elif self.strike_count >= 3:
-                Controller.transition(self, 5, False)
+                Typing.won = False
+                self.running = False
             l = len(our_word)
 
             if self.left_count == 0:
-                Controller.transition(self, 5, True)
+                Typing.won = True
+                self.running = False
 
             for event in pygame.event.get():
                 Controller.basic_command(self, event)
+                if Controller.return_to_root == True:
+                    Controller.return_to_root = False
+                    if Controller.up_insanity == True:
+                        Typing.won = False
+                    else:
+                        Typing.won = True
+                    self.running = False
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_RETURN:
                         if our_word[0:l-1] == self.word:
+                            self.OK = True
                             self.left_count -= 1
                             if self.left_count % 10 == 0 and self.left_count != 0:
                                 self.check2.play(loops=0)
                             elif self.left_count != 0:
                                 self.check.play(loops=0)
                         else:
+                            self.OK = False
+                            if Controller.insanity >= 4:
+                                self.garfielf = pygame.image.load("Sprites//garfielf.png").convert()
                             self.strike_count += 1
-                            if self.strike_count != 3:
+                            if self.strike_count != 3 and Controller.insanity < 4:
                                 self.striked.play(loops = 0)
                         self.word = random.choice(self.words)
                         our_word = "|"
@@ -163,6 +185,7 @@ class Typing:
             self.window.blit(display_ours, (40, 475))
 
             pygame.display.flip()
+
     def difficultify(self, words):
         self.words = words
         self.handler = 0

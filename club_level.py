@@ -5,20 +5,11 @@ from controller import *
 pygame.init()
 
 class Club:
+    won = False
     questions = 1
     sayings = 2
     def __init__(self):
-        self.start_tick = pygame.time.get_ticks()
-        self.running = True
-        self.completions = Controller.done_counter[3]
-        num_seconds = 20 + 5 * self.completions
-        
-        #Sounds
-        if Controller.insanity < 4:
-            self.club_music = pygame.mixer.music.load("Sounds//HOME - Above All.wav")
-        else:
-            self.club_music = pygame.mixer.music.load("Sounds//Flatline.wav")
-        pygame.mixer.music.play(loops=-1, start=0.0)
+        pygame.init()
 
         #Club Setting
         self.window = pygame.display.set_mode((800, 600))
@@ -30,19 +21,33 @@ class Club:
         #Keyboard DDR Setting
         self.speech_bubble = pygame.image.load("Sprites//speech_bubble.png").convert()
         self.directions = ['left', 'up', 'down', 'right']
-        landing_arrows = pygame.sprite.Group()
+        self.landing_arrows = pygame.sprite.Group()
         self.arrow_group = pygame.sprite.Group()
+        self.d = Dialogue()
         
+    def run(self):
+        #Sounds
+        if Controller.insanity < 4:
+            self.club_music = pygame.mixer.music.load("Sounds//HOME - Above All.wav")
+        else:
+            self.club_music = pygame.mixer.music.load("Sounds//Flatline.wav")
+        pygame.mixer.music.play(loops=-1, start=0.0)
+        
+        self.start_tick = pygame.time.get_ticks()
+        self.completions = Controller.done_counter[3]
+        self.num_seconds = 20 + 5 * self.completions
+        
+        self.running = True
         for i in self.directions:
             sprite = Arrow(2, i, 0)
-            landing_arrows.add(sprite)
+            self.landing_arrows.add(sprite)
         
         self.difficultify()
-        tell_at = num_seconds//Club.sayings
+        self.tell_at = self.num_seconds//Club.sayings
         t_list = list(range(Club.sayings))
         for i in range(Club.sayings):
-            t_list[i] = i * tell_at
-        d = Dialogue()
+            t_list[i] = i * self.tell_at
+        self.d.generate()
         arrow_time = 0
         threshold = random.randrange(int((1/Arrow.rate)*1000), 50 * 1000)
         self.arrow_tick = pygame.time.get_ticks()
@@ -60,7 +65,7 @@ class Club:
         self.phase = 1
 
         while self.running == True:
-            seconds_left = (num_seconds - (pygame.time.get_ticks() - self.start_tick)/1000)
+            seconds_left = (self.num_seconds - (pygame.time.get_ticks() - self.start_tick)/1000)
             self.window.blit(bad_background, (0,0))
             self.window.blit(our_background, (0,0))
             Controller.score(self, self.window, (255,255,255))
@@ -110,7 +115,7 @@ class Club:
                 self.speech_bubble.set_colorkey((255,255,255))
                 self.window.blit(self.speech_bubble, (400, 65))
                 self.font = pygame.font.Font("Sprites//times.ttf", 45)
-                if (num_seconds - (pygame.time.get_ticks() - self.start_tick)/1000) < 0 and self.phase == 1:
+                if (self.num_seconds - (pygame.time.get_ticks() - self.start_tick)/1000) < 0 and self.phase == 1:
                     pygame.init()
                     self.start_tick = pygame.time.get_ticks()
                     self.phase = 2
@@ -125,9 +130,9 @@ class Club:
                         arrow_time = 0
                         threshold = random.randrange(int((1/Arrow.rate)*1000), 50*1000)
                         self.arrow_tick = pygame.time.get_ticks()
-                    Controller.clock(self, self.window, (93, 240, 93), num_seconds, self.start_tick)
-                    d.draw(self.window, self.font)
-                    landing_arrows.draw(self.window)
+                    Controller.clock(self, self.window, (93, 240, 93), self.num_seconds, self.start_tick)
+                    self.d.draw(self.window, self.font)
+                    self.landing_arrows.draw(self.window)
                     self.arrow_group.update()
                     self.arrow_group.draw(self.window)
                     our_word = "|"
@@ -135,7 +140,7 @@ class Club:
                     if time.time() > end_time:
                         for i in range(Club.sayings):
                             if t_list[i] == int(seconds_left) and int(seconds_left) > 0:
-                                d = Dialogue()
+                                self.d.generate()
                         end_time = time.time() + 1
                 else:
                     self.attention1 = self.font.render("Hey! Are you", True, (0,0,0))
@@ -158,6 +163,13 @@ class Club:
             
             for event in pygame.event.get():
                 Controller.basic_command(self, event)
+                if Controller.return_to_root == True:
+                    Controller.return_to_root = False
+                    if Controller.up_insanity == True:
+                        Club.won = False
+                    else:
+                        Club.won = True
+                    self.running = False
                 # Keybinds
                 if event.type == pygame.KEYDOWN:
                     if self.setting == 2:
@@ -176,9 +188,9 @@ class Club:
                                     self.on_question += 1
                                     our_word = "|"
                                     if self.on_question > Club.questions:
-                                        Controller.transition(self, 3, True)
+                                        Club.won = True
                                 else:
-                                    Controller.transition(self, 3, False)
+                                    Club.won = False
                             elif event.key == pygame.K_BACKSPACE:
                                 our_word = our_word[0:(l-2)]
                                 our_word += "|"
@@ -376,6 +388,8 @@ class Dialogue:
     part_2 = ""
     answers = {}
     def __init__(self):
+        pass
+    def generate(self):
         p_file = open("Dialogue Files//people.txt", "r")
         a_file = open("Dialogue Files//adjectives.txt", "r")
         the_num = random.randint(1, 20)
@@ -389,7 +403,7 @@ class Dialogue:
         p_file.close()
         a_file.close()
         if line1 in Dialogue.used_list or line2 in Dialogue.used_list:
-            d = Dialogue()
+            self.d.generate()
         Dialogue.part_1 = "My " + line1
         Dialogue.part_2 = "is " + line2
         Dialogue.answers[line1] = line2
@@ -462,7 +476,7 @@ class Arrow(pygame.sprite.Sprite):
         self.rect.topleft = self.position
         if self.position[1] < 35:
             Dialogue.used_list = []
-            Controller.transition(self, Controller.scene, False)
+            Club.won = False
             
     def check(self, pressed):
         y_list = []
@@ -484,4 +498,4 @@ class Arrow(pygame.sprite.Sprite):
                     elif arrow.position[0] == 305 and pressed == 'right':
                         arrow.kill()
                         return                   
-        Controller.transition(self, 3, False)
+        Club.won = False

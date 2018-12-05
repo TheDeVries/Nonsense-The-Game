@@ -4,11 +4,11 @@ from controller import *
 pygame.init()
 
 class Maze:
+    won = False
     x_camera = 0
     y_camera = 0
     def __init__(self):
-        self.start_tick = pygame.time.get_ticks()
-        self.running = True
+        pygame.init()
         self.wn = pygame.display.set_mode((800,600), pygame.HWSURFACE)
         self.hedge = pygame.image.load("Sprites//hedge.png")
         self.grass = pygame.image.load("Sprites//grass.png")
@@ -18,9 +18,9 @@ class Maze:
         self.song = pygame.mixer.music.load("Sounds//Tchaikovsky - Valse Sentimentale.wav")
         self.boo = pygame.mixer.Sound("Sounds//Demon_Your_Soul_is_mine-BlueMann-1903732045.wav")
         self.insanity2_graphics = pygame.image.load("Sprites//insanity2_maze.png").convert()
-        player = Player()
-        active_sprite_list = pygame.sprite.Group()
-        active_sprite_list.add(player)
+        self.player = Player()
+        self.active_sprite_list = pygame.sprite.Group()
+        self.active_sprite_list.add(self.player)
         self.blacklist = []
         self.finish_list = []
         self.posy = 300-24
@@ -88,68 +88,78 @@ class Maze:
                           ["1","2","1","1","1","2","1","1","1","1","1","2","1","2","1","2","1","2","1","1","1","1","2","2","1"],
                           ["1","2","1","2","2","2","2","2","2","2","2","2","1","2","2","2","1","2","2","2","2","1","1","2","3"],
                           ["1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1"]]
+    def run(self):
+        self.start_tick = pygame.time.get_ticks()
+        self.running = True
         while self.running:
             for event in pygame.event.get():
                 # Quit button
                 Controller.basic_command(self, event)
+                if Controller.return_to_root == True:
+                    Controller.return_to_root = False
+                    if Controller.up_insanity == True:
+                        Maze.won = False
+                    else:
+                        Maze.won = True
+                    self.running = False
                 if Controller.insanity <= 2:
                     if event.type == pygame.KEYDOWN:
                         if event.key == pygame.K_w:
-                            player.go_up()
+                            self.player.go_up()
                             self.move_camera = 1
                         if event.key == pygame.K_a:
-                            player.go_left()
+                            self.player.go_left()
                             self.move_camera = 2
                         if event.key == pygame.K_s:
-                            player.go_down()
+                            self.player.go_down()
                             self.move_camera = 3
                         if event.key == pygame.K_d:
-                            player.go_right()
+                            self.player.go_right()
                             self.move_camera = 4
                         if event.key == pygame.K_UP:
-                            player.go_up()
+                            self.player.go_up()
                             self.move_camera = 1
                         if event.key == pygame.K_LEFT:
-                            player.go_left()
+                            self.player.go_left()
                             self.move_camera = 2
                         if event.key == pygame.K_DOWN:
-                            player.go_down()
+                            self.player.go_down()
                             self.move_camera = 3
                         if event.key == pygame.K_RIGHT:
-                            player.go_right()
+                            self.player.go_right()
                             self.move_camera = 4
                     elif event.type == pygame.KEYUP:
                         self.move_camera = 0
-                        player.stop()
+                        self.player.stop()
                 if Controller.insanity >= 3:
                     if event.type == pygame.KEYDOWN:
                         if event.key == pygame.K_s:
-                            player.go_up()
+                            self.player.go_up()
                             self.move_camera = 1
                         if event.key == pygame.K_d:
-                            player.go_left()
+                            self.player.go_left()
                             self.move_camera = 2
                         if event.key == pygame.K_w:
-                            player.go_down()
+                            self.player.go_down()
                             self.move_camera = 3
                         if event.key == pygame.K_a:
-                            player.go_right()
+                            self.player.go_right()
                             self.move_camera = 4
                         if event.key == pygame.K_DOWN:
-                            player.go_up()
+                            self.player.go_up()
                             self.move_camera = 1
                         if event.key == pygame.K_RIGHT:
-                            player.go_left()
+                            self.player.go_left()
                             self.move_camera = 2
                         if event.key == pygame.K_UP:
-                            player.go_down()
+                            self.player.go_down()
                             self.move_camera = 3
                         if event.key == pygame.K_LEFT:
-                            player.go_right()
+                            self.player.go_right()
                             self.move_camera = 4
                     elif event.type == pygame.KEYUP:
                         self.move_camera = 0
-                        player.stop()
+                        self.player.stop()
             if self.move_camera == 1:
                 self.posy -= self.eno
                 Maze.y_camera -= self.eno
@@ -172,13 +182,13 @@ class Maze:
                 self.map_build(self.map_list2)
             if Controller.insanity == 5 and self.insanity5toggle == False:
                 face = insanity5Face()
-                active_sprite_list.add(face)
+                self.active_sprite_list.add(face)
                 self.insanity5toggle = True
             self.time = int((pygame.time.get_ticks()-self.start_tick)/1000)
 
-            active_sprite_list.update()
+            self.active_sprite_list.update()
 
-            active_sprite_list.draw(self.wn)
+            self.active_sprite_list.draw(self.wn)
             Controller.insanity_meter(self, self.wn, (255,255,255))
             Controller.score(self, self.wn, (255,255,255))
             for x in self.blacklist:
@@ -196,9 +206,8 @@ class Maze:
                 if y.colliderect(self.player_rec):
                     Maze.x_camera = 0
                     Maze.y_camera = 0
-                    Controller.transition(self, 2, True)
-                    pygame.mixer.music.stop()
-                    c1 = Controller()
+                    Maze.won = True
+                    self.running = False
             if Controller.insanity >= 2:
                 self.insanity_results(Controller.insanity)
             if self.time == 60 and Controller.insanity < 2:

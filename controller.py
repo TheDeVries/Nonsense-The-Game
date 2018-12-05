@@ -19,24 +19,40 @@ class Controller:
     done_counter = {1: spa,  2: maz, 3: clu, 4: pla, 5: typ}
     score_current = 0
     scenes_done = []
+    return_to_root = False
+    
     def __init__(self):
         pygame.init()
-        self.running_menu = True
         self.window = pygame.display.set_mode((800,600))
         pygame.display.set_icon(pygame.image.load("Sprites//eyecon.png"))
-        while self.running_menu:
+        self.space = Space()
+        self.maze = Maze()
+        self.club = Club()
+        self.platformer = Platformer()
+        self.typing = Typing()
+        
+    def run(self):    
+        while True:
             if Controller.scene == 0:
                 men = Menu()
+                self.won = False
             elif Controller.scene == 1:
-                space = Space()
+                self.space.run()
+                self.won = Space.won
             elif Controller.scene == 2:
-                maze = Maze()
+                self.maze.run()
+                self.won = Maze.won
             elif Controller.scene == 3:
-                club = Club()
+                self.club.run()
+                self.won = Club.won
             elif Controller.scene == 4:
-                platformer = Platformer()
+                self.platformer.run()
+                self.won = Platformer.won
             elif Controller.scene == 5:
-                typing = Typing()
+                self.typing.run()
+                self.won = Typing.won
+            Controller.transition(self, Controller.scene, self.won)
+            
     def scene_selector(self, scene_finished, success):
         '''
         This always follows the transition call and similarly accepts the level id
@@ -44,21 +60,22 @@ class Controller:
         This then plays corresponding sounds, adjusts score if needed, and randomly selects a new id
         which means it chooses the next level in the mix.
         '''
-        if success == True:
-            Controller.done_counter[scene_finished] += 1
-            Controller.score_current += 1
-            if Controller.insanity == 1:
-                self.complete = pygame.mixer.Sound("Sounds//Electronic_Chime.wav")
-                self.complete.set_volume(0.3)
+        if Controller.scene != 0:
+            if success == True:
+                Controller.done_counter[scene_finished] += 1
+                Controller.score_current += 1
+                if Controller.insanity == 1:
+                    self.complete = pygame.mixer.Sound("Sounds//Electronic_Chime.wav")
+                    self.complete.set_volume(0.3)
+                else:
+                    self.complete = pygame.mixer.Sound("Sounds//switch.wav")
             else:
-                self.complete = pygame.mixer.Sound("Sounds//switch.wav")
-        else:
-            Controller.insanity += 1
-            if Controller.insanity > 5:
-                Controller.go_insane(self, self.window)
-            self.complete = pygame.mixer.Sound("Sounds//insanity_up.wav")
-            self.complete.set_volume(1.5)
-        self.complete.play(loops = 0)
+                Controller.insanity += 1
+                if Controller.insanity > 5:
+                    Controller.go_insane(self, self.window)
+                self.complete = pygame.mixer.Sound("Sounds//insanity_up.wav")
+                self.complete.set_volume(1.5)
+            self.complete.play(loops = 0)
         Controller.scenes_done.append(scene_finished)
         rand = random.randrange(0,101)
         if rand < 20:
@@ -101,7 +118,7 @@ class Controller:
                 rand = random.randrange(0,101)
                 if rand < 15:
                     Controller.scene = 5
-        c1 = Controller()
+        return
     def transition(self, lev_id, success):
         '''
         This is called whenever the player wins or fails a level.
@@ -133,7 +150,8 @@ class Controller:
         #while self.t_channel.get_busy() == True:
             #self.transition.get_image(0, 0, 800, 600, (255,255,255))
         Controller.scene_selector(self, lev_id, success)
-
+        return
+        
     def insanity_meter(self, window, color):
         '''
         When called, it draws the insanity_meter in the top-left corner of the screen
@@ -213,19 +231,16 @@ class Controller:
                 pygame.quit()
                 exit()
             if Controller.debug_mode == True:
-                if event.key == pygame.K_BACKSLASH:
-                    Dialogue.used_list = []
-                    controller = Controller()
                 if event.key == pygame.K_EQUALS:
                     Controller.insanity += 1
                 if event.key == pygame.K_MINUS:
                     Controller.insanity -= 1
                 if event.key == pygame.K_LEFTBRACKET:
-                    Dialogue.used_list = []
-                    Controller.transition(self, Controller.scene, False)
+                    Controller.up_insanity = True
+                    Controller.return_to_root = True
                 if event.key == pygame.K_RIGHTBRACKET:
-                    Controller.transition(self, Controller.scene, True)
-                    Dialogue.used_list = []
+                    Controller.up_insanity = False
+                    Controller.return_to_root = True
     def go_insane(self, window):
         endsong_list = ["Sounds//Silent Corpse.wav", "Sounds//Micro Soul 10.wav"]
         i = random.randint(0, len(endsong_list) -1)

@@ -81,7 +81,6 @@ class Menu:
 
             pygame.display.flip()
 
-
     def background(self):
         '''
            creates background
@@ -126,10 +125,10 @@ class Menu:
         self.text(47,402,50,"Start")
         if x[0] == 1 and y == True:
             pygame.mixer.music.stop()
-            # this is where you add levels
             x = random.randint(1,5)
             Controller.scene += x
-            c = Controller()
+            Menu.start = True
+            return
         # Instruction button
         y = self.button_method(237,400,363,237,400,460, self.instruct_button_unpressed, self.instruct_button_pressed)
         x = pygame.mouse.get_pressed()

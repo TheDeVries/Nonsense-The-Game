@@ -2,6 +2,7 @@ import pygame
 from controller import *
 
 class Platformer:
+    won = False
     x_camera = 0
     y_camera = 0
     player_fall = True
@@ -16,19 +17,17 @@ class Platformer:
         self.rect = self.background.get_rect()
         self.rect.move_ip((0,0))
         self.window.fill((255,255,255))
-        self.start_tick = pygame.time.get_ticks()
-        self.running = True
         self.game_over = False
         self.myfont_game_over = pygame.font.Font("Sprites//times.ttf", 60)
         self.textsurface_game_over = self.myfont_game_over.render("Press Space to continue...", True, (255,255,255))
-        player = Player_Platform()
-        bullet = Fireball()
-        death = Player_Death()
+        self.player = Player_Platform()
+        self.bullet = Fireball()
+        self.death = Player_Death()
         self.dragon_group = pygame.sprite.Group()
         self.player_death_group = pygame.sprite.Group()
-        self.player_death_group.add(death)
+        self.player_death_group.add(self.death)
         self.player_group = pygame.sprite.Group()
-        self.player_group.add(player)
+        self.player_group.add(self.player)
         self.enemies = pygame.sprite.Group()
         self.laser_group = pygame.sprite.Group()
         self.player_fireball = pygame.sprite.Group()
@@ -76,48 +75,57 @@ class Platformer:
             dragon = Dragon(self.dragon_coords[dragon_iter],self.dragon_coords[dragon_iter+1],self.dragon_coords[dragon_iter+2],self.dragon_coords[dragon_iter+3])
             self.dragon_list.append(dragon)
             self.dragon_group.add(dragon)
+    def run(self):
+        self.start_tick = pygame.time.get_ticks()
+        self.running = True
         while self.running:
             for event in pygame.event.get():
-                # Quit button
                 Controller.basic_command(self, event)
+                if Controller.return_to_root == True:
+                    Controller.return_to_root = False
+                    if Controller.up_insanity == True:
+                        Platformer.won = False
+                    else:
+                        Platformer.won = True
+                    self.running = False
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_a:
-                        player.go_left()
+                        self.player.go_left()
 
                     if event.key == pygame.K_d:
-                        player.go_right()
+                        self.player.go_right()
                     if event.key == pygame.K_LEFT:
-                        player.go_left()
+                        self.player.go_left()
                     if event.key == pygame.K_RIGHT:
-                        player.go_right()
+                        self.player.go_right()
                     if event.key == pygame.K_LSHIFT:
                         if Platformer.direction == "L":
-                            player.shot()
-                            self.player_fireball.add(bullet)
-                            bullet.shot_left()
+                            self.player.shot()
+                            self.player_fireball.add(self.bullet)
+                            self.bullet.shot_left()
                         elif Platformer.direction == "R":
-                            player.shot()
-                            self.player_fireball.add(bullet)
-                            bullet.shot_right()
+                            self.player.shot()
+                            self.player_fireball.add(self.bullet)
+                            self.bullet.shot_right()
                     if event.key == pygame.K_SPACE:
-                        player.jump_method()
+                        self.player.jump_method()
                 elif event.type == pygame.KEYUP:
                     if event.key != pygame.K_SPACE:
-                        player.stop()
+                        self.player.stop()
             self.window.blit(self.background, (0, 0))
-            player.gravity()
-            Platforms = Platforms_Map(self.window)
-            Platforms.platforms(player)
+            self.player.gravity()
+            Platforms = Platforms_Map(self.window, self.player)
+            Platforms.platforms(self.player)
             for enemy_movement in self.enemy_list:
                 enemy_movement.camera_follow()
             if pygame.sprite.groupcollide(self.player_group, self.enemies, False, False):
                 self.running = False
                 self.game_over = True
             for laser_direction in range(0,len(self.laser_list)):
-                if self.enemy_list[laser_direction].rect.x < player.rect.x:
+                if self.enemy_list[laser_direction].rect.x < self.player.rect.x:
                     if self.laser_list[laser_direction].progress == 0:
                         self.laser_list[laser_direction].shot_right()
-                elif self.enemy_list[laser_direction].rect.x > player.rect.x:
+                elif self.enemy_list[laser_direction].rect.x > self.player.rect.x:
                     if self.laser_list[laser_direction].progress == 0:
                         self.laser_list[laser_direction].shot_left()
             for laser_done in range(0,len(self.laser_list)):
@@ -129,8 +137,8 @@ class Platformer:
                 self.running = False
                 self.game_over = True
             for enemy_death in range(0, len(self.enemy_list)):
-                if pygame.sprite.collide_rect(self.enemy_list[enemy_death], bullet) and bullet.shot == True:
-                    self.enemy_list[enemy_death].health -= bullet.damage
+                if pygame.sprite.collide_rect(self.enemy_list[enemy_death], self.bullet) and self.bullet.shot == True:
+                    self.enemy_list[enemy_death].health -= self.bullet.damage
                     if self.enemy_list[enemy_death].health <= 0:
                         self.laser_group.remove(self.laser_list[enemy_death])
                         self.laser_list.remove(self.laser_list[enemy_death])
@@ -139,8 +147,8 @@ class Platformer:
                         self.explosion_group.add(self.explosion_list[enemy_death])
                         break
             for dragon_death in range(0, len(self.dragon_list)):
-                if pygame.sprite.collide_mask(self.dragon_list[dragon_death], bullet) != None and bullet.shot == True:
-                    self.dragon_list[dragon_death].health -= bullet.damage
+                if pygame.sprite.collide_mask(self.dragon_list[dragon_death], self.bullet) != None and self.bullet.shot == True:
+                    self.dragon_list[dragon_death].health -= self.bullet.damage
                     if self.dragon_list[dragon_death].health <= 0:
                         self.dragon_group.remove(self.dragon_list[dragon_death])
                         self.dragon_list.remove(self.dragon_list[dragon_death])
@@ -152,7 +160,7 @@ class Platformer:
                     self.explosion_list.remove(self.explosion_list[explosion_done])
                     break
             for dragon_kill in range(0, len(self.dragon_list)):
-                if pygame.sprite.collide_mask(self.dragon_list[dragon_kill], player) != None:
+                if pygame.sprite.collide_mask(self.dragon_list[dragon_kill], self.player) != None:
                     self.running = False
                     self.game_over = True
                     break
@@ -168,10 +176,10 @@ class Platformer:
             self.player_fireball.draw(self.window)
             self.dragon_group.update()
             self.dragon_group.draw(self.window)
-            if bullet.done == True:
-                self.player_fireball.remove(bullet)
-                bullet.done = False
-                bullet.shot = False
+            if self.bullet.done == True:
+                self.player_fireball.remove(self.bullet)
+                self.bullet.done = False
+                self.bullet.shot = False
             Controller.score(self, self.window, (255,255,255))
             Controller.insanity_meter(self, self.window, (255,255,255))
             Controller.clock(self, self.window, (240, 93, 93),  120, self.start_tick)
@@ -180,6 +188,13 @@ class Platformer:
             for event in pygame.event.get():
                 # Quit button
                 Controller.basic_command(self, event)
+                if Controller.return_to_root == True:
+                    Controller.return_to_root = False
+                    if Controller.up_insanity == True:
+                        Platformer.won = False
+                    else:
+                        Platformer.won = False
+                    self.running = False
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_SPACE:
                         Platformer.x_camera = 0
@@ -188,8 +203,9 @@ class Platformer:
                         Platformer.ground = False
                         Platformer.direction = "L"
                         Platformer.gravity = False
-                        Controller.transition(self,Controller.scene,False)
+                        Platformer.won = False
                         self.game_over = False
+                        self.running = False
             self.window.blit(self.background, (0, 0))
             self.window.blit(self.textsurface_game_over, (0,0))
             self.player_death_group.update()
@@ -198,13 +214,14 @@ class Platformer:
 
 
 class Platforms_Map:
-    def __init__(self,window):
+    def __init__(self,window, player):
         self.running = True
         self.window = window
         self.platformrect_list = []
         self.platform_collide_list = []
+        self.player = player
 
-    def platforms(self,player):
+    def platforms(self, player):
         self.platform_list = [(0,500 - Platformer.y_camera ,800,400),
                             (200 - Platformer.x_camera,300 - Platformer.y_camera ,200,20),
                             (300 - Platformer.x_camera, 200 - Platformer.y_camera ,200,20),
@@ -223,14 +240,14 @@ class Platforms_Map:
             rect = pygame.draw.rect(self.window, (255,255,255), pygame.Rect(platform))
             self.platformrect_list.append(rect)
         for platformrect in range(0,len(self.platform_list)):
-            if self.platformrect_list[platformrect].colliderect(player):
+            if self.platformrect_list[platformrect].colliderect(self.player):
                 self.platform_collide_list.append(self.platformrect_list[platformrect])
                 Platformer.ground = True
                 Platformer.player_fall = False
             else:
                 Platformer.player_fall = True
         for collide in self.platform_collide_list:
-            if collide.colliderect(player):
+            if collide.colliderect(self.player):
                 Platformer.ground = True
                 Platformer.player_fall = False
             else:
