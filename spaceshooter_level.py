@@ -179,8 +179,8 @@ class Space:
             Controller.clock(self, self.win, (240, 93, 93), time_limit, self.start_tick)
             # self.all_sprites_list.update()
             pygame.display.flip()
-            for i in self.all_sprites_list:
-                i.clear(self.win, self.background)
+            #for i in self.all_sprites_list:
+                #i.clear(self.win, self.background)
             self.all_sprites_list.clear(self.win, self.background)
 
     # def difficultify(self):         #must fix

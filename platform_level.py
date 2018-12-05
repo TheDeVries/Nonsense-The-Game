@@ -83,13 +83,9 @@ class Platformer:
             dragon = Dragon(self.dragon_coords[dragon_iter],self.dragon_coords[dragon_iter+1],self.dragon_coords[dragon_iter+2],self.dragon_coords[dragon_iter+3])
             self.dragon_list.append(dragon)
             self.dragon_group.add(dragon)
-<<<<<<< HEAD
     def run(self):
         self.start_tick = pygame.time.get_ticks()
         self.running = True
-=======
-        # main loop
->>>>>>> 61c769165301c069612b168632c76129748b3233
         while self.running:
             for event in pygame.event.get():
                 Controller.basic_command(self, event)
@@ -125,19 +121,11 @@ class Platformer:
                     if event.key != pygame.K_SPACE:
                         self.player.stop()
             self.window.blit(self.background, (0, 0))
-<<<<<<< HEAD
             self.player.gravity()
             Platforms = Platforms_Map(self.window, self.player)
             Platforms.platforms(self.player)
             for enemy_movement in self.enemy_list:
                 enemy_movement.camera_follow()
-=======
-            player.gravity()
-            Platforms = Platforms_Map(self.window)
-            Platforms.platforms(player)
-
-            # Detects enemy and player collsions
->>>>>>> 61c769165301c069612b168632c76129748b3233
             if pygame.sprite.groupcollide(self.player_group, self.enemies, False, False):
                 self.end_tick = pygame.time.get_ticks()
                 self.running = False
@@ -205,12 +193,7 @@ class Platformer:
 
             # Uses masks to detect if dragon hits player
             for dragon_kill in range(0, len(self.dragon_list)):
-<<<<<<< HEAD
                 if pygame.sprite.collide_mask(self.dragon_list[dragon_kill], self.player) != None:
-=======
-                if pygame.sprite.collide_mask(self.dragon_list[dragon_kill], player) != None:
-                    self.end_tick = pygame.time.get_ticks()
->>>>>>> 61c769165301c069612b168632c76129748b3233
                     self.running = False
                     self.game_over = True
                     break
@@ -256,19 +239,7 @@ class Platformer:
                         Platformer.gravity = False
                         Platformer.won = False
                         self.game_over = False
-<<<<<<< HEAD
                         self.running = False
-=======
-            if Controller.clock(self, self.window, (240, 93, 93),  5, self.end_tick) == 0:
-                Platformer.x_camera = 0
-                Platformer.y_camera = 0
-                Platformer.player_fall = True
-                Platformer.ground = False
-                Platformer.direction = "L"
-                Platformer.gravity = False
-                Controller.transition(self,Controller.scene,False)
-                self.game_over = False
->>>>>>> 61c769165301c069612b168632c76129748b3233
             self.window.blit(self.background, (0, 0))
             self.window.blit(self.textsurface_game_over, (0,0))
             self.player_death_group.update()
@@ -278,27 +249,14 @@ class Platformer:
 
 
 class Platforms_Map:
-<<<<<<< HEAD
     def __init__(self,window, player):
-=======
-    """
-        This class is responsible for creating various platforms. It also detects player and
-        platform collisions
-    """
-    def __init__(self,window):
->>>>>>> 61c769165301c069612b168632c76129748b3233
         self.running = True
         self.window = window
         self.platformrect_list = []
         self.platform_collide_list = []
         self.player = player
 
-<<<<<<< HEAD
     def platforms(self, player):
-=======
-    def platforms(self,player):
-        # List of all platforms
->>>>>>> 61c769165301c069612b168632c76129748b3233
         self.platform_list = [(0,500 - Platformer.y_camera ,800,400),
                             (200 - Platformer.x_camera,300 - Platformer.y_camera ,200,20),
                             (300 - Platformer.x_camera, 200 - Platformer.y_camera ,200,20),
