@@ -52,8 +52,8 @@ class Platformer:
 
         self.laser_coord = [55,60,10,
                             165,175,6,
-                            745, 60, 2,
-                            645, 170, 2,
+                            745, 60, 4,
+                            645, 170, 4,
                             235, -29, 8,
                             895, -229, 10,
                             -5, -379, 8,
@@ -811,7 +811,7 @@ class Explosion(pygame.sprite.Sprite):
         self.rect = self.rect.move(self.x - Platformer.x_camera, self.y - Platformer.y_camera)
 class Dragon(pygame.sprite.Sprite):
     """
-        Creates and updates Dragons 
+        Creates and updates Dragons
     """
     def __init__(self,x,y,speed,direction):
         super().__init__()
