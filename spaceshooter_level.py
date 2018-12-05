@@ -10,13 +10,20 @@ class Space(pygame.sprite.Sprite):
         self.start_tick = pygame.time.get_ticks()
         self.win = pygame.display.set_mode((800,600))
         self.background = pygame.image.load("Sprites//space background.png")
-        self.spacemusic = pygame.mixer.music.load("Sounds//space music.wav")
-        pygame.mixer.music.set_volume(0.3)
-        pygame.mixer.music.play(loops=-1)
+        if Controller.insanity < 4:
+            pygame.mixer.music.load("Sounds//space music.wav")
+            pygame.mixer.music.set_volume(0.3)
+            pygame.mixer.music.play(loops=-1)
+        else:
+            pygame.mixer.music.load("Sounds//Musicbox.wav")
+            pygame.mixer.music.set_volume(1.0)
+            pygame.mixer.music.play(loops=-1)
         self.music = True
         self.score = 0
         self.completions = Controller.done_counter[1]
         self.handler = 0
+        self.winner = True
+        self.game_over = False
         difficulty = {0: '005 030', 1: '010 035', 2: '015 060', 3: '020 060', 4: '025 060', 5: '010 30', 6: '015 35', 7: '010 025', 8: '020 050', 9: '025 050', 10: '030 050'}
         diff_str = difficulty[self.completions - self.handler]
         time_limit = int(diff_str[4:])
@@ -34,20 +41,24 @@ class Space(pygame.sprite.Sprite):
         self.done_explosion = []
 
         for i in range(5):
-            enemy = Enemy("Sprites//enemyship.png")
+            if Controller.insanity < 3:
+                enemy = Enemy("Sprites//enemyship.png")
+            else:
+                enemy = Enemy("Sprites//Stevenmoore.png")
+
             enemyblast = EnemyBlast("Sprites//enemyblast.png")
             enemies.add(enemy)
             enemy.rect.x = random.randrange(800)
             enemy.rect.y = random.randrange(350)
-            enemyblast.rect.x = enemy.rect.x
-            enemyblast.rect.y = enemy.rect.y
-
             all_sprites_list.add(enemy)
-            all_sprites_list.add(enemyblast)
-            enemyblasts.add(enemyblast)
-            self.enemyblastsound = pygame.mixer.Sound("Sounds//enemyblastsound.wav")
-            self.enemyblastsound.set_volume(1.0)
-            self.enemyblastsound.play(loops=0)
+            if random.randrange(100):
+                enemyblast.rect.x = enemy.rect.x
+                enemyblast.rect.y = enemy.rect.y
+                all_sprites_list.add(enemyblast)
+                enemyblasts.add(enemyblast)
+                self.enemyblastsound = pygame.mixer.Sound("Sounds//enemyblastsound.wav")
+                self.enemyblastsound.set_volume(1.0)
+                self.enemyblastsound.play(loops=0)
 
 
 
@@ -85,9 +96,13 @@ class Space(pygame.sprite.Sprite):
                     explode = Explosion(x,y)
                     explosion.add(explode)
                     self.done_explosion.append(explode)
-                    self.explosionsound = pygame.mixer.Sound("Sounds//explosoundeffect.wav")
+                    if Controller.insanity < 3:
+                        self.explosionsound = pygame.mixer.Sound("Sounds//explosoundeffect.wav")
+                    else:
+                        self.explosionsound = pygame.mixer.Sound("Sounds//rubberduck.wav")
                     self.explosionsound.set_volume(0.5)
                     self.explosionsound.play(loops=0)
+                    self.game_over = True
 
             for heroblast in heroblasts: #hero fire colliding with enemy ships
                 enemy_hit_list = pygame.sprite.spritecollide(heroblast,enemies, True, pygame.sprite.collide_circle)
@@ -100,7 +115,10 @@ class Space(pygame.sprite.Sprite):
                     explode = Explosion(x,y)
                     explosion.add(explode)
                     self.done_explosion.append(explode)
-                    self.explosionsound = pygame.mixer.Sound("Sounds//explosoundeffect.wav")
+                    if Controller.insanity < 3:
+                        self.explosionsound = pygame.mixer.Sound("Sounds//explosoundeffect.wav")
+                    else:
+                        self.explosionsound = pygame.mixer.Sound("Sounds//rubberduck.wav")
                     self.explosionsound.set_volume(0.5)
                     self.explosionsound.play(loops=0)
                     print(self.score)
@@ -115,6 +133,28 @@ class Space(pygame.sprite.Sprite):
                     explosion.remove(self.done_explosion[done])
                     self.done_explosion.remove(self.done_explosion[done])
                     break
+
+            if len(enemies) == 0:
+                myfont = pygame.font.SysFont(None,30)
+                message = myfont.render("YOU WIN!! Press TAB to continue", False, (255,255,255))
+                self.win.blit(message, (255,255))
+                # pygame.mixer.music.pause()
+                # # self.victorytheme = pygame.mixer.music.load("Sounds//Victoryscreentheme.wav")
+                # # pygame.mixer.music.play(loops=-1)
+                pygame.display.flip()
+                if keys[pygame.K_TAB]:
+                    Controller.transition(self,1,True)
+
+
+            elif len(heroship) == 0:
+
+                myfont = pygame.font.SysFont(None,30)
+                message = myfont.render("Game Over!! Press TAB to continue", False, (255,255,255))
+                self.win.blit(message, (255,255))
+                pygame.display.flip()
+                if keys[pygame.K_TAB]:
+                    Controller.transition(self,1,False)
+
 
             # print(enemies.has(enemy))         #victory things (OPTIONAL)
             # if enemies.has(enemy) == False:
@@ -150,13 +190,22 @@ class Hero(pygame.sprite.Sprite):  #spaceship model
         self.speed = 44
 
     def move_left(self):
-        if self.rect.x >= self.speed:
-            self.rect.x -= self.speed
+        if Controller.insanity < 2:
+            if self.rect.x >= self.speed:
+                self.rect.x -= self.speed
+        else:
+            if self.rect.x < 819 - self.width - self.speed:
+                self.rect.x += self.speed
 
 
     def move_right(self):
-        if self.rect.x < 819 - self.width - self.speed:
-            self.rect.x += self.speed
+        if Controller.insanity < 2:
+            if self.rect.x < 819 - self.width - self.speed:
+                self.rect.x += self.speed
+        else:
+            if self.rect.x >= self.speed:
+                self.rect.x -= self.speed
+
 
     def shoot(self):
         pass
@@ -217,7 +266,7 @@ class EnemyBlast(pygame.sprite.Sprite):
         self.rect = self.image.get_rect()
         self.radius = 10
         BLUE = (0,0,255)
-        pygame.draw.circle(self.image,BLUE, self.rect.center,self.radius)
+        #pygame.draw.circle(self.image,BLUE, self.rect.center,self.radius)
         self.speed = 30
         self.damage = 1
         self.frames_bullet = []
@@ -276,5 +325,3 @@ class Explosion(pygame.sprite.Sprite):
 
     def reset(self):
         self.done = False
-
-Space()
