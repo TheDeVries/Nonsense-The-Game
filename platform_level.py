@@ -10,11 +10,11 @@ class Platformer:
     gravity = False
     difficulty = 0
     def __init__(self):
+        """
+           Platformer class initization
+        """
         self.difficulty = Controller.scenes_done.count(4)
         Platformer.difficulty = self.difficulty
-        print(self.difficulty)
-        print(Controller.scenes_done)
-        print(Platformer.difficulty)
         pygame.init()
         self.window = pygame.display.set_mode((800,600))
         self.background = pygame.image.load("Sprites//galaxy2.png")
@@ -69,21 +69,22 @@ class Platformer:
         self.laser_list = []
         self.explosion_list = []
         self.dragon_list = []
+        # Creates enemies
         for enemies in range(0, 18, 2):
             enemy = Enemy(self.enemy_coords[enemies], self.enemy_coords[enemies+1])
             self.enemy_list.append(enemy)
             self.enemies.add(enemy)
-
+        # Creates lasers
         for laser_iter in range (0,27,3):
             laser = Laser(self.laser_coord[laser_iter], self.laser_coord[laser_iter+1], self.laser_coord[laser_iter+2])
             self.laser_list.append(laser)
             self.laser_group.add(laser)
-
+        # Creates dragons
         for dragon_iter in range(0,16,4):
             dragon = Dragon(self.dragon_coords[dragon_iter],self.dragon_coords[dragon_iter+1],self.dragon_coords[dragon_iter+2],self.dragon_coords[dragon_iter+3])
             self.dragon_list.append(dragon)
             self.dragon_group.add(dragon)
-
+        # main loop
         while self.running:
             for event in pygame.event.get():
                 # Quit button
@@ -117,11 +118,13 @@ class Platformer:
             Platforms = Platforms_Map(self.window)
             Platforms.platforms(player)
 
+            # Detects enemy and player collsions
             if pygame.sprite.groupcollide(self.player_group, self.enemies, False, False):
                 self.end_tick = pygame.time.get_ticks()
                 self.running = False
                 self.game_over = True
 
+            # Detects the way lasers should shoot
             for laser_direction in range(0,len(self.laser_list)):
                 if self.enemy_list[laser_direction].rect.x < player.rect.x:
                     if self.laser_list[laser_direction].progress == 0:
@@ -130,18 +133,22 @@ class Platformer:
                     if self.laser_list[laser_direction].progress == 0:
                         self.laser_list[laser_direction].shot_left()
 
+            # Detects if laser will be shot again
             for laser_done in range(0,len(self.laser_list)):
                 if self.laser_list[laser_done].done == True:
                     self.laser_group.empty()
 
+            # Adds laser to sprite group
             for laser_iter in range(0,len(self.laser_list)):
                 self.laser_group.add(self.laser_list[laser_iter])
 
+            # Detects if player if hit by laser/Steven moore
             if pygame.sprite.groupcollide(self.player_group, self.laser_group, False, False):
                 self.end_tick = pygame.time.get_ticks()
                 self.running = False
                 self.game_over = True
 
+            # Detects if enemy is shot and inits explosion
             for enemy_death in range(0, len(self.enemy_list)):
                 if pygame.sprite.collide_rect(self.enemy_list[enemy_death], bullet) and bullet.shot == True:
                     self.enemy_list[enemy_death].health -= bullet.damage
@@ -156,7 +163,7 @@ class Platformer:
                         self.explosion_group.add(explode)
                         self.explosion_list.append(explode)
                         break
-
+            # Detects if dragon is shot and inits explosion
             for dragon_death in range(0, len(self.dragon_list)):
                 if pygame.sprite.collide_mask(self.dragon_list[dragon_death], bullet) != None and bullet.shot == True:
                     self.dragon_list[dragon_death].health -= bullet.damage
@@ -170,13 +177,14 @@ class Platformer:
                         self.explosion_list.append(explode_drag)
                         break
 
-                    #laser_direction.done = False
+            # Detects if explosion sprite is done
             for explosion_done in range(0, len(self.explosion_list)):
                 if self.explosion_list[explosion_done].done == True:
                     self.explosion_group.remove(self.explosion_list[explosion_done])
                     self.explosion_list.remove(self.explosion_list[explosion_done])
                     break
 
+            # Uses masks to detect if dragon hits player
             for dragon_kill in range(0, len(self.dragon_list)):
                 if pygame.sprite.collide_mask(self.dragon_list[dragon_kill], player) != None:
                     self.end_tick = pygame.time.get_ticks()
@@ -204,10 +212,9 @@ class Platformer:
             Controller.insanity_meter(self, self.window, (255,255,255))
             Controller.clock(self, self.window, (240, 93, 93), 120, self.start_tick)
             pygame.display.flip()
-
+        # Game over loop
         while self.game_over:
             for event in pygame.event.get():
-                # Quit button
                 Controller.basic_command(self, event)
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_SPACE:
@@ -237,6 +244,10 @@ class Platformer:
 
 
 class Platforms_Map:
+    """
+        This class is responsible for creating various platforms. It also detects player and
+        platform collisions
+    """
     def __init__(self,window):
         self.running = True
         self.window = window
@@ -244,6 +255,7 @@ class Platforms_Map:
         self.platform_collide_list = []
 
     def platforms(self,player):
+        # List of all platforms
         self.platform_list = [(0,500 - Platformer.y_camera ,800,400),
                             (200 - Platformer.x_camera,300 - Platformer.y_camera ,200,20),
                             (300 - Platformer.x_camera, 200 - Platformer.y_camera ,200,20),
@@ -258,10 +270,11 @@ class Platforms_Map:
                             (300 - Platformer.x_camera, -1000 - Platformer.y_camera, 250,20),
                             (0 - Platformer.x_camera, -1150 - Platformer.y_camera, 250,20),
                             (400 - Platformer.x_camera, -120 - Platformer.y_camera, 250,20)]
+        # Creates platforms from list
         for platform in self.platform_list:
             rect = pygame.draw.rect(self.window, (255,255,255), pygame.Rect(platform))
             self.platformrect_list.append(rect)
-
+        # Creates collsion list
         for platformrect in range(0,len(self.platform_list)):
             if self.platformrect_list[platformrect].colliderect(player):
                 self.platform_collide_list.append(self.platformrect_list[platformrect])
@@ -269,7 +282,7 @@ class Platforms_Map:
                 Platformer.player_fall = False
             else:
                 Platformer.player_fall = True
-
+        # Detects player collsion
         for collide in self.platform_collide_list:
             if collide.colliderect(player):
                 Platformer.ground = True
@@ -277,12 +290,13 @@ class Platforms_Map:
             else:
                 Platformer.player_fall = True
                 self.platform_collide_list.remove(collide)
-
+        # Detects ground
         if Platformer.y_camera >= 160:
             Platformer.player_fall = False
 
+        # finish platform
         rect_end = pygame.draw.rect(self.window, (178,34,34), pygame.Rect((-1000 - Platformer.x_camera, -1350 - Platformer.y_camera, 5000,20)))
-
+        # If player collides with end platform
         if rect_end.colliderect(player):
             Platformer.x_camera = 0
             Platformer.y_camera = 0
@@ -299,6 +313,9 @@ class Platforms_Map:
 
 
 class Player_Platform(pygame.sprite.Sprite):
+    """
+        Creates Player Sprite and updates it
+    """
     def __init__(self):
         super().__init__()
         self.x_change = 0
@@ -508,6 +525,9 @@ class Player_Platform(pygame.sprite.Sprite):
         if Platformer.player_fall == True:
             Platformer.y_camera += 5
 class Fireball(pygame.sprite.Sprite):
+    """
+        Creates and updates Fireball
+    """
     def __init__(self):
         super().__init__()
         self.x = 0
@@ -610,6 +630,9 @@ class Fireball(pygame.sprite.Sprite):
         self.toggle = False
         self.rect = self.rect.move(420, 0)
 class Enemy(pygame.sprite.Sprite):
+    """
+        Creates and updates Enemies
+    """
     def __init__(self, x, y):
         super().__init__()
         self.x_change = 0
@@ -657,6 +680,9 @@ class Enemy(pygame.sprite.Sprite):
         self.rect = self.rect.move(self.x - Platformer.x_camera,self.y - Platformer.y_camera)
 
 class Player_Death(pygame.sprite.Sprite):
+    """
+        Player death sprite in death screen is created here.
+    """
     def __init__(self):
         super().__init__()
         sprite_sheet_death = SpriteSheet("Sprites//Player_Death.png")
@@ -686,6 +712,9 @@ class Player_Death(pygame.sprite.Sprite):
                 self.image = self.frames[self.frame]
             self.image = self.frames[self.frame]
 class Laser(pygame.sprite.Sprite):
+    """
+        Creates and updates Lasers
+    """
     def __init__(self,x,y,speed):
         super().__init__()
         self.x = x
@@ -742,6 +771,9 @@ class Laser(pygame.sprite.Sprite):
         self.progress = 0
         self.changex = 0
 class Explosion(pygame.sprite.Sprite):
+    """
+        Creates and updates Explosions
+    """
     def __init__(self,x,y):
         super().__init__()
         self.x = x
@@ -778,6 +810,9 @@ class Explosion(pygame.sprite.Sprite):
         self.rect = self.image.get_rect()
         self.rect = self.rect.move(self.x - Platformer.x_camera, self.y - Platformer.y_camera)
 class Dragon(pygame.sprite.Sprite):
+    """
+        Creates and updates Dragons 
+    """
     def __init__(self,x,y,speed,direction):
         super().__init__()
         self.health = 500 + int(Platformer.difficulty*25)
