@@ -5,8 +5,8 @@ from controller import *
 pygame.init()
 
 class Club:
-    questions = 2
-    sayings = 4
+    questions = 1
+    sayings = 2
     def __init__(self):
         self.start_tick = pygame.time.get_ticks()
         self.running = True
@@ -43,6 +43,11 @@ class Club:
         for i in range(Club.sayings):
             t_list[i] = i * tell_at
         d = Dialogue()
+        arrow_time = 0
+        threshold = random.randrange(int((1/Arrow.rate)*1000), 50 * 1000)
+        self.arrow_tick = pygame.time.get_ticks()
+        self.on_question = 1
+        self.question_handler = 1
 
         #Last considerations
         self.setting = 1
@@ -53,10 +58,6 @@ class Club:
         bad_background = pygame.image.load("Sprites//glitch_texture" + str(tex) + ".png").convert()
         self.chosens = self.Randomize()
         self.phase = 1
-        arrow_time = 0
-        threshold = random.randrange(int((1/Arrow.rate)*1000), 50 * 1000)
-        self.arrow_tick = pygame.time.get_ticks()
-        
 
         while self.running == True:
             seconds_left = (num_seconds - (pygame.time.get_ticks() - self.start_tick)/1000)
@@ -115,6 +116,8 @@ class Club:
                     self.phase = 2
                     if Club.questions > len(Dialogue.answers):
                         Club.questions = len(Dialogue.answers)
+                    ticket = random.choice(list(Dialogue.answers))
+                    type = random.randint(1,2)
                 if self.phase == 1:
                     arrow_time += (pygame.time.get_ticks() - self.arrow_tick)
                     if arrow_time > threshold:
@@ -146,7 +149,12 @@ class Club:
                     display_line = self.font.render(">", True, (255,255,255))
                     self.window.blit(display_line, (20, 495))
                     self.window.blit(display_ours, (50, 495))
-                    Dialogue.question(self, self.window, 1, self.font)
+                    if self.question_handler != self.on_question:
+                        del Dialogue.answers[ticket]
+                        ticket = random.choice(list(Dialogue.answers))
+                        self.question_handler = self.on_question
+                        type = random.randint(1,2)
+                    self.correct = Dialogue.question(self, self.window, type, self.font, ticket)
             
             for event in pygame.event.get():
                 Controller.basic_command(self, event)
@@ -164,13 +172,18 @@ class Club:
                                 Arrow.check(self)
                         elif self.phase == 2:
                             if event.key == pygame.K_RETURN:
-                                if our_word[0:l-1] == self.word:
-                                    pass
+                                if our_word[0:l-1] == self.correct:
+                                    self.on_question += 1
+                                    our_word = "|"
+                                    if self.on_question > Club.questions:
+                                        Controller.transition(self, 3, True)
                                 else:
                                     Controller.transition(self, 3, False)
                             elif event.key == pygame.K_BACKSPACE:
                                 our_word = our_word[0:(l-2)]
                                 our_word += "|"
+                                print("our_word")
+                                print(Dialogue.answers)
                             else:
                                 our_key = self.font.render(chr(event.key), True, (255,255,255))
                                 our_word = our_word[0:(l-1)]
@@ -201,7 +214,7 @@ class Club:
         '''
         dif = Controller.done_counter[3]
         if dif % 2 == 0 and dif != 0:
-            Arrow.speed += 1
+            Arrow.speed += .25
         elif dif != 0:
             Arrow.rate += .005
         if dif % 3 == 0 and dif != 0:
@@ -392,13 +405,22 @@ class Dialogue:
         window.blit(self.display_line1, (465, 120))
         window.blit(self.display_line2, (465, 170))
     
-    def question(self, window, type, font):
+    def question(self, window, type, font, ticket):
         self.heading = font.render("Question 1/" + str(Club.questions), True, (255,255,255))
         window.blit(self.heading, (20, 74))
+        self.key = ticket
         if type == 1:
-            pass
+            self.line1 = font.render("How did I describe", True, (255,255,255))
+            self.line2 = font.render("my " + str(self.key), True, (255,255,255))
+            window.blit(self.line1, (20, 154))
+            window.blit(self.line2, (20, 234))
+            return Dialogue.answers[self.key]    
         else:
-            pass
+            self.line1 = font.render("Who was described", True, (255,255,255))
+            self.line2 = font.render("as " + str(Dialogue.answers[self.key]), True, (255,255,255))
+            window.blit(self.line1, (20, 154))
+            window.blit(self.line2, (20, 234))
+            return self.key
         
 class Arrow(pygame.sprite.Sprite):
     position = (0,0)
@@ -438,14 +460,14 @@ class Arrow(pygame.sprite.Sprite):
         self.new_pos = float(self.position[1]) - float(Arrow.speed)
         self.position = (self.x, self.new_pos)
         self.rect.topleft = self.position
-        if self.position[1] < 60:
+        if self.position[1] < 35:
             Dialogue.used_list = []
             Controller.transition(self, Controller.scene, False)
             
     def check(self):
         y_list = []
         for arrow in self.arrow_group:
-            if arrow.new_pos in range(60, 160):
+            if arrow.new_pos in range(35, 160):
                 y_list.append(arrow.new_pos)
                 y_list.sort()
                 if arrow.new_pos == y_list[0]:
