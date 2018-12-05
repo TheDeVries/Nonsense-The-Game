@@ -28,8 +28,8 @@ class Controller:
         self.club = Club()
         self.platformer = Platformer()
         self.typing = Typing()
-        
-    def run(self):    
+
+    def run(self):
         while True:
             Controller.timeout = False
             if Controller.scene == 0:
@@ -53,7 +53,7 @@ class Controller:
                 self.won = Typing.won
             Controller.appear_counter[Controller.scene] += 1 
             Controller.transition(self, Controller.scene, self.won)
-            
+
     def scene_selector(self, scene_finished, success):
         '''
         This always follows the transition call and similarly accepts the level id
@@ -164,7 +164,7 @@ class Controller:
             #self.transition.get_image(0, 0, 800, 600, (255,255,255))
         Controller.scene_selector(self, lev_id, success)
         return
-        
+
     def insanity_meter(self, window, color):
         '''
         When called, it draws the insanity_meter in the top-left corner of the screen
