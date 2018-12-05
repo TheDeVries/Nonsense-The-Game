@@ -21,6 +21,7 @@ class Maze:
         player = Player()
         active_sprite_list = pygame.sprite.Group()
         active_sprite_list.add(player)
+        self.start_tick = pygame.time.get_ticks()
         self.blacklist = []
         self.finish_list = []
         self.posy = 300-24
@@ -201,18 +202,16 @@ class Maze:
                     c1 = Controller()
             if Controller.insanity >= 2:
                 self.insanity_results(Controller.insanity)
-            if self.time == 60 and Controller.insanity < 2:
-                Controller.insanity = 2
-            elif self.time == 90 and Controller.insanity < 3:
-                Controller.insanity = 3
+            elif Controller.insanity <= 3:
                 pygame.mixer.music.load("Sounds//Tchaikovsky Distorted.wav")
                 pygame.mixer.music.play(loops=-1, start=0.0)
-            elif self.time == 120 and Controller.insanity < 4:
-                Controller.insanity = 4
-            elif self.time >= 240:
-                Controller.insanity = 5
-
-            self.clock()
+            Controller.clock(self, self.wn, (240, 93, 93),  180, self.start_tick)
+            if Controller.clock(self, self.wn, (240, 93, 93),  180, self.start_tick) == 0:
+                Maze.x_camera = 0
+                Maze.y_camera = 0
+                Controller.transition(self, 2, False)
+                pygame.mixer.music.stop()
+                c1 = Controller()
             pygame.display.flip()
 
     def map_build(self, map_list):

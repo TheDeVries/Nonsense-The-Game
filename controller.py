@@ -64,7 +64,6 @@ class Controller:
         if rand < 20:
             if Controller.scene != 1:
                 Controller.scene = 1
-                Controller.scenes_done.append(1)
             elif Controller.scene == 1:
                 rand = random.randrange(0,101)
                 if rand < 15:
@@ -72,7 +71,6 @@ class Controller:
         elif rand > 20 and rand < 40:
             if Controller.scene != 2:
                 Controller.scene = 2
-                Controller.scenes_done.append(2)
             elif Controller.scene == 2:
                 rand = random.randrange(0,101)
                 if rand < 15:
@@ -80,7 +78,6 @@ class Controller:
         elif rand > 40 and rand < 60:
             if Controller.scene != 3:
                 Controller.scene = 3
-                Controller.scenes_done.append(3)
             elif Controller.scene == 3:
                 rand = random.randrange(0,101)
                 if rand < 15:
@@ -88,7 +85,6 @@ class Controller:
         elif rand > 60 and rand < 80:
             if Controller.scene != 4:
                 Controller.scene = 4
-                Controller.scenes_done.append(4)
             elif Controller.scene == 4:
                 rand = random.randrange(0,101)
                 if rand < 15:
@@ -96,7 +92,6 @@ class Controller:
         elif rand > 80 and rand < 100:
             if Controller.scene != 5:
                 Controller.scene = 5
-                Controller.scenes_done.append(5)
             elif Controller.scene == 5:
                 rand = random.randrange(0,101)
                 if rand < 15:
@@ -198,7 +193,7 @@ class Controller:
         if self.time < 0:
             if color == (240, 93, 93):
                 Controller.transition(self, Controller.scene, False)
-                    
+
     def basic_command(self, event):
         '''
         Called underneath the event loop to check common events
