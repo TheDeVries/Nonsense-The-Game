@@ -7,6 +7,9 @@ class Maze:
     x_camera = 0
     y_camera = 0
     def __init__(self):
+        """
+            Initization of Maze class
+        """
         self.start_tick = pygame.time.get_ticks()
         self.running = True
         self.wn = pygame.display.set_mode((800,600), pygame.HWSURFACE)
@@ -38,6 +41,9 @@ class Maze:
         self.insanity5toggle = False
         if Controller.insanity == 1:
             pygame.mixer.music.play(loops=-1, start=0.0)
+
+        # Map Creation
+
         self.map_list = [["1","1","3","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1"],
                     ["1","2","2","2","2","1","1","1","1","1","1","1","1","1","1","1","1","1","2","2","2","1","2","1","1"],
                     ["1","2","2","2","2","1","1","1","2","2","2","2","2","2","2","2","2","1","2","1","2","1","2","1","1"],
@@ -89,68 +95,90 @@ class Maze:
                           ["1","2","1","1","1","2","1","1","1","1","1","2","1","2","1","2","1","2","1","1","1","1","2","2","1"],
                           ["1","2","1","2","2","2","2","2","2","2","2","2","1","2","2","2","1","2","2","2","2","1","1","2","3"],
                           ["1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1"]]
+        # Main Game Loop
         while self.running:
             for event in pygame.event.get():
                 # Quit button
                 Controller.basic_command(self, event)
+
                 if Controller.insanity <= 2:
                     if event.type == pygame.KEYDOWN:
+
+                        # Player movement
                         if event.key == pygame.K_w:
                             player.go_up()
                             self.move_camera = 1
+
                         if event.key == pygame.K_a:
                             player.go_left()
                             self.move_camera = 2
+
                         if event.key == pygame.K_s:
                             player.go_down()
                             self.move_camera = 3
+
                         if event.key == pygame.K_d:
                             player.go_right()
                             self.move_camera = 4
+
                         if event.key == pygame.K_UP:
                             player.go_up()
                             self.move_camera = 1
+
                         if event.key == pygame.K_LEFT:
                             player.go_left()
                             self.move_camera = 2
+
                         if event.key == pygame.K_DOWN:
                             player.go_down()
                             self.move_camera = 3
+
                         if event.key == pygame.K_RIGHT:
                             player.go_right()
                             self.move_camera = 4
+
                     elif event.type == pygame.KEYUP:
                         self.move_camera = 0
                         player.stop()
+                # Insanity 3 and above movement
                 if Controller.insanity >= 3:
                     if event.type == pygame.KEYDOWN:
                         if event.key == pygame.K_s:
                             player.go_up()
                             self.move_camera = 1
+
                         if event.key == pygame.K_d:
                             player.go_left()
                             self.move_camera = 2
+
                         if event.key == pygame.K_w:
                             player.go_down()
                             self.move_camera = 3
+
                         if event.key == pygame.K_a:
                             player.go_right()
                             self.move_camera = 4
+
                         if event.key == pygame.K_DOWN:
                             player.go_up()
                             self.move_camera = 1
+
                         if event.key == pygame.K_RIGHT:
                             player.go_left()
                             self.move_camera = 2
+
                         if event.key == pygame.K_UP:
                             player.go_down()
                             self.move_camera = 3
+
                         if event.key == pygame.K_LEFT:
                             player.go_right()
                             self.move_camera = 4
+
                     elif event.type == pygame.KEYUP:
                         self.move_camera = 0
                         player.stop()
+            # Responsible for camera movement
             if self.move_camera == 1:
                 self.posy -= self.eno
                 Maze.y_camera -= self.eno
@@ -165,26 +193,34 @@ class Maze:
                 self.posx += self.eno
                 Maze.x_camera += self.eno
                 self.insanity2_pos += self.eno
+            # Creates readible player rectangle
             self.player_rec = pygame.Rect(self.posx,self.posy,48,48)
             self.wn.fill((0,0,0))
+            # Picks maps
             if self.maze_map == 1:
                 self.map_build(self.map_list)
             elif self.maze_map == 2:
                 self.map_build(self.map_list2)
+            # If insanity == 5 a sprite will appear
             if Controller.insanity == 5 and self.insanity5toggle == False:
                 face = insanity5Face()
                 active_sprite_list.add(face)
                 self.insanity5toggle = True
+            # responsible for time
             self.time = int((pygame.time.get_ticks()-self.start_tick)/1000)
 
             active_sprite_list.update()
 
             active_sprite_list.draw(self.wn)
+            # Controller hud initization
             Controller.insanity_meter(self, self.wn, (255,255,255))
             Controller.score(self, self.wn, (255,255,255))
+
+            # Detects collsion between player and hedges
             for x in self.blacklist:
                 if x.colliderect(self.player_rec):
                     self.move_camera = 0
+                # If player goes into hedge
                 if x.contains(self.player_rec):
                     Controller.score_current -= 1
                     self.boo.play(loops=1)
@@ -193,18 +229,22 @@ class Maze:
                         pygame.mixer.music.load("Sounds//Tchaikovsky Distorted.wav")
                         pygame.mixer.music.play(loops=-1, start=0.0)
                         Controller.insanity = 5
+            # Detects if player finished maze
             for y in self.finish_list:
                 if y.colliderect(self.player_rec):
                     Maze.x_camera = 0
                     Maze.y_camera = 0
                     Controller.transition(self, 2, True)
                     pygame.mixer.music.stop()
+            # Insanity effects
             if Controller.insanity >= 2:
                 self.insanity_results(Controller.insanity)
             elif Controller.insanity <= 3:
                 pygame.mixer.music.load("Sounds//Tchaikovsky Distorted.wav")
                 pygame.mixer.music.play(loops=-1, start=0.0)
+            # Initization of clock
             Controller.clock(self, self.wn, (240, 93, 93),  180, self.start_tick)
+            # If clock runs out of time
             if Controller.clock(self, self.wn, (240, 93, 93),  180, self.start_tick) == 0:
                 Maze.x_camera = 0
                 Maze.y_camera = 0
@@ -213,12 +253,15 @@ class Maze:
             pygame.display.flip()
 
     def map_build(self, map_list):
+        """
+            Creates map from map_list
+        """
         if Controller.insanity < 4:
             textures = {"1":self.hedge, "2":self.grass, "3":self.finish}
         elif Controller.insanity >= 3:
             textures = {"1":self.hedge_insanity4, "2":self.grass, "3":self.finish}
 
-
+        # Blits map using map_list
         for rows in range(self.map_height):
             for columns in range(self.map_width):
                 if textures[map_list[rows][columns]] == self.hedge:
@@ -247,6 +290,9 @@ class Maze:
         self.wn.blit(clocktimer,(400,0))
 
 class Player(pygame.sprite.Sprite):
+    """
+        Creates and updates Player using sprite_sheet
+    """
 
     def __init__(self):
 
@@ -344,6 +390,9 @@ class Player(pygame.sprite.Sprite):
     def stop(self):
         self.change_x = 0
 class insanity5Face(pygame.sprite.Sprite):
+    """
+        Creates and updates Insanity 5 graphics using sprite_sheet
+    """
     def __init__(self):
         super().__init__()
         sprite_sheet = SpriteSheet("Sprites//creepy.png")
