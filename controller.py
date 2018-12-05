@@ -11,8 +11,7 @@ class Controller:
     insanity5 = pygame.image.load("Sprites//insanity5.png")
     debug_mode = True
     done_counter = {1: 0,  2: 0, 3: 0, 4: 0, 5: 0}
-    appear_counter = {1: 0, 2: 0, 3: 0, 4: 0, 5: 0}
-    appear_counter = []
+    appear_counter = {1: 1, 2: 1, 3: 1, 4: 1, 5: 1}
     score_current = 0
     scenes_done = []
     return_to_root = False
@@ -30,12 +29,14 @@ class Controller:
         self.typing = Typing()
 
     def run(self):
+        '''
+        Houses the main controller loop
+        '''
         while True:
             Controller.timeout = False
             if Controller.scene == 0:
                 men = Menu()
                 self.won = True
-                Controller.score_current -= 1
             elif Controller.scene == 1:
                 self.space.run()
                 self.won = Space.won
@@ -50,8 +51,7 @@ class Controller:
                 self.won = Platformer.won
             elif Controller.scene == 5:
                 self.typing.run()
-                self.won = Typing.won
-            Controller.appear_counter[Controller.scene] += 1 
+                self.won = Typing.won 
             Controller.transition(self, Controller.scene, self.won)
 
     def scene_selector(self, scene_finished, success):
@@ -61,76 +61,47 @@ class Controller:
         This then plays corresponding sounds, adjusts score if needed, and randomly selects a new id
         which means it chooses the next level in the mix.
         '''
-        if success == True:
-            Controller.done_counter[scene_finished] += 1
-            Controller.score_current += 1
-            if Controller.insanity == 1:
-                self.complete = pygame.mixer.Sound("Sounds//Electronic_Chime.wav")
-                self.complete.set_volume(0.3)
+        if Controller.scene != 0: 
+            Controller.appear_counter[Controller.scene] += 1   
+            if success == True:
+                Controller.done_counter[scene_finished] += 1
+                Controller.score_current += 1
+                if Controller.insanity == 1:
+                    self.complete = pygame.mixer.Sound("Sounds//Electronic_Chime.wav")
+                    self.complete.set_volume(0.3)
+                else:
+                    self.complete = pygame.mixer.Sound("Sounds//switch.wav")
             else:
-                self.complete = pygame.mixer.Sound("Sounds//switch.wav")
+                Controller.insanity += 1
+                if Controller.insanity > 5:
+                    Controller.go_insane(self, self.window)
+                self.complete = pygame.mixer.Sound("Sounds//insanity_up.wav")
+                self.complete.set_volume(1.5)
+            self.complete.play(loops = 0)
+    
+            Controller.scenes_done.append(scene_finished)
+            
+            rand = random.randrange(0,1)
+            appear_total = 0
+            prob_list = []
+            for i in range(5):
+                appear_total+=Controller.appear_counter[i+1]
+                prob_list.append(Controller.appear_counter[i+1])
+            for i in range(5):
+                prob_list[i]=appear_total-prob_list[i]
+                prob_list[i]/=(appear_total*4)
+            temp = sorted(prob_list,reverse=True)
+            accum = 0
+            for i in temp:
+                accum+=i
+                if rand < accum:
+                    Controller.scene = prob_list.index(i)+1
+                    break
+            print(prob_list)
+            
         else:
-            Controller.insanity += 1
-            if Controller.insanity > 5:
-                Controller.go_insane(self, self.window)
-            self.complete = pygame.mixer.Sound("Sounds//insanity_up.wav")
-            self.complete.set_volume(1.5)
-        self.complete.play(loops = 0)
-        Controller.scenes_done.append(scene_finished)
-        
-        rand = random.randrange(0,1)
-        appear_total = 0
-        prob_list = []
-        for i in range(5):
-            appear_total+=appear_counter[i+1]
-            prob_list.append[appear_counter[i]]
-        for i in range(5):
-            prob_list[i]=appear_total-prob_list[i]
-            prob_list[i]/=(appear_total*4)
-        temp = sorted(prob_list,reverse=True)
-        accum = 0
-        for i in temp:
-            accum+=i
-            if rand < accum:
-                Controller.scene = prob_list.index(i)+1
-                
-        '''
-        if rand < 20:
-            if Controller.scene != 1:
-                Controller.scene = 1
-            elif Controller.scene == 1:
-                rand = random.randrange(0,101)
-                if rand < 15:
-                    Controller.scene = 1
-        elif rand > 20 and rand < 40:
-            if Controller.scene != 2:
-                Controller.scene = 2
-            elif Controller.scene == 2:
-                rand = random.randrange(0,101)
-                if rand < 15:
-                    Controller.scene = 2
-        elif rand > 40 and rand < 60:
-            if Controller.scene != 3:
-                Controller.scene = 3
-            elif Controller.scene == 3:
-                rand = random.randrange(0,101)
-                if rand < 15:
-                    Controller.scene = 3
-        elif rand > 60 and rand < 80:
-            if Controller.scene != 4:
-                Controller.scene = 4
-            elif Controller.scene == 4:
-                rand = random.randrange(0,101)
-                if rand < 15:
-                    Controller.scene = 4
-        elif rand > 80 and rand < 100:
-            if Controller.scene != 5:
-                Controller.scene = 5
-            elif Controller.scene == 5:
-                rand = random.randrange(0,101)
-                if rand < 15:
-                    Controller.scene = 5
-            '''
+            Controller.scene = random.randint(1,5)        
+
         return
     def transition(self, lev_id, success):
         '''

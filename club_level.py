@@ -21,11 +21,11 @@ class Club:
         #Keyboard DDR Setting
         self.speech_bubble = pygame.image.load("Sprites//speech_bubble.png").convert()
         self.directions = ['left', 'up', 'down', 'right']
-        self.landing_arrows = pygame.sprite.Group()
-        self.arrow_group = pygame.sprite.Group()
         self.d = Dialogue()
         
     def run(self):
+        self.landing_arrows = pygame.sprite.Group()
+        self.arrow_group = pygame.sprite.Group()
         #Sounds
         if Controller.insanity < 4:
             self.club_music = pygame.mixer.music.load("Sounds//HOME - Above All.wav")

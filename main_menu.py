@@ -124,9 +124,6 @@ class Menu:
         x = pygame.mouse.get_pressed()
         self.text(47,402,50,"Start")
         if x[0] == 1 and y == True:
-            pygame.mixer.music.stop()
-            x = random.randint(1,5)
-            Controller.scene += x
             Menu.start = True
             return
         # Instruction button

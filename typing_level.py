@@ -5,8 +5,8 @@ pygame.init()
 
 class Typing:
     won = False
-    total_words = 5
-    time_limit = 35
+    total_words = 0
+    time_limit = 25
     I1_L1 = ["cat", "tractor", "monkey", "boat", "house", "man", "hat", "run",
     "elephant", "mouse", "computer", "pick", "deep", "sports", "fruit",
     "ocean", "money", "game", "snake", "car", "factory", "food", "family", "the",
@@ -191,11 +191,13 @@ class Typing:
     def difficultify(self, words):
         self.words = words
         self.handler = 0
-        if self.completions % 2 == 0 and self.completions != 0:
+        if self.completions % 2 == 0:
             Typing.total_words += 5
             Typing.time_limit += 10
-        else:
+        elif self.completions % 2 != 0:
             Typing.time_limit -= 5
+        if self.completions > 10:
+            Typing.total_words -= (5 * (self.completions % 10))
         if (self.completions % 10) + 1 == 1:
             if self.completions >= 11:
                 self.handler = 10
