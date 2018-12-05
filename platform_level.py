@@ -603,7 +603,7 @@ class Enemy(pygame.sprite.Sprite):
         super().__init__()
         self.x_change = 0
         self.y_change = 0
-        self.health = 50
+        self.health = 50 + int(Platformer.difficulty * 50)
         self.damage = 100
         self.x = x
         self.y = y
@@ -680,7 +680,7 @@ class Laser(pygame.sprite.Sprite):
         self.x = x
         self.y = y
         self.changex = 0
-        self.speed = speed + int(Platformer.difficulty/2)
+        self.speed = speed + int(Platformer.difficulty*2)
         self.changey = 0
         self.damage = 100
         self.direction = ""
