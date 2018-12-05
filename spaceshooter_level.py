@@ -10,8 +10,9 @@ class Space(pygame.sprite.Sprite):
         self.start_tick = pygame.time.get_ticks()
         self.win = pygame.display.set_mode((800,600))
         self.background = pygame.image.load("Sprites//space background.png")
-        pygame.mixer.music.load("Sounds//space music.wav")
-        pygame.mixer.music.play(-1,0.0)
+        self.spacemusic = pygame.mixer.music.load("Sounds//space music.wav")
+        pygame.mixer.music.set_volume(0.3)
+        pygame.mixer.music.play(loops=-1)
         self.music = True
         self.score = 0
         self.completions = Controller.done_counter[1]
@@ -24,24 +25,29 @@ class Space(pygame.sprite.Sprite):
         enemyblasts = pygame.sprite.Group()
         enemies = pygame.sprite.Group()
         explosion = pygame.sprite.Group()
+        heroship = pygame.sprite.Group()
         hero = Hero("Sprites//THEspaceship.png")
         all_sprites_list.add(hero)
-        # explosion = Explosion("Sprites//explosion.png", 9, 8)
+        heroship.add(hero)
         hero.rect.y = 530
         pygame.display.update()
         self.done_explosion = []
 
-        for i in range(20):
+        for i in range(5):
             enemy = Enemy("Sprites//enemyship.png")
-            # enemyblast = EnemyBlast("Sprites//enemyblast.png")
+            enemyblast = EnemyBlast("Sprites//enemyblast.png")
             enemies.add(enemy)
             enemy.rect.x = random.randrange(800)
             enemy.rect.y = random.randrange(350)
-            # enemyblast.rect.x = enemy.rect.x
-            # enemyblast.rect.y = enemy.rect.y
+            enemyblast.rect.x = enemy.rect.x
+            enemyblast.rect.y = enemy.rect.y
 
             all_sprites_list.add(enemy)
-            # random.choice([all_sprites_list.add(enemyblast),enemyblasts.add(enemyblast)])
+            all_sprites_list.add(enemyblast)
+            enemyblasts.add(enemyblast)
+            self.enemyblastsound = pygame.mixer.Sound("Sounds//enemyblastsound.wav")
+            self.enemyblastsound.set_volume(1.0)
+            self.enemyblastsound.play(loops=0)
 
 
 
@@ -53,10 +59,10 @@ class Space(pygame.sprite.Sprite):
             self.win.blit(self.background, (0,0))
             keys = pygame.key.get_pressed()
 
-            if keys[pygame.K_LEFT]: #and self.x > self.speed:
+            if keys[pygame.K_LEFT]:
                 hero.move_left()
 
-            if keys[pygame.K_RIGHT]: #and self.x < 819 - self.width - self.speed:
+            if keys[pygame.K_RIGHT]:
                 hero.move_right()
 
             if keys[pygame.K_SPACE]:
@@ -65,18 +71,27 @@ class Space(pygame.sprite.Sprite):
                 heroblast.rect.y = hero.rect.y
                 all_sprites_list.add(heroblast)
                 heroblasts.add(heroblast)
-
-            # self.win.blit(self.image, (self.x,self.y))
+                self.heroblastsound = pygame.mixer.Sound("Sounds//Ki blast.wav")
+                self.heroblastsound.set_volume(1.0)
+                self.heroblastsound.play(loops=0)
 
             all_sprites_list.update()
-            # hero.draw(self.win)
-            # enemy.draw(self.win)
-            # enemy.update()
-            for heroblast in heroblasts:
+
+            for enemyblast in enemyblasts:  #enemy fire colliding with hero ship
+                hero_hit_list = pygame.sprite.spritecollide(enemyblast,heroship, True, pygame.sprite.collide_circle)
+                for hero_coord in hero_hit_list:
+                    x = hero_coord.rect.x
+                    y = hero_coord.rect.y
+                    explode = Explosion(x,y)
+                    explosion.add(explode)
+                    self.done_explosion.append(explode)
+                    self.explosionsound = pygame.mixer.Sound("Sounds//explosoundeffect.wav")
+                    self.explosionsound.set_volume(0.5)
+                    self.explosionsound.play(loops=0)
+
+            for heroblast in heroblasts: #hero fire colliding with enemy ships
                 enemy_hit_list = pygame.sprite.spritecollide(heroblast,enemies, True, pygame.sprite.collide_circle)
-                print(enemy_hit_list)
                 for enemy_coord in enemy_hit_list:
-                    #all_sprites_list.add(explosion)
                     self.score += 1
                     heroblasts.remove(heroblast)
                     all_sprites_list.remove(heroblast)
@@ -85,18 +100,27 @@ class Space(pygame.sprite.Sprite):
                     explode = Explosion(x,y)
                     explosion.add(explode)
                     self.done_explosion.append(explode)
+                    self.explosionsound = pygame.mixer.Sound("Sounds//explosoundeffect.wav")
+                    self.explosionsound.set_volume(0.5)
+                    self.explosionsound.play(loops=0)
                     print(self.score)
+                    print(enemies)
 
                 if heroblast.rect.y < -10:
                     heroblasts.remove(heroblast)
                     all_sprites_list.remove(heroblast)
 
-            #for explosion_done in range(0,20):
             for done in range(len(self.done_explosion)):
                 if self.done_explosion[done].done == True:
                     explosion.remove(self.done_explosion[done])
                     self.done_explosion.remove(self.done_explosion[done])
                     break
+
+            # print(enemies.has(enemy))         #victory things (OPTIONAL)
+            # if enemies.has(enemy) == False:
+            #     pygame.mixer.music.pause()
+            #     self.victorytheme = pygame.mixer.music.load("Sounds//Victoryscreentheme.wav")
+            #     pygame.mixer.music.play(loops=0)
 
 
 
@@ -183,26 +207,26 @@ class HeroBlast(pygame.sprite.Sprite):
         self.rect.y -= self.speed
         #print(self.rect.y)
 
-#Space()
 
-# class EnemyBlast(pygame.sprite.Sprite):
-#     def __init__(self,filename):
-#         pygame.sprite.Sprite.__init__(self)
-#         self.image = pygame.image.load(filename).convert_alpha()
-#         self.image = pygame.transform.scale(self.image, (50,50))
-#         self.rect = self.image.get_rect()
-#         self.radius = 10
-#         BLUE = (0,0,255)
-#         # pygame.draw.circle(self.image,BLUE, self.rect.center,self.radius)
-#         self.speed = 30
-#         self.damage = 1
-#         self.frames_bullet = []
-#
-#
-#     def update(self):
-#         self.rect.y += self.speed
-#         #print(self.rect.y)
-#
+
+class EnemyBlast(pygame.sprite.Sprite):
+    def __init__(self,filename):
+        pygame.sprite.Sprite.__init__(self)
+        self.image = pygame.image.load(filename).convert_alpha()
+        self.image = pygame.transform.scale(self.image, (30,30))
+        self.rect = self.image.get_rect()
+        self.radius = 10
+        BLUE = (0,0,255)
+        pygame.draw.circle(self.image,BLUE, self.rect.center,self.radius)
+        self.speed = 30
+        self.damage = 1
+        self.frames_bullet = []
+
+
+    def update(self):
+        self.rect.y += self.speed
+        #print(self.rect.y)
+
 class Explosion(pygame.sprite.Sprite):
     def __init__(self,x,y):
         pygame.sprite.Sprite.__init__(self)
@@ -252,3 +276,5 @@ class Explosion(pygame.sprite.Sprite):
 
     def reset(self):
         self.done = False
+
+Space()
