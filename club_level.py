@@ -163,13 +163,13 @@ class Club:
                     if self.setting == 2:
                         if self.phase == 1:
                             if event.key == pygame.K_LEFT or event.key == pygame.K_a:
-                                Arrow.check(self)
+                                Arrow.check(self, 'left')
                             if event.key == pygame.K_UP or event.key == pygame.K_w:
-                                Arrow.check(self)
+                                Arrow.check(self, 'up')
                             if event.key == pygame.K_DOWN or event.key == pygame.K_s:
-                                Arrow.check(self)
+                                Arrow.check(self, 'down')
                             if event.key == pygame.K_RIGHT or event.key == pygame.K_d:
-                                Arrow.check(self)
+                                Arrow.check(self, 'right')
                         elif self.phase == 2:
                             if event.key == pygame.K_RETURN:
                                 if our_word[0:l-1] == self.correct:
@@ -464,14 +464,24 @@ class Arrow(pygame.sprite.Sprite):
             Dialogue.used_list = []
             Controller.transition(self, Controller.scene, False)
             
-    def check(self):
+    def check(self, pressed):
         y_list = []
         for arrow in self.arrow_group:
             if arrow.new_pos in range(35, 160):
                 y_list.append(arrow.new_pos)
                 y_list.sort()
                 if arrow.new_pos == y_list[0]:
-                    self.arrow_group.remove(arrow)
-                    arrow.kill()
-                    return        
+                    if arrow.position[0] == 5 and pressed == 'left':
+                        self.arrow_group.remove(arrow)
+                        arrow.kill()
+                        return
+                    elif arrow.position[0] == 105 and pressed == 'up':
+                        arrow.kill()
+                        return 
+                    elif arrow.position[0] == 205 and pressed == 'down':
+                        arrow.kill()
+                        return
+                    elif arrow.position[0] == 305 and pressed == 'right':
+                        arrow.kill()
+                        return                   
         Controller.transition(self, 3, False)

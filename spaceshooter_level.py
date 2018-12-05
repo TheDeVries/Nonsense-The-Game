@@ -24,7 +24,7 @@ class Space(pygame.sprite.Sprite):
         self.handler = 0
         self.winner = True
         self.game_over = False
-        self.difficultify()
+        #self.difficultify()
         difficulty = {0: '005 030', 1: '010 035', 2: '015 060', 3: '020 060', 4: '025 060', 5: '010 30', 6: '015 35', 7: '010 025', 8: '020 050', 9: '025 050', 10: '030 050'}
         diff_str = difficulty[self.completions - self.handler]
         time_limit = int(diff_str[4:])
@@ -230,8 +230,11 @@ class Enemy(pygame.sprite.Sprite):
         print(self.speed)
 
     def update(self):
-        self.movex = random.randint(-10,10)
-        self.rect.x += self.movex
+        self.movex = random.randint(-self.speed, self.speed)
+        if self.rect.x + self.movex > 0 and self.rect.x + self.movex + 20 < 800:
+            self.rect.x += self.movex
+        else:
+            self.rect.x -= self.movex
 
 
     def draw(self, win):
