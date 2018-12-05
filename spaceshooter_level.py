@@ -24,6 +24,7 @@ class Space(pygame.sprite.Sprite):
         self.handler = 0
         self.winner = True
         self.game_over = False
+        self.difficultify()
         difficulty = {0: '005 030', 1: '010 035', 2: '015 060', 3: '020 060', 4: '025 060', 5: '010 30', 6: '015 35', 7: '010 025', 8: '020 050', 9: '025 050', 10: '030 050'}
         diff_str = difficulty[self.completions - self.handler]
         time_limit = int(diff_str[4:])
@@ -96,10 +97,8 @@ class Space(pygame.sprite.Sprite):
                     explode = Explosion(x,y)
                     explosion.add(explode)
                     self.done_explosion.append(explode)
-                    if Controller.insanity < 3:
-                        self.explosionsound = pygame.mixer.Sound("Sounds//explosoundeffect.wav")
-                    else:
-                        self.explosionsound = pygame.mixer.Sound("Sounds//rubberduck.wav")
+                    # if Controller.insanity < 3:
+                    self.explosionsound = pygame.mixer.Sound("Sounds//explosoundeffect.wav")
                     self.explosionsound.set_volume(0.5)
                     self.explosionsound.play(loops=0)
                     self.game_over = True
@@ -115,10 +114,8 @@ class Space(pygame.sprite.Sprite):
                     explode = Explosion(x,y)
                     explosion.add(explode)
                     self.done_explosion.append(explode)
-                    if Controller.insanity < 3:
-                        self.explosionsound = pygame.mixer.Sound("Sounds//explosoundeffect.wav")
-                    else:
-                        self.explosionsound = pygame.mixer.Sound("Sounds//rubberduck.wav")
+                    # if Controller.insanity < 3:
+                    self.explosionsound = pygame.mixer.Sound("Sounds//explosoundeffect.wav")
                     self.explosionsound.set_volume(0.5)
                     self.explosionsound.play(loops=0)
                     print(self.score)
@@ -133,6 +130,9 @@ class Space(pygame.sprite.Sprite):
                     explosion.remove(self.done_explosion[done])
                     self.done_explosion.remove(self.done_explosion[done])
                     break
+
+
+
 
             if len(enemies) == 0:
                 myfont = pygame.font.SysFont(None,30)
@@ -176,6 +176,11 @@ class Space(pygame.sprite.Sprite):
             # all_sprites_list.update()
             pygame.display.flip()
 
+    # def difficultify(self):         #must fix
+    #     dif = Controller.done_counter[1]
+    #     if dif % 2 == 0 and dif !=0:
+    #         self.speed += 20
+
 class Hero(pygame.sprite.Sprite):  #spaceship model
     def __init__(self, filename):
         pygame.sprite.Sprite.__init__(self)
@@ -206,10 +211,6 @@ class Hero(pygame.sprite.Sprite):  #spaceship model
             if self.rect.x >= self.speed:
                 self.rect.x -= self.speed
 
-
-    def shoot(self):
-        pass
-
     def draw(self, win):
         win.blit(self.image, self.rect)
 
@@ -226,6 +227,7 @@ class Enemy(pygame.sprite.Sprite):
         BLUE = (0,0,255)
         # pygame.draw.circle(self.image,BLUE, self.rect.center,self.radius)
         self.speed = 10
+        print(self.speed)
 
     def update(self):
         self.movex = random.randint(-10,10)
