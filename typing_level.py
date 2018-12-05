@@ -37,7 +37,8 @@ class Typing:
 
         I1_L1 = ["cat", "tractor", "monkey", "boat", "house", "man", "hat", "run",
         "elephant", "mouse", "computer", "pick", "deep", "sports", "fruit",
-        "ocean", "money", "game", "snake", "car", "factory", "food", "family", "the"]
+        "ocean", "money", "game", "snake", "car", "factory", "food", "family", "the",
+        "host", "pantry", "tag", "flag", "plant", "noun", "bank", "joke"]
         I1_L2 = ["receipt", "instructions", "development", "civilization", "etiquette",
         "mispronunciation", "success", "advertisement", "commercial", "residential",
         "education", "industrial", "excellence", "guarantee", "typing", "one-hundred",
@@ -67,7 +68,8 @@ class Typing:
         "apocalypse", "supernovas", "industrialization", "greenhouses", "latitudinal", "deception", "equilibrium", "protection"]
         I4_L1 = ["die", "crust", "blip", "hike", "lost", "pod", "crop", "suck", "wasp", "zombie", "down", "drown",
         "heel", "combustion", "kale", "love", "dealer", "needle", "cradle", "beetle", "leech", "tentacle", "yeast",
-        "saint", "lob", "bridge", "craft", "sack", "aged", "wreck", "wrench", "spoon", "bulge", "corrode", "void", "god"]
+        "saint", "lob", "bridge", "craft", "sack", "aged", "wreck", "wrench", "spoon", "bulge", "corrode", "void", "god",
+        "soap", "mud", "bubble", "vista", "jade", "patch", "bolt", "sun", "twist", "sign", "cleave", "suds"]
         I4_L2 = ["ass", "frightening", "betrayal", "inconsistency", "derivative", "spine", "collar", "mortal",
         "divine", "enlighten", "pastel", "blood", "labor", "firefly", "nuclear", "dehydrated", "smallpox", "plague",
         "normality", "creep", "expectation", "common", "habitat", "misophonia", "citation", "disorderly"]
@@ -76,13 +78,14 @@ class Typing:
         "considerations", "accomodations", "citadel", "demonic", "destruction", "invasion", "taxation", "palace"]
         I5_L1 = ["hush", "little", "baby", "dont", "say", "a", "word", "mommas", "gonna", "buy", "you", "rocking", "bird",
         "sleep", "goat", "devil", "twinkle", "star", "wonder", "what", "are", "frugality", "python", "hell", "devil", "liability",
-        "bribery", "token", "salvage", "surrender", "this", "instant", "kill", "murder", "broke", "ruination", "prod", "alcohol"]
+        "bribery", "token", "salvage", "surrender", "this", "instant", "kill", "murder", "broke", "ruination", "prod", "alcohol",
+        "fool", "divorce", "dim", "drip", "pulp", "luck", "ape", "pig", "maul"]
         I5_L2 = ["ivory", "malfunction", "assassination", "improvisation", "tiles", "arsonist", "psychological", "surrealism",
         "hahahahahahahahahahahahahahahahahahhahahahah", "gray", "pale", "lifeless", "flesh", "sin", "loneliness", "homeless", "oppressed",
-        "forever", "deprived", "of", "necessities", "intolerance", "thousands", "wanderers", "hopelessness", "fate", "unhinged", "backwards"]
+        "forever", "deprived", "of", "necessities", "intolerance", "thousands", "wanderers", "hopelessness", "fate", "unhinged", "backwards", "divorce"]
         I5_L3 = ["decapitation", "dehumanization", "willpower", "allhopeislost", "youcantwinthisgameyouknow", "ddagweggaeg", "plmidffeddargh", "scissors",
         "potency", "wweeiirrdd", "gamethisis", "whyareyoustillplaying", "puppet", "werewolf", "vampire", "professorstevenallenmoore", "eeegfgfgfgfggfgfgfgf",
-        "locket", "verilyisaytoyou", "m", "a", "d", "n", "e", "s", "copingmechanism", "plaque", "wound"]
+        "locket", "verilyisaytoyou", "m", "a", "d", "n", "e", "s", "copingmechanism", "plaque", "wound", "atlantiansarestupid", "suckitourprojectisthebest"]
         words = []
         #Below, the first int in the string is the number of words and the second is the time in seconds
         difficulty = {0: '005 030', 1: '010 035', 2: '015 060', 3: '020 060', 4: '025 060', 5: '010 30', 6: '015 35', 7: '010 025', 8: '020 050', 9: '025 050', 10: '030 050'}
@@ -137,7 +140,10 @@ class Typing:
 
         running = True
         while running:
+            self.window.blit(self.walmart, (0,0))
             self.window.blit(self.background, (0,0))
+            if Controller.insanity == 5:
+                self.background.set_colorkey((19, 108, 78))
             Controller.score(self, self.window, (255,255,255))
             Controller.insanity_meter(self, self.window, (255,255,255))
             Controller.clock(self, self.window, (240, 93, 93), time_limit, self.start_tick)

@@ -472,5 +472,6 @@ class Arrow(pygame.sprite.Sprite):
                 y_list.sort()
                 if arrow.new_pos == y_list[0]:
                     self.arrow_group.remove(arrow)
+                    arrow.kill()
                     return        
         Controller.transition(self, 3, False)
