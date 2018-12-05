@@ -54,7 +54,7 @@ class Club:
         self.chosens = self.Randomize()
         self.phase = 1
         arrow_time = 0
-        threshold = random.randrange(int((1/Arrow.rate)*1000), 5000)
+        threshold = random.randrange(int((1/Arrow.rate)*1000), 50 * 1000)
         self.arrow_tick = pygame.time.get_ticks()
         
 
@@ -120,12 +120,12 @@ class Club:
                     if arrow_time > threshold:
                         self.spawn()
                         arrow_time = 0
-                        threshold = random.randrange(int((1/Arrow.rate)*1000), 5000)
+                        threshold = random.randrange(int((1/Arrow.rate)*1000), 50*1000)
                         self.arrow_tick = pygame.time.get_ticks()
                     Controller.clock(self, self.window, (93, 240, 93), num_seconds, self.start_tick)
                     d.draw(self.window, self.font)
                     landing_arrows.draw(self.window)
-                    self.arrow_group.update(Arrow.position)
+                    self.arrow_group.update()
                     self.arrow_group.draw(self.window)
                     our_word = "|"
                     
@@ -155,14 +155,13 @@ class Club:
                     if self.setting == 2:
                         if self.phase == 1:
                             if event.key == pygame.K_LEFT or event.key == pygame.K_a:
-                                if self.flying_arrow.position[1] in range(60, 170):
-                                    self.flying_arrow.kill()
+                                Arrow.check(self)
                             if event.key == pygame.K_UP or event.key == pygame.K_w:
-                                pass
+                                Arrow.check(self)
                             if event.key == pygame.K_DOWN or event.key == pygame.K_s:
-                                pass
+                                Arrow.check(self)
                             if event.key == pygame.K_RIGHT or event.key == pygame.K_d:
-                                pass
+                                Arrow.check(self)
                         elif self.phase == 2:
                             if event.key == pygame.K_RETURN:
                                 if our_word[0:l-1] == self.word:
@@ -204,14 +203,14 @@ class Club:
         if dif % 2 == 0 and dif != 0:
             Arrow.speed += 1
         elif dif != 0:
-            Arrow.rate += 1
+            Arrow.rate += .005
         if dif % 3 == 0 and dif != 0:
             if Club.sayings + 2 <= 20:
                 Club.questions += 1
                 Club.sayings += 2
         if self.isPrime(dif) == True and dif != 0:
             Arrow.speed += .5
-            Arrow.rate += 1
+            Arrow.rate += .009
 
     def isPrime(self, n):
         '''
@@ -403,7 +402,7 @@ class Dialogue:
         
 class Arrow(pygame.sprite.Sprite):
     position = (0,0)
-    rate = 1
+    rate = .021
     speed = 1
     def __init__(self, type, h, speed):
         pygame.sprite.Sprite.__init__(self)
@@ -432,12 +431,24 @@ class Arrow(pygame.sprite.Sprite):
             self.image = ar_direc[h]
             self.end_position = ar_end[h]
             self.rect.topleft = self.end_position
+            self.new_pos = 0
 
-    def update(self, position):
+    def update(self):
         self.x = self.position[0]
-        new_pos = float(self.position[1]) - float(Arrow.speed)
-        self.position = (self.x, new_pos)
+        self.new_pos = float(self.position[1]) - float(Arrow.speed)
+        self.position = (self.x, self.new_pos)
         self.rect.topleft = self.position
-        if self.position[1] < 70:
+        if self.position[1] < 60:
             Dialogue.used_list = []
             Controller.transition(self, Controller.scene, False)
+            
+    def check(self):
+        y_list = []
+        for arrow in self.arrow_group:
+            if arrow.new_pos in range(60, 160):
+                y_list.append(arrow.new_pos)
+                y_list.sort()
+                if arrow.new_pos == y_list[0]:
+                    self.arrow_group.remove(arrow)
+                    return        
+        Controller.transition(self, 3, False)
