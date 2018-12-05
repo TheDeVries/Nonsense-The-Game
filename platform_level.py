@@ -50,15 +50,15 @@ class Platformer:
                              950,-729,
                              -10, -779]
 
-        self.laser_coord = [55,60,20,
-                            165,175,10,
+        self.laser_coord = [55,60,10,
+                            165,175,6,
                             745, 60, 2,
                             645, 170, 2,
-                            235, -29, 15,
-                            895, -229, 18,
-                            -5, -379, 15,
-                            995, -679, 10,
-                            35, -729, 10]
+                            235, -29, 8,
+                            895, -229, 10,
+                            -5, -379, 8,
+                            995, -679, 8,
+                            35, -729, 8]
 
         self.dragon_coords = [0, -600, 10, "R",
                               100, -950, 5, "R",
@@ -202,7 +202,7 @@ class Platformer:
                 bullet.shot = False
             Controller.score(self, self.window, (255,255,255))
             Controller.insanity_meter(self, self.window, (255,255,255))
-            Controller.clock(self, self.window, (240, 93, 93), 180, self.start_tick)
+            Controller.clock(self, self.window, (240, 93, 93), 120, self.start_tick)
             pygame.display.flip()
 
         while self.game_over:
@@ -280,6 +280,17 @@ class Platforms_Map:
 
         if Platformer.y_camera >= 160:
             Platformer.player_fall = False
+
+        rect_end = pygame.draw.rect(self.window, (178,34,34), pygame.Rect((-1000 - Platformer.x_camera, -1350 - Platformer.y_camera, 5000,20)))
+
+        if rect_end.colliderect(player):
+            Platformer.x_camera = 0
+            Platformer.y_camera = 0
+            Platformer.player_fall = True
+            Platformer.ground = False
+            Platformer.direction = "L"
+            Platformer.gravity = False
+            Controller.transition(self, 4, True)
 
 
 
@@ -603,7 +614,7 @@ class Enemy(pygame.sprite.Sprite):
         super().__init__()
         self.x_change = 0
         self.y_change = 0
-        self.health = 50 + int(Platformer.difficulty * 50)
+        self.health = 50
         self.damage = 100
         self.x = x
         self.y = y

@@ -199,7 +199,6 @@ class Maze:
                     Maze.y_camera = 0
                     Controller.transition(self, 2, True)
                     pygame.mixer.music.stop()
-                    c1 = Controller()
             if Controller.insanity >= 2:
                 self.insanity_results(Controller.insanity)
             elif Controller.insanity <= 3:
@@ -211,7 +210,6 @@ class Maze:
                 Maze.y_camera = 0
                 Controller.transition(self, 2, False)
                 pygame.mixer.music.stop()
-                c1 = Controller()
             pygame.display.flip()
 
     def map_build(self, map_list):
