@@ -24,6 +24,7 @@ class Club:
         self.d = Dialogue()
         
     def run(self):
+        Club.won = True
         self.landing_arrows = pygame.sprite.Group()
         self.arrow_group = pygame.sprite.Group()
         #Sounds
@@ -79,6 +80,8 @@ class Club:
                     c = Controller.clock(self, self.window, (240, 93, 93), 10, self.start_tick)
                     if Controller.timeout == True:
                         Club.won = False
+                        self.arrow_group.empty()
+                        self.landing_arrows.empty()
                         self.running = False
                 else:
                     self.font = pygame.font.Font("Sprites//times.ttf", 30)
@@ -151,6 +154,8 @@ class Club:
                     c = Controller.clock(self, self.window, (240, 93, 93), 6 * Club.questions, self.start_tick)
                     if Controller.timeout == True:
                         Club.won = False
+                        self.landing_arrows.empty()
+                        self.arrow_group.empty()
                         self.running = False
                     l = len(our_word)
                     self.window.blit(self.attention1, (465,120))
@@ -167,6 +172,10 @@ class Club:
                         type = random.randint(1,2)
                     self.correct = Dialogue.question(self, self.window, type, self.font, ticket)
             
+            if Club.won == False:
+                self.arrow_group.empty()
+                self.landing_arrows.empty()
+                self.running = False
             for event in pygame.event.get():
                 Controller.basic_command(self, event)
                 if Controller.return_to_root == True:
@@ -175,6 +184,8 @@ class Club:
                         Club.won = False
                     else:
                         Club.won = True
+                    self.arrow_group.empty()
+                    self.landing_arrows.empty()
                     self.running = False
                 # Keybinds
                 if event.type == pygame.KEYDOWN:
@@ -188,8 +199,6 @@ class Club:
                                 Arrow.check(self, 'down')
                             if event.key == pygame.K_RIGHT or event.key == pygame.K_d:
                                 Arrow.check(self, 'right')
-                            if Club.won == False:
-                                self.running = False
                         elif self.phase == 2:
                             if event.key == pygame.K_RETURN:
                                 if our_word[0:l-1] == self.correct:
@@ -197,9 +206,13 @@ class Club:
                                     our_word = "|"
                                     if self.on_question > Club.questions:
                                         Club.won = True
+                                        self.landing_arrows.empty()
+                                        self.arrow_group.empty()
                                         self.running = False
                                 else:
                                     Club.won = False
+                                    self.landing_arrows.empty()
+                                    self.arrow_group.empty()
                                     self.running = False
                             elif event.key == pygame.K_BACKSPACE:
                                 our_word = our_word[0:(l-2)]
