@@ -88,9 +88,20 @@ class Maze:
                           ["1","2","1","2","2","2","2","2","2","2","2","2","1","2","2","2","1","2","2","2","2","1","1","2","3"],
                           ["1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1"]]
     def run(self):
+        self.posy = 300-24
+        self.posx = 400-24
+        self.blacklist = []
+        self.finish_list = []
+        Maze.y_camera = 0
+        Maze.x_camera = 0
         self.start_tick = pygame.time.get_ticks()
         self.running = True
+        self.move_camera = 0
         while self.running:
+            if Controller.timeout == True:
+                self.start_tick = pygame.time.get_ticks()
+                Maze.won = False
+                self.running = False
             for event in pygame.event.get():
                 # Quit button
                 Controller.basic_command(self, event)
@@ -159,6 +170,7 @@ class Maze:
                     elif event.type == pygame.KEYUP:
                         self.move_camera = 0
                         self.player.stop()
+            self.player_rec = pygame.Rect(self.posx,self.posy,48,48)
             if self.move_camera == 1:
                 self.posy -= self.eno
                 Maze.y_camera -= self.eno
@@ -173,12 +185,11 @@ class Maze:
                 self.posx += self.eno
                 Maze.x_camera += self.eno
                 self.insanity2_pos += self.eno
-            self.player_rec = pygame.Rect(self.posx,self.posy,48,48)
             self.wn.fill((0,0,0))
-            if self.maze_map == 1:
-                self.map_build(self.map_list)
-            elif self.maze_map == 2:
-                self.map_build(self.map_list2)
+
+            self.map_build(self.map_list)
+            #elif self.maze_map == 2:
+            #    self.map_build(self.map_list2)
             if Controller.insanity == 5 and self.insanity5toggle == False:
                 face = insanity5Face()
                 self.active_sprite_list.add(face)
@@ -203,24 +214,13 @@ class Maze:
                         Controller.insanity = 5
             for y in self.finish_list:
                 if y.colliderect(self.player_rec):
-                    Maze.x_camera = 0
-                    Maze.y_camera = 0
-                    Maze.won = False
+                    Maze.won = True
                     self.running = False
             if Controller.insanity >= 2:
                 self.insanity_results(Controller.insanity)
-            if self.time == 60 and Controller.insanity < 2:
-                Controller.insanity = 2
-            elif self.time == 90 and Controller.insanity < 3:
-                Controller.insanity = 3
                 pygame.mixer.music.load("Sounds//Tchaikovsky Distorted.wav")
                 pygame.mixer.music.play(loops=-1, start=0.0)
-            elif self.time == 120 and Controller.insanity < 4:
-                Controller.insanity = 4
-            elif self.time >= 240:
-                Controller.insanity = 5
-
-            self.clock()
+            c = Controller.clock(self, self.wn, (240, 93, 93), 180, self.start_tick)
             pygame.display.flip()
 
     def map_build(self, map_list):

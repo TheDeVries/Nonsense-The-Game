@@ -87,12 +87,9 @@ class Platformer:
         self.start_tick = pygame.time.get_ticks()
         self.running = True
         while self.running:
-            Controller.score(self, self.window, (255,255,255))
-            Controller.insanity_meter(self, self.window, (255,255,255))
-            c = Controller.clock(self, self.window, (240, 93, 93), 120, self.start_tick)
             if Controller.timeout == True:
                 Platformer.won = False
-                self.running = False    
+                self.running = False
             for event in pygame.event.get():
                 Controller.basic_command(self, event)
                 if Controller.return_to_root == True:
@@ -130,10 +127,9 @@ class Platformer:
             self.player.gravity()
             Platforms = Platforms_Map(self.window, self.player)
             Platforms.platforms(self.player)
-            for enemy_movement in self.enemy_list:
-                enemy_movement.camera_follow()
             if pygame.sprite.groupcollide(self.player_group, self.enemies, False, False):
                 self.end_tick = pygame.time.get_ticks()
+                self.reset()
                 self.running = False
                 self.game_over = True
 
@@ -158,6 +154,7 @@ class Platformer:
             # Detects if player if hit by laser/Steven moore
             if pygame.sprite.groupcollide(self.player_group, self.laser_group, False, False):
                 self.end_tick = pygame.time.get_ticks()
+                self.reset()
                 self.running = False
                 self.game_over = True
 
@@ -200,6 +197,7 @@ class Platformer:
             # Uses masks to detect if dragon hits player
             for dragon_kill in range(0, len(self.dragon_list)):
                 if pygame.sprite.collide_mask(self.dragon_list[dragon_kill], self.player) != None:
+                    self.reset()
                     self.running = False
                     self.game_over = True
                     break
@@ -220,6 +218,9 @@ class Platformer:
                 self.player_fireball.remove(self.bullet)
                 self.bullet.done = False
                 self.bullet.shot = False
+            Controller.score(self, self.window, (255,255,255))
+            Controller.insanity_meter(self, self.window, (255,255,255))
+            c = Controller.clock(self, self.window, (240, 93, 93), 120, self.start_tick)
             pygame.display.flip()
         # Game over loop
         while self.game_over:
@@ -234,12 +235,6 @@ class Platformer:
                     self.running = False
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_SPACE:
-                        Platformer.x_camera = 0
-                        Platformer.y_camera = 0
-                        Platformer.player_fall = True
-                        Platformer.ground = False
-                        Platformer.direction = "L"
-                        Platformer.gravity = False
                         Platformer.won = False
                         self.game_over = False
                         self.running = False
@@ -249,6 +244,61 @@ class Platformer:
             self.player_death_group.draw(self.window)
             c = Controller.clock(self, self.window, (240, 93, 93),  5, self.end_tick)
             pygame.display.flip()
+    def reset(self):
+        self.enemies.empty()
+        self.laser_group.empty()
+        self.dragon_group.empty()
+        self.explosion_group.empty()
+        self.enemy_coords = [10,10,
+                            120,125,
+                             700,10,
+                             600,120,
+                             190,-79,
+                             850,-279,
+                             -50,-429,
+                             950,-729,
+                             -10, -779]
+
+        self.laser_coord = [55,60,10,
+                            165,175,6,
+                            745, 60, 4,
+                            645, 170, 4,
+                            235, -29, 8,
+                            895, -229, 10,
+                            -5, -379, 8,
+                            995, -679, 8,
+                            35, -729, 8]
+
+        self.dragon_coords = [0, -600, 10, "R",
+                              100, -950, 5, "R",
+                              650, -1100, 15, "L",
+                              -400, -1250, 8, "R"]
+        self.enemy = ""
+        self.enemy_list = []
+        self.laser_list = []
+        self.explosion_list = []
+        self.dragon_list = []
+        Platformer.x_camera = 0
+        Platformer.y_camera = 0
+        Platformer.player_fall = True
+        Platformer.ground = False
+        Platformer.direction = "L"
+        Platformer.gravity = False
+        # Creates enemies
+        for enemies in range(0, 18, 2):
+            enemy = Enemy(self.enemy_coords[enemies], self.enemy_coords[enemies+1])
+            self.enemy_list.append(enemy)
+            self.enemies.add(enemy)
+        # Creates lasers
+        for laser_iter in range (0,27,3):
+            laser = Laser(self.laser_coord[laser_iter], self.laser_coord[laser_iter+1], self.laser_coord[laser_iter+2])
+            self.laser_list.append(laser)
+            self.laser_group.add(laser)
+        # Creates dragons
+        for dragon_iter in range(0,16,4):
+            dragon = Dragon(self.dragon_coords[dragon_iter],self.dragon_coords[dragon_iter+1],self.dragon_coords[dragon_iter+2],self.dragon_coords[dragon_iter+3])
+            self.dragon_list.append(dragon)
+            self.dragon_group.add(dragon)
 
 
 class Platforms_Map:
