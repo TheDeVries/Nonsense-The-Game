@@ -9,12 +9,18 @@ class Space:
     def __init__(self):
         self.win = pygame.display.set_mode((800,600))
         self.background = pygame.image.load("Sprites//space background.png")
+        self.hell = pygame.image.load("Sprites//hellsetting.png")
         self.music = True
         self.all_sprites_list = pygame.sprite.Group()
         self.heroblasts = pygame.sprite.Group()
         self.enemies = pygame.sprite.Group()
         self.explosion = pygame.sprite.Group()
         self.heroship = pygame.sprite.Group()
+        self.score = 0
+        myfont = pygame.font.SysFont(None,30)
+        message = myfont.render("Press spacebar to shoot!", False, (255,255,255))
+        self.win.blit(message, (300,600))
+
     def run(self):
         self.start_tick = pygame.time.get_ticks()
         self.running = True
@@ -26,11 +32,12 @@ class Space:
             pygame.mixer.music.load("Sounds//Musicbox.wav")
             pygame.mixer.music.set_volume(1.0)
             pygame.mixer.music.play(loops=-1)
+
         self.completions = Controller.done_counter[1]
         self.handler = 0
         self.winner = True
         self.game_over = False
-        #self.difficultify()
+        self.difficultify()
         difficulty = {0: '005 030', 1: '010 035', 2: '015 060', 3: '020 060', 4: '025 060', 5: '010 30', 6: '015 35', 7: '010 025', 8: '020 050', 9: '025 050', 10: '030 050'}
         diff_str = difficulty[self.completions - self.handler]
         time_limit = int(diff_str[4:])
@@ -69,14 +76,20 @@ class Space:
                         Space.won = True
                     self.running = False
 
-            self.win.blit(self.background, (0,0))
+            if Controller.insanity < 5:
+                self.win.blit(self.background, (0,0))
+            else:
+                self.win.blit(self.hell, (0,0))
             keys = pygame.key.get_pressed()
 
             if keys[pygame.K_LEFT]:
                 hero.move_left()
+                self.win.blit(self.background, (0,0))
+
 
             if keys[pygame.K_RIGHT]:
                 hero.move_right()
+
 
             if keys[pygame.K_SPACE]:
                 self.heroblast = HeroBlast("Sprites//spacebullet.png")
@@ -98,10 +111,14 @@ class Space:
                     explode = Explosion(x,y)
                     self.explosion.add(explode)
                     self.done_explosion.append(explode)
-                    # if Controller.insanity < 3:
-                    self.explosionsound = pygame.mixer.Sound("Sounds//explosoundeffect.wav")
-                    self.explosionsound.set_volume(0.5)
-                    self.explosionsound.play(loops=0)
+                    if Controller.insanity < 5:
+                        self.explosionsound = pygame.mixer.Sound("Sounds//explosoundeffect.wav")
+                        self.explosionsound.set_volume(0.5)
+                        self.explosionsound.play(loops=0)
+                    else:
+                        self.cry = pygame.mixer.Sound("Sounds//baby.wav")
+                        self.cry.set_volume(0.5)
+                        self.cry.play(loops=0)
                     self.game_over = True
 
 
@@ -112,13 +129,19 @@ class Space:
                     self.all_sprites_list.remove(heroblast)
                     x = enemy_coord.rect.x
                     y = enemy_coord.rect.y
+                    self.score += 1
                     explode = Explosion(x,y)
                     self.explosion.add(explode)
                     self.done_explosion.append(explode)
-                    # if Controller.insanity < 3:
-                    self.explosionsound = pygame.mixer.Sound("Sounds//explosoundeffect.wav")
-                    self.explosionsound.set_volume(0.5)
-                    self.explosionsound.play(loops=0)
+                    if Controller.insanity < 5:
+                        self.explosionsound = pygame.mixer.Sound("Sounds//explosoundeffect.wav")
+                        self.explosionsound.set_volume(0.5)
+                        self.explosionsound.play(loops=0)
+                    else:
+                        self.cry = pygame.mixer.Sound("Sounds//baby.wav")
+                        self.cry.set_volume(0.5)
+                        self.cry.play(loops=0)
+                    # print(self.enemies)
 
                 if self.heroblast.rect.y < -10:
                     self.heroblasts.remove(heroblast)
@@ -133,15 +156,18 @@ class Space:
 
 
 
-            if len(self.enemies) == 0:
+            if len(self.enemies) == 0 and self.score >= 10:
                 myfont = pygame.font.SysFont(None,30)
                 message = myfont.render("YOU WIN!! Press TAB to continue", False, (255,255,255))
                 self.win.blit(message, (255,255))
-                # pygame.mixer.music.pause()
-                # # self.victorytheme = pygame.mixer.music.load("Sounds//Victoryscreentheme.wav")
-                # # pygame.mixer.music.play(loops=-1)
+                self.all_sprites_list.remove(hero)
+                self.heroship.remove(hero)
+                self.all_sprites_list.remove(enemy)
+                self.enemies.remove(enemy)
+                self.explosion.remove(explode)
                 pygame.display.flip()
                 if keys[pygame.K_TAB]:
+                    self.score = 0
                     Space.won = True
                     self.running = False
 
@@ -151,11 +177,27 @@ class Space:
                 myfont = pygame.font.SysFont(None,30)
                 message = myfont.render("Game Over!! Press TAB to continue", False, (255,255,255))
                 self.win.blit(message, (255,255))
+                self.all_sprites_list.remove(enemy)
+                self.enemies.remove(enemy)
+                self.explosion.remove(explode)
                 pygame.display.flip()
                 if keys[pygame.K_TAB]:
+                    self.score = 0
                     Space.won = False
                     self.running = False
 
+
+            # print(self.enemies.has(enemy))         #victory things (OPTIONAL)
+            # if self.enemies.has(enemy) == False:
+            #     pygame.mixer.music.pause()
+            #     self.victorytheme = pygame.mixer.music.load("Sounds//Victoryscreentheme.wav")
+            #     pygame.mixer.music.play(loops=0)
+
+
+
+            myfont = pygame.font.SysFont(None,30)
+            message = myfont.render("Press spacebar to shoot!", False, (255,255,255))
+            self.win.blit(message, (550,60))
             self.explosion.draw(self.win)
             self.explosion.update()
             self.all_sprites_list.draw(self.win)
@@ -164,14 +206,15 @@ class Space:
             c = Controller.clock(self, self.win, (240, 93, 93), time_limit, self.start_tick)
             # self.all_sprites_list.update()
             pygame.display.flip()
-            #for i in self.all_sprites_list:
-                #i.clear(self.win, self.background)
-            self.all_sprites_list.clear(self.win, self.background)
 
-    # def difficultify(self):         #must fix
-    #     dif = Controller.done_counter[1]
-    #     if dif % 2 == 0 and dif !=0:
-    #         self.speed += 20
+
+    def difficultify(self):  #difficulty scaler
+        dif = Controller.done_counter[1]
+        if dif % 2 == 0 and dif !=0: #level 2 difficulty
+            Space.num_of_enemies += 5
+        if dif % 3 == 0 and dif != 0: #level 3 difficulty
+            Space.num_of_enemies += 5
+
 
 class Hero(pygame.sprite.Sprite):  #spaceship model
     def __init__(self, filename):
@@ -206,9 +249,6 @@ class Hero(pygame.sprite.Sprite):  #spaceship model
     def draw(self, win):
         win.blit(self.image, self.rect)
 
-
-
-
 class Enemy(pygame.sprite.Sprite):
     def __init__(self,filename):
         pygame.sprite.Sprite.__init__(self)
@@ -219,7 +259,8 @@ class Enemy(pygame.sprite.Sprite):
         BLUE = (0,0,255)
         # pygame.draw.circle(self.image,BLUE, self.rect.center,self.radius)
         self.speedx = random.randrange(-10,10)
-        self.speedy = random.randrange(10,40)
+        self.speedy = random.randrange(10,25)
+        # print(self.rect.width)
 
     def update(self):
         self.rect.x += self.speedx
@@ -248,6 +289,7 @@ class HeroBlast(pygame.sprite.Sprite):
 
     def update(self):
         self.rect.y -= self.speed
+        #print(self.rect.y)
 
 class Explosion(pygame.sprite.Sprite):
     def __init__(self,x,y):
