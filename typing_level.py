@@ -76,6 +76,7 @@ class Typing:
         self.feedback_pic = pygame.image.load("Sprites//thumbs_up.png").convert()
         
     def run(self):
+        self.fielf = False
         self.start_tick = pygame.time.get_ticks()
         #Sound Insanity Check
         if Controller.insanity < 3:
@@ -118,7 +119,7 @@ class Typing:
             if Controller.insanity == 5:
                 self.background.set_colorkey((19, 108, 78))
             #if self.left_count <= 
-            if self.left_count <= Typing.total_words - 1 and self.OK == True:
+            if self.left_count <= Typing.total_words - 1 and self.OK == True and self.fielf == False:
                     self.window.blit(self.feedback_pic, (320, 170))
             elif self.OK == False and Controller.insanity > 3:
                 self.window.blit(self.garfielf, (320,170))
@@ -170,8 +171,10 @@ class Typing:
                             self.OK = False
                             if Controller.insanity >= 4:
                                 self.garfielf = pygame.image.load("Sprites//garfielf.png").convert()
+                                self.garfielf = pygame.transform.scale(self.garfielf, (220,220))
+                                self.fielf = True
                             self.strike_count += 1
-                            if self.strike_count != 3 and Controller.insanity < 4:
+                            if self.strike_count != 3:
                                 self.striked.play(loops = 0)
                         self.word = random.choice(self.words)
                         our_word = "|"
