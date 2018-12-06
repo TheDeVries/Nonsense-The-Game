@@ -84,6 +84,9 @@ class Controller:
             rand = random.randrange(0,1)
             appear_total = 0
             prob_list = []
+            
+            #Generates a level, where it decreases the chances of the previous level happening again increases
+            #the chances of other levels appearing and then selects
             for i in range(5):
                 appear_total+=Controller.appear_counter[i+1]
                 prob_list.append(Controller.appear_counter[i+1])
@@ -97,7 +100,6 @@ class Controller:
                 if rand < accum:
                     Controller.scene = prob_list.index(i)+1
                     break
-            print(prob_list)
             
         else:
             Controller.scene = random.randint(1,5)        
@@ -115,7 +117,7 @@ class Controller:
         transition_noises = ["drone1", "drone2"]
         self.t_channel = pygame.mixer.Channel(3)
         self.noise = pygame.mixer.Sound("Sounds//" + transition_noises[random.randint(0, (len(transition_noises) -1))] + ".wav")
-        sheet_transitions = ["geo_tunnel", "low_polygon", "rainbow_tunnel.png", "ball_column.png"]
+        sheet_transitions = ["geo_tunnel", "low_polygon", "rainbow_tunnel", "ball_column"]
         #self.transition = SpriteSheet("Sprites//" + sheet_transitions[random.randint(0, (len(sheet_transitions) -1))] + ".png")
         if Controller.insanity == 1:
             pass
