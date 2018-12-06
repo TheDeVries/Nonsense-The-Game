@@ -76,6 +76,9 @@ class Typing:
         self.feedback_pic = pygame.image.load("Sprites//thumbs_up.png").convert()
         
     def run(self):
+        '''
+        Main loop of typing level, with some initializations
+        '''
         self.fielf = False
         self.start_tick = pygame.time.get_ticks()
         #Sound Insanity Check

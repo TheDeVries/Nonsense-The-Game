@@ -228,6 +228,10 @@ class Controller:
                     Controller.up_insanity = False
                     Controller.return_to_root = True
     def go_insane(self, window):
+        '''
+        Window as a paramter
+        Creates the end screen that displays high score after andomly choosing an endgame music
+        '''
         endsong_list = ["Sounds//Silent Corpse.wav", "Sounds//Micro Soul 10.wav"]
         i = random.randint(0, len(endsong_list) -1)
         self.gameover_tune = pygame.mixer.music.load(endsong_list[i])
