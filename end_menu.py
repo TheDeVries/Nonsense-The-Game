@@ -25,40 +25,39 @@ class End:
                 if self.sec > 3 and self.sec < 5:
                     a_string = ""
                 elif self.sec > 5 and self.sec < 13:
-                    if Controller.score_current < 2 and Controller.score_current != 0:
+                    if Controller.score_current == 1:
                         self.pural = ""
                     a_string = "You cleared " + str(Controller.score_current) + " scene" + self.plural + "."
                 elif self.sec > 12:
                     a_string = ""
                     if self.sec > 14:
                         #Add to a local highscore json file before displaying final screen
-                        
-                        fptr = open("highscore.json")
-                        data = fptr.read()
-                        print(data)
-                        fptr.close()
-                        '''
-                        pdata = json.loads(data)
-                        pdata.append(Controller.score_current)
-                        pdata = json.dumps(pdata)
-                        fptr = open("people.json", "w")
-                        data = fptr.write(pdata)
-                        fptr.close()
-                        '''
-                        
-                        infile = open("highscore.json", "r")
+                        add = open("highscore.json", "a+")
+                        add.close()        
                         our_list = []
+                        infile = open("highscore.json", "r")
                         for line in infile:
                             our_list.append(line[:-1])
+                        infile.close()
+                        add = open("highscore.json", "a+")
+                        add.write(str(Controller.score_current) + "\r\n")
+                        add.close()
+                        our_list = []
+                        infile = open("highscore.json", "r")
+                        for line in infile:
+                            if str(line) != '\n':
+                                our_list.append(int(line[:-1]))
+                        infile.close()
                         our_list.sort()
-                        print(our_list)
+                        a_string = "Local highscore: " + str(our_list[-1])
                         
                         self.mode = 2
                 self.window.blit(self.display_message, self.position)
             elif self.mode == 2:
+                self.display_message = self.font.render(a_string, True, (240, 93, 93))
                 pygame.draw.ellipse(self.window, (255,255,255), (150, 50, 500, 250))
                 self.window.blit(self.c_title, (200,100))
-                self.display_message
+                self.window.blit(self.display_message, (190, 425))
 
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
