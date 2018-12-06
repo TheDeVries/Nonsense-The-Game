@@ -311,6 +311,9 @@ class Platformer:
 
 
 class Platforms_Map:
+    """
+        Initzation of Platforms
+    """
     def __init__(self,window, player):
         self.running = True
         self.window = window
@@ -319,6 +322,9 @@ class Platforms_Map:
         self.player = player
 
     def platforms(self, player):
+        """
+            Creates platforms and detects collision 
+        """
         self.platform_list = [(0,500 - Platformer.y_camera ,800,400),
                             (200 - Platformer.x_camera,300 - Platformer.y_camera ,200,20),
                             (300 - Platformer.x_camera, 200 - Platformer.y_camera ,200,20),

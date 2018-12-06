@@ -4,10 +4,16 @@ from controller import *
 pygame.init()
 
 class Maze:
+    """
+        Maze level Class
+    """
     won = False
     x_camera = 0
     y_camera = 0
     def __init__(self):
+        """
+            Initzation of Maze level
+        """
         self.wn = pygame.display.set_mode((800,600), pygame.HWSURFACE)
         self.hedge = pygame.image.load("Sprites//hedge.png")
         self.grass = pygame.image.load("Sprites//grass.png")
@@ -83,7 +89,11 @@ class Maze:
                           ["1","2","1","1","1","2","1","1","1","1","1","2","1","2","1","2","1","2","1","1","1","1","2","2","1"],
                           ["1","2","1","2","2","2","2","2","2","2","2","2","1","2","2","2","1","2","2","2","2","1","1","2","3"],
                           ["1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1"]]
+    # Main loop
     def run(self):
+        """
+            Main game loop
+        """
         if Controller.insanity < 3:
             self.song = pygame.mixer.music.load("Sounds//Tchaikovsky - Valse Sentimentale.wav")
         if Controller.insanity > 2:
@@ -189,8 +199,6 @@ class Maze:
             self.wn.fill((0,0,0))
 
             self.map_build(self.map_list)
-            #elif self.maze_map == 2:
-            #    self.map_build(self.map_list2)
             if Controller.insanity == 5 and self.insanity5toggle == False:
                 face = insanity5Face()
                 self.active_sprite_list.add(face)
@@ -210,8 +218,6 @@ class Maze:
                     self.boo.play(loops=1)
                     Controller.insanity += 1
                     if Controller.insanity > 5:
-                        pygame.mixer.music.load("Sounds//Tchaikovsky Distorted.wav")
-                        pygame.mixer.music.play(loops=-1, start=0.0)
                         Controller.insanity = 5
             for y in self.finish_list:
                 if y.colliderect(self.player_rec):
@@ -219,12 +225,14 @@ class Maze:
                     self.running = False
             if Controller.insanity >= 2:
                 self.insanity_results(Controller.insanity)
-                pygame.mixer.music.load("Sounds//Tchaikovsky Distorted.wav")
-                pygame.mixer.music.play(loops=-1, start=0.0)
             c = Controller.clock(self, self.wn, (240, 93, 93), 180, self.start_tick)
             pygame.display.flip()
 
     def map_build(self, map_list):
+        """
+            Creates map from map_list and blits it based on camera
+        """
+
         if Controller.insanity < 4:
             textures = {"1":self.hedge, "2":self.grass, "3":self.finish}
         elif Controller.insanity >= 3:
@@ -244,6 +252,9 @@ class Maze:
                     self.finish_list += [self.rec1.move(columns*self.tile_size, rows*self.tile_size)]
                 self.wn.blit(textures[map_list[rows][columns]], (columns*self.tile_size - Maze.x_camera, rows*self.tile_size - Maze.y_camera))
     def insanity_results(self, insanity):
+        """
+            Initzation of Insanity graphics
+        """
         insanity_graphics = []
         self.insanity2_graphics.set_colorkey((0,0,0,0))
         if self.insanity2_pos <= -2400:
@@ -254,6 +265,9 @@ class Maze:
         if Controller.insanity == 5:
             pass
     def clock(self):
+        """
+            Initzation of clock
+        """
         myfont = pygame.font.Font("Sprites//digital-7.ttf", 55)
         timefont = myfont.render("Time:", True, (240, 93, 93))
         strtimer = str(self.time)
@@ -262,6 +276,9 @@ class Maze:
         self.wn.blit(clocktimer,(400,0))
 
 class Player(pygame.sprite.Sprite):
+    """
+        Creates player, iterates through player frames
+    """
 
     def __init__(self):
 
@@ -319,6 +336,9 @@ class Player(pygame.sprite.Sprite):
         self.y_coord = self.rect.top
 
     def update(self):
+        """
+            Updates player frames
+        """
 
 
         # Move left/right
@@ -359,6 +379,9 @@ class Player(pygame.sprite.Sprite):
     def stop(self):
         self.change_x = 0
 class insanity5Face(pygame.sprite.Sprite):
+    """
+        Creates insanity 5 face effect
+    """
     def __init__(self):
         super().__init__()
         sprite_sheet = SpriteSheet("Sprites//creepy.png")
@@ -413,6 +436,9 @@ class insanity5Face(pygame.sprite.Sprite):
         self.rect = self.image.get_rect()
         self.rect.move_ip(0,-100)
     def update(self):
+        """
+            Updates insanity 5 face frames 
+        """
         self.index += 1
         if self.index >= len(self.insanity5_frames)-1:
             self.index = 120
