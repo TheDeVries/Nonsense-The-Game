@@ -211,9 +211,6 @@ class Club:
                                         self.running = False
                                 else:
                                     Club.won = False
-                                    self.landing_arrows.empty()
-                                    self.arrow_group.empty()
-                                    self.running = False
                             elif event.key == pygame.K_BACKSPACE:
                                 our_word = our_word[0:(l-2)]
                                 our_word += "|"

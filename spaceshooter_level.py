@@ -119,7 +119,6 @@ class Space:
                     self.explosionsound = pygame.mixer.Sound("Sounds//explosoundeffect.wav")
                     self.explosionsound.set_volume(0.5)
                     self.explosionsound.play(loops=0)
-                    print(self.enemies)
 
                 if self.heroblast.rect.y < -10:
                     self.heroblasts.remove(heroblast)
@@ -156,16 +155,6 @@ class Space:
                 if keys[pygame.K_TAB]:
                     Space.won = False
                     self.running = False
-
-
-            # print(self.enemies.has(enemy))         #victory things (OPTIONAL)
-            # if self.enemies.has(enemy) == False:
-            #     pygame.mixer.music.pause()
-            #     self.victorytheme = pygame.mixer.music.load("Sounds//Victoryscreentheme.wav")
-            #     pygame.mixer.music.play(loops=0)
-
-
-
 
             self.explosion.draw(self.win)
             self.explosion.update()
@@ -231,7 +220,6 @@ class Enemy(pygame.sprite.Sprite):
         # pygame.draw.circle(self.image,BLUE, self.rect.center,self.radius)
         self.speedx = random.randrange(-10,10)
         self.speedy = random.randrange(10,40)
-        print(self.rect.width)
 
     def update(self):
         self.rect.x += self.speedx
@@ -260,8 +248,6 @@ class HeroBlast(pygame.sprite.Sprite):
 
     def update(self):
         self.rect.y -= self.speed
-        #print(self.rect.y)
-
 
 class Explosion(pygame.sprite.Sprite):
     def __init__(self,x,y):
