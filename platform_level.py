@@ -149,6 +149,7 @@ class Platformer:
 
             # Adds laser to sprite group
             for laser_iter in range(0,len(self.laser_list)):
+                self.laser_list[laser_iter].insanity_effects()
                 self.laser_group.add(self.laser_list[laser_iter])
 
             # Detects if player if hit by laser/Steven moore
@@ -824,6 +825,12 @@ class Laser(pygame.sprite.Sprite):
     def reset(self):
         self.progress = 0
         self.changex = 0
+    def insanity_effects(self):
+        if Controller.insanity <= 2:
+            self.image = pygame.image.load("Sprites//Bad_guy_shot.png")
+        elif Controller.insanity > 2:
+            self.image = pygame.image.load("Sprites//Stevenmoore.png")
+            self.image = pygame.transform.scale(self.image, (35,47))
 class Explosion(pygame.sprite.Sprite):
     """
         Creates and updates Explosions
