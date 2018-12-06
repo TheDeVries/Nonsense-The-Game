@@ -5,7 +5,7 @@ from controller import *
 pygame.init()
 
 class Club:
-    won = False
+    won = True
     questions = 1
     sayings = 2
     def __init__(self):
@@ -188,6 +188,8 @@ class Club:
                                 Arrow.check(self, 'down')
                             if event.key == pygame.K_RIGHT or event.key == pygame.K_d:
                                 Arrow.check(self, 'right')
+                            if Club.won == False:
+                                self.running = False
                         elif self.phase == 2:
                             if event.key == pygame.K_RETURN:
                                 if our_word[0:l-1] == self.correct:
@@ -494,16 +496,15 @@ class Arrow(pygame.sprite.Sprite):
                 y_list.sort()
                 if arrow.new_pos == y_list[0]:
                     if arrow.position[0] == 5 and pressed == 'left':
-                        self.arrow_group.remove(arrow)
                         arrow.kill()
                         return
-                    elif arrow.position[0] == 105 and pressed == 'up':
+                    if arrow.position[0] == 105 and pressed == 'up':
                         arrow.kill()
                         return 
-                    elif arrow.position[0] == 205 and pressed == 'down':
+                    if arrow.position[0] == 205 and pressed == 'down':
                         arrow.kill()
                         return
-                    elif arrow.position[0] == 305 and pressed == 'right':
+                    if arrow.position[0] == 305 and pressed == 'right':
                         arrow.kill()
                         return                   
         Club.won = False

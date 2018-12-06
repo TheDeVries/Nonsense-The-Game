@@ -12,9 +12,7 @@ class Maze:
         self.hedge = pygame.image.load("Sprites//hedge.png")
         self.grass = pygame.image.load("Sprites//grass.png")
         self.hedge_insanity4 = pygame.image.load("Sprites//hedge_insanity4.png")
-
         self.finish = pygame.image.load("Sprites//finish.png")
-        self.song = pygame.mixer.music.load("Sounds//Tchaikovsky - Valse Sentimentale.wav")
         self.boo = pygame.mixer.Sound("Sounds//Demon_Your_Soul_is_mine-BlueMann-1903732045.wav")
         self.insanity2_graphics = pygame.image.load("Sprites//insanity2_maze.png").convert()
         self.player = Player()
@@ -34,8 +32,6 @@ class Maze:
         self.test = True
         self.insanity2_pos = -800
         self.insanity5toggle = False
-        if Controller.insanity == 1:
-            pygame.mixer.music.play(loops=-1, start=0.0)
         self.map_list = [["1","1","3","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1"],
                     ["1","2","2","2","2","1","1","1","1","1","1","1","1","1","1","1","1","1","2","2","2","1","2","1","1"],
                     ["1","2","2","2","2","1","1","1","2","2","2","2","2","2","2","2","2","1","2","1","2","1","2","1","1"],
@@ -88,6 +84,11 @@ class Maze:
                           ["1","2","1","2","2","2","2","2","2","2","2","2","1","2","2","2","1","2","2","2","2","1","1","2","3"],
                           ["1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1"]]
     def run(self):
+        if Controller.insanity < 3:
+            self.song = pygame.mixer.music.load("Sounds//Tchaikovsky - Valse Sentimentale.wav")
+        if Controller.insanity > 2:
+            self.song2 = pygame.mixer.music.load("Sounds//Tchaikovsky Distorted.wav")
+        pygame.mixer.music.play(loops=-1, start=0.0)
         self.posy = 300-24
         self.posx = 400-24
         self.blacklist = []
