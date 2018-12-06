@@ -86,6 +86,8 @@ class Platformer:
     def run(self):
         self.start_tick = pygame.time.get_ticks()
         self.running = True
+        for insanity_heads in range(len(self.laser_list)):
+            self.laser_list[insanity_heads].insanity_effects()
         while self.running:
             if Controller.timeout == True:
                 Platformer.won = False
@@ -149,7 +151,6 @@ class Platformer:
 
             # Adds laser to sprite group
             for laser_iter in range(0,len(self.laser_list)):
-                self.laser_list[laser_iter].insanity_effects()
                 self.laser_group.add(self.laser_list[laser_iter])
 
             # Detects if player if hit by laser/Steven moore
@@ -198,6 +199,7 @@ class Platformer:
             # Uses masks to detect if dragon hits player
             for dragon_kill in range(0, len(self.dragon_list)):
                 if pygame.sprite.collide_mask(self.dragon_list[dragon_kill], self.player) != None:
+                    self.end_tick = pygame.time.get_ticks()
                     self.reset()
                     self.running = False
                     self.game_over = True
@@ -244,6 +246,12 @@ class Platformer:
             self.player_death_group.update()
             self.player_death_group.draw(self.window)
             c = Controller.clock(self, self.window, (240, 93, 93),  5, self.end_tick)
+            rect_end = pygame.draw.rect(self.window, (178,34,34), pygame.Rect((-1000 - Platformer.x_camera, -1350 - Platformer.y_camera, 5000,20)))
+            if rect_end.colliderect(self.player):
+                self.reset()
+                Platformer.won = True
+                self.running = False
+
             pygame.display.flip()
     def reset(self):
         self.enemies.empty()
@@ -353,6 +361,7 @@ class Platforms_Map:
         rect_end = pygame.draw.rect(self.window, (178,34,34), pygame.Rect((-1000 - Platformer.x_camera, -1350 - Platformer.y_camera, 5000,20)))
         # If player collides with end platform
         if rect_end.colliderect(player):
+
             Platformer.x_camera = 0
             Platformer.y_camera = 0
             Platformer.player_fall = True

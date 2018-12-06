@@ -236,6 +236,9 @@ class Maze:
                 if textures[map_list[rows][columns]] == self.hedge:
                     self.rec = textures[map_list[rows][columns]].get_rect()
                     self.blacklist += [self.rec.move(columns*self.tile_size, rows*self.tile_size)]
+                elif textures[map_list[rows][columns]] == self.hedge_insanity4:
+                    self.rec = textures[map_list[rows][columns]].get_rect()
+                    self.blacklist += [self.rec.move(columns*self.tile_size, rows*self.tile_size)]
                 if textures[map_list[rows][columns]] == self.finish:
                     self.rec1 = textures[map_list[rows][columns]].get_rect()
                     self.finish_list += [self.rec1.move(columns*self.tile_size, rows*self.tile_size)]
