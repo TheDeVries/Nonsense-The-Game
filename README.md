@@ -9,7 +9,7 @@
 ### Team: __THE__
 * Michael Spano
 * Kevin Apyapong
-* Brain DeVries
+* Brian DeVries
 
 ***
 
