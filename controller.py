@@ -112,13 +112,14 @@ class Controller:
         It then randomly plays a between-scene graphical interlude (or not) if the insanity is greater than 1
         '''
         pygame.mixer.music.stop()
+        done_developed = False
         self.window = pygame.display.set_mode((800,600))
         self.t_chance = random.randint(0,100)
         transition_noises = ["drone1", "drone2"]
         self.t_channel = pygame.mixer.Channel(3)
+        self.t_channel.stop()
         self.noise = pygame.mixer.Sound("Sounds//" + transition_noises[random.randint(0, (len(transition_noises) -1))] + ".wav")
-        sheet_transitions = ["geo_tunnel", "low_polygon", "rainbow_tunnel", "ball_column"]
-        #self.transition = SpriteSheet("Sprites//" + sheet_transitions[random.randint(0, (len(sheet_transitions) -1))] + ".png")
+        sheet_transitions = {"geo_tunnel" : .75, "low_polygon": .75, "rainbow_tunnel": .75, "ball_column": .5}
         if Controller.insanity == 1:
             pass
         elif Controller.insanity == 2:
@@ -128,13 +129,33 @@ class Controller:
             if self.t_chance > 80:
                 self.t_channel.play(self.noise)
         elif Controller.insanity == 4:
-            if self.t_chance > 70:
+            if self.t_chance > 75:
                 self.t_channel.play(self.noise)
         elif Controller.insanity == 5:
-            if self.t_chance > 58:
+            if self.t_chance > 63:
                 self.t_channel.play(self.noise)
-        #while self.t_channel.get_busy() == True:
-            #self.transition.get_image(0, 0, 800, 600, (255,255,255))
+        while self.t_channel.get_busy() == True:
+            if done_developed == False:
+                our_transition = random.choice(list(sheet_transitions.keys()))
+                self.transition = SpriteSheet("Sprites//" + our_transition + ".png")
+                done_developed = True
+                trim_x = 0
+                trim_y = 0
+                print(self.transition.sheet_rec)
+            decal = self.transition.get_image(trim_x, trim_y, 800, 600, (255,255,255))
+            self.window.blit(decal, (0,0))
+            pygame.display.flip()
+            print(trim_x, trim_y)
+            if pygame.time.get_ticks() % sheet_transitions[our_transition] == 0:
+                if trim_x != self.transition.sheet_rec[0] - 800:
+                    trim_x += 800
+                elif trim_y != self.transition.sheet_rec[1] - 600:
+                    trim_x = 0
+                    trim_y += 600
+                else:
+                    trim_x = 0
+                    trim_y = 0
+            
         Controller.scene_selector(self, lev_id, success)
         return
 
@@ -244,6 +265,7 @@ class SpriteSheet(object):
 
         # Load the sprite sheet.
         self.sprite_sheet = pygame.image.load(file_name).convert()
+        self.sheet_rec = self.sprite_sheet.get_rect().size
 
 
     def get_image(self, x, y, width, height, color_key):
